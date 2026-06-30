@@ -4,6 +4,7 @@ import FnbAlert from './components/FnbAlert.vue'
 import FnbButton from './components/FnbButton.vue'
 import FnbCard from './components/FnbCard.vue'
 import FnbConfigProvider from './providers/FnbConfigProvider.vue'
+import FnbDialogProvider from './providers/FnbDialogProvider.vue'
 import FnbEllipsis from './components/FnbEllipsis.vue'
 import FnbFloatButton from './components/FnbFloatButton.vue'
 import FnbIcon from './components/FnbIcon.vue'
@@ -27,6 +28,7 @@ export {
   FnbButton,
   FnbCard,
   FnbConfigProvider,
+  FnbDialogProvider,
   FnbEllipsis,
   FnbFloatButton,
   FnbIcon,
@@ -47,6 +49,7 @@ export {
 }
 
 export { useMessage } from './composables/useMessage'
+export { useDialog } from './composables/useDialog'
 
 export type { FnbTabPaneInfo, FnbTabsContext } from './components/tabs-context'
 export type {
@@ -59,12 +62,14 @@ export type {
   FnbMessageOptions,
   FnbMessageHandle,
 } from './providers/message-context'
+export type { FnbDialogApi, FnbDialogOptions } from './providers/dialog-context'
 
 const components: Record<string, Component> = {
   FnbAlert,
   FnbButton,
   FnbCard,
   FnbConfigProvider,
+  FnbDialogProvider,
   FnbEllipsis,
   FnbFloatButton,
   FnbIcon,
