@@ -3,10 +3,16 @@ import type { App, Component, Plugin } from 'vue'
 import FnbButton from './components/FnbButton.vue'
 import FnbCard from './components/FnbCard.vue'
 import FnbIcon from './components/FnbIcon.vue'
+import FnbTag from './components/FnbTag.vue'
 
-export { FnbButton, FnbCard, FnbIcon }
+export { FnbButton, FnbCard, FnbIcon, FnbTag }
 
-const components: Record<string, Component> = { FnbButton, FnbCard, FnbIcon }
+const components: Record<string, Component> = {
+  FnbButton,
+  FnbCard,
+  FnbIcon,
+  FnbTag,
+}
 
 const FnbUI: Plugin = {
   install(app: App) {
