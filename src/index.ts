@@ -3,6 +3,7 @@ import type { App, Component, Plugin } from 'vue'
 import FnbAlert from './components/FnbAlert.vue'
 import FnbButton from './components/FnbButton.vue'
 import FnbCard from './components/FnbCard.vue'
+import FnbConfigProvider from './providers/FnbConfigProvider.vue'
 import FnbEllipsis from './components/FnbEllipsis.vue'
 import FnbFloatButton from './components/FnbFloatButton.vue'
 import FnbIcon from './components/FnbIcon.vue'
@@ -24,6 +25,7 @@ export {
   FnbAlert,
   FnbButton,
   FnbCard,
+  FnbConfigProvider,
   FnbEllipsis,
   FnbFloatButton,
   FnbIcon,
@@ -43,11 +45,16 @@ export {
 }
 
 export type { FnbTabPaneInfo, FnbTabsContext } from './components/tabs-context'
+export type {
+  FnbThemeOverrides,
+  FnbConfigContext,
+} from './providers/config-context'
 
 const components: Record<string, Component> = {
   FnbAlert,
   FnbButton,
   FnbCard,
+  FnbConfigProvider,
   FnbEllipsis,
   FnbFloatButton,
   FnbIcon,
