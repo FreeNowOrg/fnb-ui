@@ -121,11 +121,17 @@ export default defineConfig({
 
 ## 5. 组件清单与处置
 
-来源：PixivNow `app/components/ui/Fnb*.vue`（21 个），作为移植蓝本。处置分四类：
+来源：PixivNow `app/components/ui/Fnb*.vue`（21 个）+ `app/components/FnbIcon.vue`（1 个，位于 ui 目录之外，初版清单漏扫），作为移植蓝本。处置分四类：
 
 ### 直接移植（纯 Vue，零业务耦合，仅去掉 `~/` 自动导入、改显式 import）
 
 `FnbButton` · `FnbCard` · `FnbInput` · `FnbSelect` · `FnbTag` · `FnbTable` · `FnbPagination` · `FnbProgress` · `FnbSkeleton` · `FnbSpin` · `FnbScrollbar` · `FnbImage` · `FnbFloatButton` · `FnbEllipsis` · `FnbResult`
+
+### 新增 / API 化（PixivNow 已有雏形，纳库时正式定义接口）
+
+| 组件 | 来源 | 处置 |
+|---|---|---|
+| **`FnbIcon`** | PixivNow `app/components/FnbIcon.vue`（无 props 的 `i.fnb-icon` 包裹器） | 对标 naive `NIcon` 加 props：`size`(`number→px`/`string`)、`color`、`component`（直接传图标组件，免插槽）。`inheritAttrs:false` + 默认可覆盖的 `aria-hidden`。**砍掉** naive 的 `depth`（依赖主题 opacity token，YAGNI）与 nesting 警告。样式走 naive 路线：包裹 `<i>` 只设 `font-size`/`color` + `fill: currentColor`，靠图标自带 `currentColor` 着色；不强制 `stroke`、不写 `.tabler-icon` 特例（tabler 的 `fill="none"` presentation attribute 自然胜出）。`FnbButton` 的 `:deep(.fnb-icon)` 即指此 class，纳库后成正式契约。 |
 
 ### 改名（对齐主流命名）
 
@@ -174,6 +180,7 @@ FnbTabs(v-model:value="active" type="segment" size="small")
 | `FnbMessageProvider` | `useMessage()` | 轻量飘条（info/success/warning/error） | 旧 `useToast` + `FnbToast` |
 | `FnbDialogProvider` | `useDialog()` | 确认/对话框（返回 Promise） | 旧 `useDialog` + `FnbDialog` |
 
+- **实现以 naive 源码为蓝本**（已克隆至 `../naive-ui`，见 `src/message/src/`、`src/dialog/src/`）。地道 Vue3 形态：`context.ts` 暴露 typed `InjectionKey` → Provider 组件 `defineComponent` 内持有 `reactive` 列表、构造 `api` 对象、`provide(key, api)`、用 `Teleport` 渲染各条目 → `useMessage()`/`useDialog()` 仅 `inject(key, null)`，无 Provider 时 `throw`。message api 形如 `create/info/success/warning/error/destroyAll`，返回带 `.destroy()` 的 handle。**避免 React 味写法**（render-prop、prop-drilling、模块级单例）。
 - `useMessage()` / `useDialog()` **读 inject 进来的上下文**，不再是模块级全局单例。组件树外层需挂对应 Provider。
 - **聚合入口 `FnbProvider`**：一次性挂好 config + message + dialog（保留这个好用的总入口），消费端单标签包裹即可。
 - `FnbConfigProvider` 的 `theme-overrides` 不走 css-in-js，而是把覆写的 token 当**内联 CSS 变量**写到自身根元素 `style` 上（见 §7）。
@@ -234,6 +241,7 @@ API 形状重构，但**视觉与交互行为须与各项目现有 `Fnb*` 保持
 
 ## 9. 文档站
 
+- 站点位于 **`website/`**（VitePress root），与 `docs/`（SDD specs/plans）分开，避免 VitePress 把设计文档也当站点页面构建。`package.json` 的 `docs:*` 脚本指向 `website`。
 - VitePress 1.6.4 + `vitepress-demo-plugin` 1.5.1，Markdown 内嵌 live 组件 demo（渲染效果 + 源码）。
 - 覆盖：每个组件用法、主题覆写指南、Provider/Hook 用法、Nuxt 接入指南。
 - 同时承接各项目原本散落的"组件 showcase"（如 PixivNow 的 `/_debug/components`）的职责。
@@ -251,9 +259,10 @@ fnb-ui/
 │  ├─ styles/              # _variables.scss / _fnb.scss(mixins) / index.scss
 │  └─ index.ts             # 公共入口（导出组件 + hook + 类型）
 ├─ nuxt/                   # 可选 Nuxt module（§8，后续）
-├─ docs/                   # VitePress 文档站
-│  ├─ .vitepress/
-│  └─ superpowers/specs/   # 设计 spec（本文件所在）
+├─ website/                # VitePress 文档站（独立于 docs/，避免与 SDD 文档冲突）
+│  └─ .vitepress/
+├─ docs/                   # SDD 文档（非 VitePress）
+│  └─ superpowers/         # specs / plans（本文件所在）
 ├─ vite.config.ts
 ├─ tsconfig.json           # 含 vueCompilerOptions.plugins: ['@vue/language-plugin-pug']
 ├─ .oxlintrc.json
