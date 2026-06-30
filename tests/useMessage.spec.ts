@@ -59,6 +59,21 @@ describe('useMessage', () => {
     expect(document.body.querySelector('.fnb-message')).toBeNull()
   })
 
+  it('clears the auto-dismiss timer on early destroy', async () => {
+    const w = mountWithProvider()
+    const handle = (w.vm.$refs.child as any).message.info('Hi', {
+      duration: 1000,
+    })
+    await w.vm.$nextTick()
+    handle.destroy()
+    await w.vm.$nextTick()
+    expect(document.body.querySelector('.fnb-message')).toBeNull()
+    // Advancing past the duration must not re-fire remove or throw.
+    expect(() => vi.advanceTimersByTime(1100)).not.toThrow()
+    await w.vm.$nextTick()
+    expect(document.body.querySelector('.fnb-message')).toBeNull()
+  })
+
   it('useMessage throws without a provider', () => {
     const Lonely = defineComponent({
       setup() {

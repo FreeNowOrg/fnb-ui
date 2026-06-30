@@ -17,7 +17,7 @@ Teleport(to='body')
 </template>
 
 <script lang="ts" setup>
-import { provide, ref, watch } from 'vue'
+import { onUnmounted, provide, ref, watch } from 'vue'
 import FnbButton from '../components/FnbButton.vue'
 import { fnbDialogKey } from './dialog-context'
 import type { FnbDialogApi, FnbDialogOptions } from './dialog-context'
@@ -52,6 +52,11 @@ watch(
     document.body.style.overflow = open ? 'hidden' : ''
   }
 )
+
+// Restore body scroll if the provider unmounts while a dialog is open.
+onUnmounted(() => {
+  document.body.style.overflow = ''
+})
 </script>
 
 <style scoped lang="scss">

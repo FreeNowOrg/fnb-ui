@@ -11,7 +11,7 @@ Teleport(to='body')
 </template>
 
 <script lang="ts" setup>
-import { provide, reactive } from 'vue'
+import { onUnmounted, provide, reactive } from 'vue'
 import { fnbMessageKey } from './message-context'
 import type {
   FnbMessageApi,
@@ -27,9 +27,15 @@ interface MessageItem {
 }
 
 const messages = reactive<MessageItem[]>([])
+const timers = new Map<number, ReturnType<typeof setTimeout>>()
 let nextId = 0
 
 function remove(id: number) {
+  const timer = timers.get(id)
+  if (timer !== undefined) {
+    clearTimeout(timer)
+    timers.delete(id)
+  }
   const i = messages.findIndex((m) => m.id === id)
   if (i !== -1) messages.splice(i, 1)
 }
@@ -43,7 +49,10 @@ function create(
   messages.push({ id, content, type })
   const duration = options?.duration ?? 3000
   if (duration > 0) {
-    setTimeout(() => remove(id), duration)
+    timers.set(
+      id,
+      setTimeout(() => remove(id), duration)
+    )
   }
   return { destroy: () => remove(id) }
 }
@@ -56,6 +65,12 @@ const api: FnbMessageApi = {
 }
 
 provide(fnbMessageKey, api)
+
+// Clear any pending auto-dismiss timers on provider teardown.
+onUnmounted(() => {
+  for (const timer of timers.values()) clearTimeout(timer)
+  timers.clear()
+})
 </script>
 
 <style scoped lang="scss">

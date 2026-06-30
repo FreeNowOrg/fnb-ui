@@ -10,7 +10,7 @@ import { fnbTabsKey } from './tabs-context'
 const props = defineProps<{ name: string; tab?: string }>()
 const slots = useSlots()
 
-const ctx = inject(fnbTabsKey)
+const ctx = inject(fnbTabsKey, null)
 if (!ctx) {
   throw new Error('[fnb-ui] FnbTabPane must be used inside FnbTabs')
 }
