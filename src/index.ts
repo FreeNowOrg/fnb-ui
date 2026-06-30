@@ -2,6 +2,7 @@ import './styles/index.scss'
 import type { App, Component, Plugin } from 'vue'
 import FnbButton from './components/FnbButton.vue'
 import FnbCard from './components/FnbCard.vue'
+import FnbEllipsis from './components/FnbEllipsis.vue'
 import FnbIcon from './components/FnbIcon.vue'
 import FnbInput from './components/FnbInput.vue'
 import FnbProgress from './components/FnbProgress.vue'
@@ -11,6 +12,7 @@ import FnbTag from './components/FnbTag.vue'
 export {
   FnbButton,
   FnbCard,
+  FnbEllipsis,
   FnbIcon,
   FnbInput,
   FnbProgress,
@@ -21,6 +23,7 @@ export {
 const components: Record<string, Component> = {
   FnbButton,
   FnbCard,
+  FnbEllipsis,
   FnbIcon,
   FnbInput,
   FnbProgress,
