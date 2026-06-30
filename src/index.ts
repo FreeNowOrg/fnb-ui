@@ -10,6 +10,7 @@ import FnbInput from './components/FnbInput.vue'
 import FnbProgress from './components/FnbProgress.vue'
 import FnbResult from './components/FnbResult.vue'
 import FnbScrollbar from './components/FnbScrollbar.vue'
+import FnbSkeleton from './components/FnbSkeleton.vue'
 import FnbTable from './components/FnbTable.vue'
 import FnbTag from './components/FnbTag.vue'
 
@@ -24,6 +25,7 @@ export {
   FnbProgress,
   FnbResult,
   FnbScrollbar,
+  FnbSkeleton,
   FnbTable,
   FnbTag,
 }
@@ -39,6 +41,7 @@ const components: Record<string, Component> = {
   FnbProgress,
   FnbResult,
   FnbScrollbar,
+  FnbSkeleton,
   FnbTable,
   FnbTag,
 }
