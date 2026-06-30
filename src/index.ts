@@ -6,6 +6,7 @@ import FnbCard from './components/FnbCard.vue'
 import FnbEllipsis from './components/FnbEllipsis.vue'
 import FnbFloatButton from './components/FnbFloatButton.vue'
 import FnbIcon from './components/FnbIcon.vue'
+import FnbImage from './components/FnbImage.vue'
 import FnbInput from './components/FnbInput.vue'
 import FnbProgress from './components/FnbProgress.vue'
 import FnbResult from './components/FnbResult.vue'
@@ -22,6 +23,7 @@ export {
   FnbEllipsis,
   FnbFloatButton,
   FnbIcon,
+  FnbImage,
   FnbInput,
   FnbProgress,
   FnbResult,
@@ -39,6 +41,7 @@ const components: Record<string, Component> = {
   FnbEllipsis,
   FnbFloatButton,
   FnbIcon,
+  FnbImage,
   FnbInput,
   FnbProgress,
   FnbResult,
