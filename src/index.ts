@@ -9,6 +9,7 @@ import FnbFloatButton from './components/FnbFloatButton.vue'
 import FnbIcon from './components/FnbIcon.vue'
 import FnbImage from './components/FnbImage.vue'
 import FnbInput from './components/FnbInput.vue'
+import FnbMessageProvider from './providers/FnbMessageProvider.vue'
 import FnbPagination from './components/FnbPagination.vue'
 import FnbProgress from './components/FnbProgress.vue'
 import FnbResult from './components/FnbResult.vue'
@@ -31,6 +32,7 @@ export {
   FnbIcon,
   FnbImage,
   FnbInput,
+  FnbMessageProvider,
   FnbPagination,
   FnbProgress,
   FnbResult,
@@ -44,11 +46,19 @@ export {
   FnbTag,
 }
 
+export { useMessage } from './composables/useMessage'
+
 export type { FnbTabPaneInfo, FnbTabsContext } from './components/tabs-context'
 export type {
   FnbThemeOverrides,
   FnbConfigContext,
 } from './providers/config-context'
+export type {
+  FnbMessageApi,
+  FnbMessageType,
+  FnbMessageOptions,
+  FnbMessageHandle,
+} from './providers/message-context'
 
 const components: Record<string, Component> = {
   FnbAlert,
@@ -60,6 +70,7 @@ const components: Record<string, Component> = {
   FnbIcon,
   FnbImage,
   FnbInput,
+  FnbMessageProvider,
   FnbPagination,
   FnbProgress,
   FnbResult,
