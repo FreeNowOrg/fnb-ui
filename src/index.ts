@@ -5,9 +5,18 @@ import FnbCard from './components/FnbCard.vue'
 import FnbIcon from './components/FnbIcon.vue'
 import FnbInput from './components/FnbInput.vue'
 import FnbProgress from './components/FnbProgress.vue'
+import FnbScrollbar from './components/FnbScrollbar.vue'
 import FnbTag from './components/FnbTag.vue'
 
-export { FnbButton, FnbCard, FnbIcon, FnbInput, FnbProgress, FnbTag }
+export {
+  FnbButton,
+  FnbCard,
+  FnbIcon,
+  FnbInput,
+  FnbProgress,
+  FnbScrollbar,
+  FnbTag,
+}
 
 const components: Record<string, Component> = {
   FnbButton,
@@ -15,6 +24,7 @@ const components: Record<string, Component> = {
   FnbIcon,
   FnbInput,
   FnbProgress,
+  FnbScrollbar,
   FnbTag,
 }
 
