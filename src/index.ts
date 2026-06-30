@@ -1,11 +1,12 @@
 import './styles/index.scss'
 import type { App, Component, Plugin } from 'vue'
 import FnbButton from './components/FnbButton.vue'
+import FnbCard from './components/FnbCard.vue'
 import FnbIcon from './components/FnbIcon.vue'
 
-export { FnbButton, FnbIcon }
+export { FnbButton, FnbCard, FnbIcon }
 
-const components: Record<string, Component> = { FnbButton, FnbIcon }
+const components: Record<string, Component> = { FnbButton, FnbCard, FnbIcon }
 
 const FnbUI: Plugin = {
   install(app: App) {
