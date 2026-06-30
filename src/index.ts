@@ -1,5 +1,6 @@
 import './styles/index.scss'
 import type { App, Component, Plugin } from 'vue'
+import FnbAlert from './components/FnbAlert.vue'
 import FnbButton from './components/FnbButton.vue'
 import FnbCard from './components/FnbCard.vue'
 import FnbEllipsis from './components/FnbEllipsis.vue'
@@ -12,6 +13,7 @@ import FnbTable from './components/FnbTable.vue'
 import FnbTag from './components/FnbTag.vue'
 
 export {
+  FnbAlert,
   FnbButton,
   FnbCard,
   FnbEllipsis,
@@ -25,6 +27,7 @@ export {
 }
 
 const components: Record<string, Component> = {
+  FnbAlert,
   FnbButton,
   FnbCard,
   FnbEllipsis,
