@@ -72,6 +72,41 @@ describe('FnbTabs', () => {
     expect(w.find('.fnb-tabs__tab .ico').text()).toBe('★')
   })
 
+  it('switches uncontrolled (no v-model:value bound) on click', async () => {
+    const w = mount(FnbTabs, {
+      slots: {
+        default: () => [
+          h(
+            FnbTabPane,
+            { name: 'a', tab: 'Apple' },
+            { default: () => 'Panel A' }
+          ),
+          h(
+            FnbTabPane,
+            { name: 'b', tab: 'Banana' },
+            { default: () => 'Panel B' }
+          ),
+        ],
+      },
+    })
+    await nextTick()
+    // Defaults to the first pane.
+    expect(w.findAll('.fnb-tabs__tab')[0].classes()).toContain(
+      'fnb-tabs__tab--active'
+    )
+    // Clicking switches without any parent wiring.
+    await w.findAll('.fnb-tabs__tab')[1].trigger('click')
+    expect(w.findAll('.fnb-tabs__tab')[1].classes()).toContain(
+      'fnb-tabs__tab--active'
+    )
+    expect(w.findAll('.fnb-tabs__panel')[0].attributes('style')).toContain(
+      'display: none'
+    )
+    expect(
+      w.findAll('.fnb-tabs__panel')[1].attributes('style') ?? ''
+    ).not.toContain('display: none')
+  })
+
   it('FnbTabPane throws when used outside FnbTabs', () => {
     expect(() => mount(FnbTabPane, { props: { name: 'a' } })).toThrow(/FnbTabs/)
   })

@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, provide, reactive } from 'vue'
+import { computed, provide, reactive, ref } from 'vue'
 import { fnbTabsKey } from './tabs-context'
 import type { FnbTabPaneInfo } from './tabs-context'
 
@@ -35,10 +35,17 @@ const emit = defineEmits<{ 'update:value': [value: string] }>()
 // Panes self-register in slot/mount order.
 const panes = reactive<FnbTabPaneInfo[]>([])
 
-const activeName = computed(() => props.value ?? panes[0]?.name)
+// Internal fallback for uncontrolled usage (no v-model:value bound).
+const uncontrolledValue = ref<string>()
+
+const activeName = computed(
+  () => props.value ?? uncontrolledValue.value ?? panes[0]?.name
+)
 
 function select(name: string) {
-  if (name !== props.value) emit('update:value', name)
+  if (name === activeName.value) return
+  uncontrolledValue.value = name
+  emit('update:value', name)
 }
 
 provide(fnbTabsKey, {
