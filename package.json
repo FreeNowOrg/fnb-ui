@@ -45,6 +45,8 @@
   },
   "scripts": {
     "build": "vite build",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "typecheck": "vue-tsc --noEmit",
     "lint": "oxlint .",
     "format": "prettier --write .",
@@ -62,6 +64,8 @@
     "@types/node": "^24.0.0",
     "@vitejs/plugin-vue": "^6.0.7",
     "@vue/language-plugin-pug": "^3.3.5",
+    "@vue/test-utils": "^2.4.11",
+    "jsdom": "^29.1.1",
     "oxlint": "^1.72.0",
     "prettier": "^3.9.4",
     "pug": "^3.0.4",
@@ -71,6 +75,7 @@
     "vite-plugin-dts": "^5.0.3",
     "vitepress": "^1.6.4",
     "vitepress-demo-plugin": "^1.5.1",
+    "vitest": "^4.1.9",
     "vue": "^3.5.18",
     "vue-tsc": "^3.3.5"
   }
