@@ -45,6 +45,7 @@
   },
   "scripts": {
     "build": "vite build",
+    "verify": "pnpm build && node scripts/verify-dist.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "vue-tsc --noEmit",
