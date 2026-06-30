@@ -16,6 +16,8 @@ import FnbSelect from './components/FnbSelect.vue'
 import FnbSkeleton from './components/FnbSkeleton.vue'
 import FnbSpin from './components/FnbSpin.vue'
 import FnbTable from './components/FnbTable.vue'
+import FnbTabPane from './components/FnbTabPane.vue'
+import FnbTabs from './components/FnbTabs.vue'
 import FnbTag from './components/FnbTag.vue'
 
 export {
@@ -35,8 +37,12 @@ export {
   FnbSkeleton,
   FnbSpin,
   FnbTable,
+  FnbTabPane,
+  FnbTabs,
   FnbTag,
 }
+
+export type { FnbTabPaneInfo, FnbTabsContext } from './components/tabs-context'
 
 const components: Record<string, Component> = {
   FnbAlert,
@@ -55,6 +61,8 @@ const components: Record<string, Component> = {
   FnbSkeleton,
   FnbSpin,
   FnbTable,
+  FnbTabPane,
+  FnbTabs,
   FnbTag,
 }
 
