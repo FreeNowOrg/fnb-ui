@@ -13,6 +13,7 @@ import FnbInput from './components/FnbInput.vue'
 import FnbMessageProvider from './providers/FnbMessageProvider.vue'
 import FnbPagination from './components/FnbPagination.vue'
 import FnbProgress from './components/FnbProgress.vue'
+import FnbProvider from './providers/FnbProvider.vue'
 import FnbResult from './components/FnbResult.vue'
 import FnbScrollbar from './components/FnbScrollbar.vue'
 import FnbSelect from './components/FnbSelect.vue'
@@ -37,6 +38,7 @@ export {
   FnbMessageProvider,
   FnbPagination,
   FnbProgress,
+  FnbProvider,
   FnbResult,
   FnbScrollbar,
   FnbSelect,
@@ -78,6 +80,7 @@ const components: Record<string, Component> = {
   FnbMessageProvider,
   FnbPagination,
   FnbProgress,
+  FnbProvider,
   FnbResult,
   FnbScrollbar,
   FnbSelect,
