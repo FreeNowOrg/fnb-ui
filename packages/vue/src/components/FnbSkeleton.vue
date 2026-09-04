@@ -37,35 +37,3 @@ const sizeStyle = computed(() => ({
   height: props.height,
 }))
 </script>
-
-<style scoped lang="scss">
-.fnb-skeleton {
-  display: inline-block;
-  background: var(--fnb-skeleton);
-  animation: imgProgress 0.8s ease infinite alternate;
-  border-radius: var(--fnb-radius-sm);
-
-  &--circle {
-    border-radius: 50%;
-  }
-
-  &--block {
-    display: block;
-    width: 100%;
-  }
-
-  &--text {
-    height: 1em;
-    display: inline-block;
-  }
-}
-
-@keyframes imgProgress {
-  from {
-    background-color: color-mix(in srgb, var(--fnb-skeleton) 92%, white);
-  }
-  to {
-    background-color: var(--fnb-skeleton);
-  }
-}
-</style>

@@ -27,24 +27,3 @@ const fillStyle = computed(() => ({
   height: `${props.height}px`,
 }))
 </script>
-
-<style scoped lang="scss">
-@use '../styles/fnb' as *;
-
-.fnb-progress__track {
-  @include fnb-border-sm;
-  background: var(--fnb-surface);
-  overflow: hidden;
-}
-
-.fnb-progress__fill {
-  transition: width 300ms ease;
-}
-
-.fnb-progress__label {
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-align: center;
-  margin-top: 0.25rem;
-}
-</style>

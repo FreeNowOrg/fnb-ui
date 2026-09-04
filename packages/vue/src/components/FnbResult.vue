@@ -37,34 +37,3 @@ const statusEmoji = computed(() => {
   return map[props.status] || props.status
 })
 </script>
-
-<style scoped lang="scss">
-.fnb-result {
-  text-align: center;
-  padding: 2rem;
-}
-
-.fnb-result__status {
-  font-family: var(--fnb-font-display);
-  font-size: 4rem;
-  font-weight: 900;
-  line-height: 1.2;
-  margin-bottom: 1rem;
-}
-
-.fnb-result__title {
-  font-family: var(--fnb-font-display);
-  font-size: 1.5rem;
-  font-weight: 900;
-  margin-bottom: 0.5rem;
-}
-
-.fnb-result__description {
-  color: var(--fnb-text-muted);
-  margin-bottom: 1rem;
-}
-
-.fnb-result__footer {
-  margin-top: 1rem;
-}
-</style>

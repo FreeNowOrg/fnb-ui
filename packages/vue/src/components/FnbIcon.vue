@@ -22,25 +22,3 @@ const iconStyle = computed(() => ({
   color: props.color,
 }))
 </script>
-
-<style scoped lang="scss">
-.fnb-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-style: normal;
-  width: 1em;
-  height: 1em;
-  line-height: 1;
-  // Default fill for icon sets that rely on currentColor. Stroke-based sets
-  // (tabler) keep their own fill="none" attribute, which wins over this.
-  fill: currentColor;
-  vertical-align: -0.125em;
-
-  > svg,
-  > img {
-    width: 1em;
-    height: 1em;
-  }
-}
-</style>

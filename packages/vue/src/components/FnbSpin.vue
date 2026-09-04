@@ -39,33 +39,3 @@ const spinnerSize = computed(() => {
   }
 })
 </script>
-
-<style scoped lang="scss">
-.fnb-spin {
-  position: relative;
-}
-
-.fnb-spin--active > :not(.fnb-spin__overlay) {
-  opacity: 0.4;
-  pointer-events: none;
-}
-
-.fnb-spin__overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-}
-
-svg.spin {
-  animation: spin 2s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-</style>

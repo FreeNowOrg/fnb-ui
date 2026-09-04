@@ -263,3 +263,230 @@
   --fnb-weight-border: var(--fnb-w4-border);
   --fnb-weight-shadow: var(--fnb-w4-shadow);
 }
+
+/* ==========================================================================
+   Presentational components
+   ========================================================================== */
+
+/* --- Card ------------------------------------------------------------------- */
+
+.fnb-card {
+  box-sizing: border-box;
+  background: var(--fnb-surface);
+  border: var(--fnb-weight-border) solid var(--fnb-border);
+  box-shadow: var(--fnb-weight-shadow) var(--fnb-weight-shadow) 0 0
+    var(--fnb-shadow-color);
+  border-radius: var(--fnb-radius);
+  padding: 1rem;
+  transition: all var(--fnb-duration-fast);
+}
+
+.fnb-card--shadow-sm {
+  --fnb-weight-border: var(--fnb-w2-border);
+  --fnb-weight-shadow: var(--fnb-w2-shadow);
+}
+
+.fnb-card--shadow-lg {
+  --fnb-weight-border: var(--fnb-w4-border);
+  --fnb-weight-shadow: var(--fnb-w4-shadow);
+}
+
+.fnb-card--shadow-none {
+  box-shadow: none;
+}
+
+.fnb-card--brand {
+  background: var(--fnb-brand);
+  color: var(--fnb-on-brand);
+}
+
+.fnb-card--highlight {
+  background: var(--fnb-highlight);
+  color: var(--fnb-on-light);
+}
+
+.fnb-card--success {
+  background: var(--fnb-success);
+  color: var(--fnb-on-light);
+}
+
+/* --- Alert ------------------------------------------------------------------ */
+
+.fnb-alert {
+  box-sizing: border-box;
+  background: var(--fnb-surface);
+  border: var(--fnb-w3-border) solid var(--fnb-border);
+  box-shadow: var(--fnb-w3-shadow) var(--fnb-w3-shadow) 0 0
+    var(--fnb-shadow-color);
+  border-radius: var(--fnb-radius);
+  padding: 1rem;
+  position: relative;
+}
+
+.fnb-alert--info {
+  background: var(--fnb-surface);
+}
+
+.fnb-alert--success {
+  background: var(--fnb-success);
+  color: var(--fnb-on-light);
+}
+
+.fnb-alert--warning {
+  background: var(--fnb-highlight);
+  color: var(--fnb-on-light);
+}
+
+.fnb-alert--error {
+  background: var(--fnb-danger);
+  color: var(--fnb-on-brand);
+}
+
+.fnb-alert__header {
+  font-weight: 900;
+  margin-bottom: 0.5rem;
+}
+
+.fnb-alert__close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  font-weight: 900;
+  line-height: 1;
+  padding: 0.25rem;
+  color: inherit;
+}
+
+/* --- Result ------------------------------------------------------------------ */
+
+.fnb-result {
+  text-align: center;
+  padding: 2rem;
+}
+
+.fnb-result__status {
+  font-family: var(--fnb-font-display);
+  font-size: 4rem;
+  font-weight: 900;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.fnb-result__title {
+  font-family: var(--fnb-font-display);
+  font-size: 1.5rem;
+  font-weight: 900;
+  margin-bottom: 0.5rem;
+}
+
+.fnb-result__description {
+  color: var(--fnb-text-muted);
+  margin-bottom: 1rem;
+}
+
+.fnb-result__footer {
+  margin-top: 1rem;
+}
+
+/* --- Skeleton ----------------------------------------------------------------- */
+
+.fnb-skeleton {
+  display: inline-block;
+  background: var(--fnb-skeleton);
+  animation: fnb-img-progress 0.8s ease infinite alternate;
+  border-radius: var(--fnb-radius);
+}
+
+.fnb-skeleton--circle {
+  border-radius: 50%;
+}
+
+.fnb-skeleton--block {
+  display: block;
+  width: 100%;
+}
+
+.fnb-skeleton--text {
+  height: 1em;
+  display: inline-block;
+}
+
+@keyframes fnb-img-progress {
+  from {
+    background-color: color-mix(in srgb, var(--fnb-skeleton) 92%, white);
+  }
+  to {
+    background-color: var(--fnb-skeleton);
+  }
+}
+
+/* --- Spin ------------------------------------------------------------------- */
+
+.fnb-spin {
+  position: relative;
+}
+
+.fnb-spin--active > :not(.fnb-spin__overlay) {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.fnb-spin__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.fnb-spin svg.spin {
+  animation: fnb-spin 2s linear infinite;
+}
+
+/* --- Progress ----------------------------------------------------------------- */
+
+.fnb-progress__track {
+  box-sizing: border-box;
+  border: var(--fnb-w1-border) solid var(--fnb-border);
+  border-radius: var(--fnb-radius);
+  background: var(--fnb-surface);
+  overflow: hidden;
+}
+
+.fnb-progress__fill {
+  transition: width 300ms ease;
+}
+
+.fnb-progress__label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-align: center;
+  margin-top: 0.25rem;
+}
+
+/* --- Icon --------------------------------------------------------------------- */
+
+.fnb-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-style: normal;
+  width: 1em;
+  height: 1em;
+  line-height: 1;
+  /* Default fill for icon sets that rely on currentColor. Stroke-based sets
+     (tabler) keep their own fill="none" attribute, which wins over this. */
+  fill: currentColor;
+  vertical-align: -0.125em;
+}
+
+.fnb-icon > svg,
+.fnb-icon > img {
+  width: 1em;
+  height: 1em;
+}
