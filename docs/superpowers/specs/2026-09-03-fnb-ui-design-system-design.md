@@ -163,19 +163,21 @@ Vue 层只提供行为与结构，`import 'fnb-ui/style.css'` 之外不产出任
 
 dist 实测（Chromium，16px 根字号）：
 
-| 组件 | 实测高度 | naive-ui 对应档 | Ant Design 对应档 |
-|---|---|---|---|
-| `FnbButton` sm | 35.8px | small 28 | small 24 |
-| `FnbButton` md | **52.5px** | medium 34 | middle 32 |
-| `FnbButton` lg | 62.5px | large 40 | large 40 |
-| `FnbInput` | **42.5px** | — | — |
-| `FnbTag` | 27.8px | — | — |
+| 组件 | 实测高度 | border | shadow | naive-ui 对应档 | Ant Design 对应档 |
+|---|---|---|---|---|---|
+| `FnbButton` sm | 35.8px | 2px | 4px | small 28 | small 24 |
+| `FnbButton` md | **52.5px** | **3px** | **6px** | medium 34 | middle 32 |
+| `FnbButton` lg | 62.5px | 3px | 6px | large 40 | large 40 |
+| `FnbInput` | **42.5px** | **2px** | **4px** | — | — |
+| `FnbTag` | 27.8px | 2px | 3px | — | — |
+| `FnbCard` | — | 3px | 6px | — | — |
 
-三项症状：
+四项症状：
 
 1. **整个 scale 上偏一档以上**：`md` 52.5px 比 Ant Design 的 `large`(40px) 还大 12.5px。
-2. **同档不对齐**：`Button md` 52.5px 与 `Input` 42.5px 相差 10px，并排必然错位。
-3. **生产中默认值是少数派**：PixivNow 的 36 个 `FnbButton` 里 **24 个显式写 `size='sm'`**（占三分之二）。
+2. **同类控件在三个维度上全部不对齐**：`Button md` 与 `Input` 高度差 10px、边框差 1px、阴影差 2px。在本设计语言里 border 与 shadow **就是视觉重量本身**，因此即使高度调齐，两者并排仍不像一套。（`FnbTag` 的 2px/3px 偏轻**是合理的**——它是行内标记不是控件，见 §5.2 的 weight 维度。）
+3. **border 不一致使拼接无法计算**：Group 合并相邻边依赖 `-1 × border-width`，成员边框不等宽则必然裂开或重叠。故边框/阴影对齐是 §5.4 能成立的**前提**，非锦上添花。
+4. **生产中默认值是少数派**：PixivNow 的 36 个 `FnbButton` 里 **24 个显式写 `size='sm'`**（占三分之二）。
 
 后果见 PixivNow `SiteHeader.vue` 的搜索胶囊——为把 `FnbSelect` + `FnbInput` 拼在一起，使用方把两个组件的样式**几乎全部拆光再重贴**：
 
@@ -189,19 +191,42 @@ dist 实测（Chromium，16px 根字号）：
 }
 ```
 
-### 5.2 control height 锚定
+### 5.2 两个正交维度：size 与 weight
 
-新增尺寸 token，**同一 size 下所有单行控件共用同一高度**：
+尺寸与视觉重量是**两个正交维度**，不可合并为一。
 
-| size | `--fnb-control-h-*` | font-size | padding-inline | border-width |
-|---|---|---|---|---|
-| sm | **28px** | 13px | 10px | 2px |
-| md（默认） | **36px** | 14px | 14px | 3px |
-| lg | **44px** | 16px | 18px | 3px |
+**维度一 · size** —— 决定尺寸：
+
+| size | height | font-size | padding-inline |
+|---|---|---|---|
+| sm | 28px | 13px | 10px |
+| md（默认） | **36px** | 14px | 14px |
+| lg | 44px | 16px | 18px |
 
 **`md = 36px` 取自真实生产**：PixivNow 三分之二的按钮实际选用的 `size='sm'` 实测 35.8px，取整到 4px 基数即 36px。默认值直接对齐两个项目已经跑了很久的那个尺寸，而非另拍一个数。
 
-已验证：该 scale 下 `Button md` 与 `Input md` 实测均为 36.0px。
+**维度二 · weight** —— 决定视觉重量，border 与 shadow 成对：
+
+| weight | border | shadow | 适用 |
+|---|---|---|---|
+| w1（轻） | 2px | 3px | Tag 等行内标记 |
+| w2 | 2px | 4px | sm 档控件 |
+| w3（标准） | 3px | 6px | md 档控件、Card |
+| w4（重） | 3px | 8px | lg 档控件、Dialog |
+
+**禁令：border 与 shadow 必须成对变更，禁止单独调整其一。** 在本设计语言中硬阴影与边框是同级别的东西，二者合起来才构成一档视觉重量；拆开调会立刻失衡。
+
+**元素 → weight 映射由元素类型主导，不由 size 单独决定：**
+
+- **Tag 恒为 w1，不随 size 升档。** `size=md` 的 Tag 不应背上 Card 的 3px/6px——行内标记与容器的视觉重量本就不同，强行统一是错的。
+- Button / Input / Select：sm→w2，md→w3，lg→w4
+- Card：w3　｜　Dialog：w4
+
+**同一 size 的控件之间**（Button / Input / Select），height、border、shadow 三者必须全部一致——缺任一维度都对不齐。这与「Tag 保持轻」并不冲突：前者是同类元素的同档对齐，后者是异类元素的重量分级。
+
+`w3` 的 `border 3px / shadow 6px` 与现有 `FnbButton md`、`FnbCard` 一致，故容器与标准控件的视觉重量自动统一。`w4` 的 border 保持 3px 不升到 4px：4px 边框在本设计语言下过重，大元素改由更深的阴影表达层级。
+
+**已验证**（原型实测）：三档 group 成员高度分别为 28/36/44 且组内完全一致，接缝间隙等于 `-border`（完美重合）；独立的 Button md 与 Input md 三维一致；Tag(w1) 2px/3px 与 Button(w3) 3px/6px 在同为默认 size 时重量不同，正交生效。
 
 ### 5.3 实现约束
 
@@ -209,7 +234,34 @@ dist 实测（Chromium，16px 根字号）：
 - `box-sizing: border-box`，border 计入高度。
 - 图标槽位用 `1em` 相对字号，不得额外撑高行。
 - **适用**：Button、Input、Select、Pagination 按钮等单行控件。
-- **不适用**：Tag（标记而非控件，独立档 ~24px）、Card / Alert / Table 等容器与多行内容组件。
+- **不适用于 control-h**：Tag（行内标记，固定 ~24px，weight 恒为 w1）、Alert / Table 等多行内容组件。Card 取 w3 的 border/shadow 但不受 height 约束。
+
+**size 通过 CSS 变量继承传递，组件不感知自己所处的 size 上下文**：
+
+```css
+:root {
+  /* size 维度，默认 md */
+  --fnb-control-h: 36px; --fnb-control-font: 14px; --fnb-control-px: 14px;
+  /* weight 维度，默认 w3 */
+  --fnb-weight-border: 3px; --fnb-weight-shadow: 6px;
+}
+.fnb-button, .fnb-input, .fnb-select__trigger {
+  height: var(--fnb-control-h);
+  font-size: var(--fnb-control-font);
+  padding-inline: var(--fnb-control-px);
+  border-width: var(--fnb-weight-border);
+  box-shadow: var(--fnb-weight-shadow) var(--fnb-weight-shadow) 0 0 var(--fnb-shadow-color);
+}
+/* 控件的 size 类同时切两个维度——控件的 weight 跟随其 size */
+.fnb-button--sm, .fnb-input-group--sm {
+  --fnb-control-h: 28px; --fnb-control-font: 13px; --fnb-control-px: 10px;
+  --fnb-weight-border: 2px; --fnb-weight-shadow: 4px;      /* → w2 */
+}
+/* Tag 只锁 weight，不参与 control size */
+.fnb-tag { --fnb-weight-border: 2px; --fnb-weight-shadow: 3px; height: 24px; }
+```
+
+由此 `.fnb-input-group--sm` 只需覆盖变量，**全体成员经 CSS 继承自动跟随**——成员无需知道自己在 group 内，Vue 侧也不必 provide/inject 传 size。两个维度各用一组变量，正交性由此在实现层面强制。
 
 ### 5.4 组合拼接：`.fnb-input-group`
 
@@ -224,10 +276,18 @@ dist 实测（Chromium，16px 根字号）：
 
 `.fnb-input-group` 的职责：
 
-- 成员共享相邻边（相邻项 `margin-inline-start: calc(-1 * var(--fnb-border-width))`）
-- 成员各自的 `box-shadow` 归零，由 group 统一施加一次
-- 成员的按压位移（`fnb-press`）在组内禁用，避免拼接处裂开
-- 高度由 group 的 size 决定，成员继承
+- 成员共享相邻边：相邻项 `margin-inline-start: calc(-1 * var(--fnb-weight-border))`。**此式成立的前提是组内成员边框等宽**，由 §5.2 保证。
+- 成员各自的 `box-shadow` 归零，由 group 统一施加一次——否则硬阴影会互相遮挡（后一个盖住前一个）。
+- 成员的按压位移（`fnb-press`）在组内禁用，避免拼接处裂开。
+- size 由 group 上的变量覆盖决定，成员经 CSS 继承自动跟随（见 §5.3）。
+- **焦点态改用内描边**：成员 shadow 已归零，`FnbInput` 原有的 `:focus { box-shadow: 4px 4px 0 0 brand }` 在组内既失效又会撑破拼接。组内改用
+  ```css
+  .fnb-input-group > :focus-visible {
+    outline: 2px solid var(--fnb-brand);
+    outline-offset: -2px;     /* 内描边，不占布局、不影响相邻边合并 */
+    position: relative; z-index: 1;   /* 描边压在相邻成员之上 */
+  }
+  ```
 
 目标是 SiteHeader 的搜索胶囊迁移后**零样式覆盖**。
 
@@ -332,5 +392,6 @@ const { class: themeClass, style: themeStyle } = useThemeScope()
 6. 全库 SFC 中 `<style>` 块数量为 0。
 7. `FnbLink` 同时传 `external` 与自定义 `suffix-icon` 时，图标被覆盖而 `target` / `rel` 仍生效（正交性）。
 8. `tokens.css` 中不含任何 breakpoint 变量；SCSS 变量与 TS 常量各生成一份且取值一致。
-9. **尺寸对齐**：同一 size 下 `FnbButton` / `FnbInput` / `FnbSelect` 的 `getBoundingClientRect().height` 完全相等，sm/md/lg 三档均需通过。
-10. **组合零覆盖**：`.fnb-input-group` 包裹 Select + Input + Button 后，不写任何额外 CSS 即得到与 PixivNow 现有搜索胶囊等效的外观。
+9. **同类控件三维对齐**：同一 size 下 `FnbButton` / `FnbInput` / `FnbSelect` 的 `height`、`borderTopWidth`、`boxShadow` 三项计算值完全相等，sm/md/lg 三档均需通过。
+9b. **weight 与 size 正交**：默认 size 下 `FnbTag` 的 border/shadow 严格轻于 `FnbButton`（2px/3px vs 3px/6px）；Tag 不因 size 变化而升到 w3。
+10. **组合零覆盖**：`.fnb-input-group` 包裹 Select + Input + Button 后，不写任何额外 CSS 即得到与 PixivNow 现有搜索胶囊等效的外观；组内任一成员获得焦点时拼接不裂开。
