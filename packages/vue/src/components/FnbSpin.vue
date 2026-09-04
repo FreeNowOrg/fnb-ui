@@ -2,7 +2,11 @@
 .fnb-spin(:class='{ "fnb-spin--active": show }')
   slot
   .fnb-spin__overlay(v-if='show')
-    svg.spin(viewBox='0 0 24 24', :width='spinnerSize', :height='spinnerSize')
+    svg.fnb-spin__icon(
+      viewBox='0 0 24 24',
+      :width='spinnerSize',
+      :height='spinnerSize'
+    )
       circle(
         cx='12',
         cy='12',

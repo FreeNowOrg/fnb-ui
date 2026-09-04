@@ -444,7 +444,7 @@
   z-index: 10;
 }
 
-.fnb-spin svg.spin {
+.fnb-spin__icon {
   animation: fnb-spin 2s linear infinite;
 }
 

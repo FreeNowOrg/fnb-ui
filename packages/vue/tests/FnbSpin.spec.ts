@@ -10,7 +10,7 @@ describe('FnbSpin', () => {
 
   it('renders the spinner svg when show is true', () => {
     const w = mount(FnbSpin, { props: { show: true } })
-    expect(w.find('svg.spin').exists()).toBe(true)
+    expect(w.find('svg.fnb-spin__icon').exists()).toBe(true)
   })
 
   it('size prop changes the class list', () => {

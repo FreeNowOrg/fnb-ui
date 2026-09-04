@@ -7,7 +7,7 @@ component.fnb-button(
   v-bind='$attrs'
 )
   span.fnb-button__spinner(v-if='loading')
-    svg.spin(viewBox='0 0 24 24', width='1em', height='1em')
+    svg(viewBox='0 0 24 24', width='1em', height='1em')
       circle(
         cx='12',
         cy='12',
