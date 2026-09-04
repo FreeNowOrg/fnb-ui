@@ -108,8 +108,13 @@ export const layout = {
 
 /**
  * Breakpoints are NOT emitted as CSS variables: `@media (min-width: var(--x))`
- * silently fails, and `@custom-media` is not usable yet. The generator emits
- * SCSS variables for `@media`; TS consumers import this constant instead.
+ * silently fails — no error, the query just never matches — and
+ * `@custom-media` is not usable yet. Never "simplify" these into tokens.css.
+ *
+ * They are not emitted into any stylesheet at all. This constant is the only
+ * published form: TS consumers (useMediaQuery and friends) import it, and any
+ * @media rule inside the library hard-codes the literal px value that matches
+ * it. There is no SCSS layer left in this repo to hold the other half.
  */
 export const breakpoints = {
   sm: 640,

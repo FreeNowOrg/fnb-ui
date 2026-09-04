@@ -161,7 +161,9 @@ website/                      VitePress 文档站
 
 **CSS 变量在 `@media` 查询条件里不生效**——`@media (min-width: var(--fnb-bp-md))` 静默失效，不报错。`@custom-media` 尚未落地可用。
 
-因此 breakpoint 在 `core/src/tokens/index.ts` 定义后，只生成 **SCSS 变量**（供 `@media` 使用）与 **TS 常量导出**（供 `useMediaQuery` 使用），**不生成 CSS 变量**。生成脚本需对 breakpoint 分组做此特殊处理。
+因此 breakpoint 只以 `core/src/tokens/index.ts` 的 **TS 常量**发布（供 `useMediaQuery` 等消费），**不进入任何样式表**——既不生成 CSS 变量，也不生成 SCSS 变量。生成脚本跳过 breakpoint 分组。
+
+库内若需要 `@media`，直接写死与该常量一致的 px 字面量。本仓库已无 SCSS 层，发布一份没有消费者的 `_breakpoints.scss` 属于过度设计。
 
 ### 4.5 类型收紧
 
@@ -456,7 +458,7 @@ const { class: themeClass, style: themeStyle } = useThemeScope()
 6. 全库 SFC 中 `<style>` 块数量为 0。
    6b. **包边界**：`packages/vue/dist` 中不存在任何 `.css` 文件；`@fnb-ui/core/style.css` 的引入不触发任何 JS 加载。
 7. `FnbLink` 同时传 `external` 与自定义 `suffix-icon` 时，图标被覆盖而 `target` / `rel` 仍生效（正交性）。
-8. `tokens.css` 中不含任何 breakpoint 变量；SCSS 变量与 TS 常量各生成一份且取值一致。
+8. `tokens.css` 中不含任何 breakpoint 变量；breakpoint 只以 TS 常量导出，构建产物中不存在任何 breakpoint 样式表。
 9. **同类控件三维对齐**：同一 size 下 `FnbButton` / `FnbInput` / `FnbSelect` 的 `height`、`borderTopWidth`、`boxShadow` 三项计算值完全相等，sm/md/lg 三档均需通过。
    9b. **weight 与 size 正交**：默认 size 下 `FnbTag` 的 border/shadow 严格轻于 `FnbButton`（2px/3px vs 3px/6px）；Tag 不因 size 变化而升到 w3。
 10. **组合零覆盖**：`.fnb-input-group` 包裹 Select + Input + Button 后，不写任何额外 CSS 即得到与 PixivNow 现有搜索胶囊等效的外观；组内任一成员获得焦点时拼接不裂开。
