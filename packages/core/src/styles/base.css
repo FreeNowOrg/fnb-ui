@@ -4,6 +4,21 @@
    would leak into the host page the moment this stylesheet is imported. The
    only unscoped names allowed here are explicit .fnb-* classes, which require
    an opt-in class on the consumer's markup just like .fnb-link does.
+
+   Everything to the right of .fnb-prose is wrapped in :where(), pseudo-classes
+   included, so every rule here weighs exactly (0,1,0) — the same as a single
+   component class. Without it, `.fnb-prose a` is (0,1,1) and quietly outranks
+   .fnb-link--plain, .fnb-button--primary and .fnb-tag on any element that
+   carries both, which is exactly what prose content is full of. Do NOT unwrap
+   them, do not leave a pseudo-class outside the :where(), and do not raise the
+   weight by adding a second class or an id to the left of it.
+
+   Ties are broken by source order, so the layering must stay:
+     prose element defaults  <  opt-in .fnb-* classes in this file
+                             <  components.css (imported after base.css)
+   That is why the prose rules for <a> and <hr> sit ABOVE .fnb-link and
+   .fnb-divider rather than at the end of the file. Moving them back down
+   would restore the bug at equal specificity.
    ========================================================================== */
 
 .fnb-prose {
@@ -11,75 +26,83 @@
   line-height: 1.7;
 }
 
-.fnb-prose h1,
-.fnb-prose h2,
-.fnb-prose h3,
-.fnb-prose h4 {
+.fnb-prose :where(h1, h2, h3, h4) {
   font-family: var(--fnb-font-display, inherit);
   font-weight: 900;
   line-height: 1.25;
   margin: 1.5em 0 0.5em;
 }
 
-.fnb-prose h1 {
+.fnb-prose :where(h1) {
   font-size: 2rem;
 }
-.fnb-prose h2 {
+.fnb-prose :where(h2) {
   font-size: 1.5rem;
 }
-.fnb-prose h3 {
+.fnb-prose :where(h3) {
   font-size: 1.25rem;
 }
-.fnb-prose h4 {
+.fnb-prose :where(h4) {
   font-size: 1.1rem;
 }
 
-.fnb-prose p,
-.fnb-prose ul,
-.fnb-prose ol {
+.fnb-prose :where(p, ul, ol) {
   margin: 0.5em 0;
 }
 
-.fnb-prose ul,
-.fnb-prose ol {
+.fnb-prose :where(ul, ol) {
   padding-inline-start: 1.5em;
 }
 
-.fnb-prose pre {
+.fnb-prose :where(pre) {
   overflow: auto;
   background: var(--fnb-skeleton);
   padding: var(--fnb-space-1);
   border: var(--fnb-w1-border) solid var(--fnb-border);
 }
 
-.fnb-prose table {
+.fnb-prose :where(table) {
   border-collapse: collapse;
   width: 100%;
 }
 
-.fnb-prose th,
-.fnb-prose td {
+.fnb-prose :where(th, td) {
   border: var(--fnb-w1-border) solid var(--fnb-divider);
   padding: var(--fnb-space-2);
   text-align: start;
 }
 
-/* --- Divider ----------------------------------------------------------------
-   .fnb-divider is a standalone utility, usable outside .fnb-prose (e.g.
-   between cards or sections) — the same opt-in-class pattern as .fnb-link.
-   Kept as its own rule rather than merged with `.fnb-prose hr`: a future
-   FnbDivider component is planned to grow modifiers (dashed, vertical,
-   captioned) on this class, and those should not silently change how a bare
-   <hr> renders inside prose content.
-   -------------------------------------------------------------------------- */
-
-.fnb-divider {
+.fnb-prose :where(hr) {
   border: none;
   border-top: 1px solid var(--fnb-divider);
   margin: var(--fnb-space-6) 0;
 }
 
-.fnb-prose hr {
+.fnb-prose :where(a) {
+  color: var(--fnb-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 2px;
+}
+
+/* :hover goes INSIDE :where() too. Left outside it the rule would weigh
+   (0,2,0) and repaint a brand-blue .fnb-button--primary link on its own
+   brand-blue background. */
+.fnb-prose :where(a:hover) {
+  color: var(--fnb-brand);
+}
+
+/* --- Divider ----------------------------------------------------------------
+   .fnb-divider is a standalone utility, usable outside .fnb-prose (e.g.
+   between cards or sections) — the same opt-in-class pattern as .fnb-link.
+   Kept as its own rule rather than merged with the prose <hr> rule: a future
+   FnbDivider component is planned to grow modifiers (dashed, vertical,
+   captioned) on this class, and those should not silently change how a bare
+   <hr> renders inside prose content — nor be silently overridden by the prose
+   rule when an .fnb-divider is placed inside .fnb-prose.
+   -------------------------------------------------------------------------- */
+
+.fnb-divider {
   border: none;
   border-top: 1px solid var(--fnb-divider);
   margin: var(--fnb-space-6) 0;
@@ -104,15 +127,4 @@
 
 .fnb-link--plain {
   text-decoration: none;
-}
-
-.fnb-prose a {
-  color: var(--fnb-text);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-thickness: 2px;
-}
-
-.fnb-prose a:hover {
-  color: var(--fnb-brand);
 }
