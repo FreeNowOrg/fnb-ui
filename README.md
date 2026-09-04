@@ -12,6 +12,30 @@ CSS custom properties, with a naive-ui-aligned API surface.
 
 > 🚧 Early development. Design specs live under `docs/superpowers/specs/`.
 
+## 安装
+
+```bash
+pnpm add @fnb-ui/core @fnb-ui/vue
+```
+
+## 使用
+
+样式与框架绑定是分开的——CSS 是核心，框架封装是外围：
+
+```ts
+import '@fnb-ui/core/style.css'
+import FnbUI from '@fnb-ui/vue'
+
+app.use(FnbUI)
+```
+
+不用 Vue 也可以，只引样式即可获得全部外观：
+
+```html
+<link rel="stylesheet" href="node_modules/@fnb-ui/core/dist/style.css" />
+<button class="fnb-button fnb-button--primary">按钮</button>
+```
+
 ## License
 
 [MIT](./LICENSE) © FreeNowOrg
