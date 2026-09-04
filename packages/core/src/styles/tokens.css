@@ -72,6 +72,7 @@
   --fnb-ease: cubic-bezier(0.4, 0, 0.2, 1);
   --fnb-z-base: 1;
   --fnb-z-sticky-header: 100;
+  --fnb-z-float-button: 150;
   --fnb-z-sider-overlay: 200;
   --fnb-z-sider: 210;
   --fnb-z-dialog-overlay: 300;

@@ -86,6 +86,7 @@ export const motion = {
 export const zIndex = {
   base: '1',
   stickyHeader: '100',
+  floatButton: '150',
   siderOverlay: '200',
   sider: '210',
   dialogOverlay: '300',

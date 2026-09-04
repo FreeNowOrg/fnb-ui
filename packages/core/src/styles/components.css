@@ -489,7 +489,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10;
+  /* Only needs to sit above its sibling inside .fnb-spin's own stacking
+     context (position: relative) — same local-elevate use as the select
+     dropdown and input-group focus ring below, not a page-level layer. */
+  z-index: var(--fnb-z-base);
 }
 
 .fnb-spin__icon {
@@ -789,7 +792,7 @@
 
 .fnb-float-button {
   position: fixed;
-  z-index: var(--fnb-z-sticky-header);
+  z-index: var(--fnb-z-float-button);
 }
 
 .fnb-float-button:hover .fnb-float-button__menu {
