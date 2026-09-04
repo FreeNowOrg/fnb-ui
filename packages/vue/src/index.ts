@@ -65,6 +65,9 @@ export type {
 } from './providers/message-context'
 export type { FnbDialogApi, FnbDialogOptions } from './providers/dialog-context'
 
+export { pixivTheme, picaTheme, tokens, breakpoints } from '@fnb-ui/core'
+export type { FnbTokenName, FnbBreakpoint } from '@fnb-ui/core'
+
 const components: Record<string, Component> = {
   FnbAlert,
   FnbButton,

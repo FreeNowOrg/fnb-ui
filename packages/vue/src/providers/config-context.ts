@@ -1,6 +1,7 @@
 import type { ComputedRef, InjectionKey } from 'vue'
+import type { FnbThemeOverrides } from '@fnb-ui/core'
 
-export type FnbThemeOverrides = Record<string, string>
+export type { FnbThemeOverrides }
 
 export interface FnbConfigContext {
   themeOverrides: ComputedRef<FnbThemeOverrides>
