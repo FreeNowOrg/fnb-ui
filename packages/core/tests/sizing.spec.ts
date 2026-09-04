@@ -14,18 +14,24 @@ const css = readFileSync(
 const cssNoComments = css.replace(/\/\*[\s\S]*?\*\//g, '')
 
 /**
- * Extract the declaration block of the first top-level rule whose selector
+ * Extract the merged declarations of every top-level rule whose selector
  * list contains the given selector (handles grouped selectors like
- * `.fnb-button, .fnb-input, .fnb-select__trigger { ... }`).
+ * `.fnb-button, .fnb-input, .fnb-select__trigger { ... }`) as well as a
+ * component's own dedicated rule (`.fnb-button { display: inline-flex; ... }`).
+ * A selector can legitimately own more than one rule, and every one of them
+ * has to be scanned — a single-match version would leave a component's own
+ * rule block unchecked whenever the shared baseline rule matches first.
  */
 function block(selector: string): string {
   const ruleRe = /([^{}]+)\{([^}]*)\}/g
   let m: RegExpExecArray | null
+  const blocks: string[] = []
   while ((m = ruleRe.exec(cssNoComments))) {
     const selectors = m[1].split(',').map((s) => s.trim())
-    if (selectors.includes(selector)) return m[2]
+    if (selectors.includes(selector)) blocks.push(m[2])
   }
-  throw new Error(`selector not found: ${selector}`)
+  if (!blocks.length) throw new Error(`selector not found: ${selector}`)
+  return blocks.join('\n')
 }
 
 const CONTROLS = ['.fnb-button', '.fnb-input', '.fnb-select__trigger']
