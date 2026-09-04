@@ -45,8 +45,11 @@ export default defineConfig({
   vite: {
     resolve: {
       alias: {
-        // Preview against source directly — no build step needed.
-        'fnb-ui': fileURLToPath(
+        // Preview against source directly — no build step needed. The alias
+        // key must stay the real published name: vitepress-demo-plugin shows
+        // each demo's source verbatim, so whatever the imports say is what
+        // readers copy into their own project.
+        '@fnb-ui/vue': fileURLToPath(
           new URL('../../packages/vue/src/index.ts', import.meta.url)
         ),
       },

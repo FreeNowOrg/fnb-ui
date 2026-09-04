@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { FnbTabs, FnbTabPane } from 'fnb-ui'
+import { FnbTabs, FnbTabPane } from '@fnb-ui/vue'
 </script>
 
 <template>

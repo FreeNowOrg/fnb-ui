@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { FnbTabs, FnbTabPane } from 'fnb-ui'
+import { FnbTabs, FnbTabPane } from '@fnb-ui/vue'
 
 const active = ref('overview')
 </script>

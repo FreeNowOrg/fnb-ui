@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { FnbButton, useMessage } from 'fnb-ui'
+import { FnbButton, useMessage } from '@fnb-ui/vue'
 
 // Works because the docs site is wrapped in <FnbProvider>.
 const message = useMessage()

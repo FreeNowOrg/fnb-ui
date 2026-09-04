@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { FnbButton, useDialog, useMessage } from 'fnb-ui'
+import { FnbButton, useDialog, useMessage } from '@fnb-ui/vue'
 
 const dialog = useDialog()
 const message = useMessage()

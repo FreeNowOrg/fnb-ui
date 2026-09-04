@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { FnbButton } from 'fnb-ui'
+import { FnbButton } from '@fnb-ui/vue'
 </script>
 
 <template>
