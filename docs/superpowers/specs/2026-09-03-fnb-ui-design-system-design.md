@@ -335,6 +335,7 @@ dist 实测（Chromium，16px 根字号）：
 | | `FnbFooter` | 页脚容器 |
 | 配件 | `FnbBrand` / `FnbNav` / `FnbNavLink` | 导航现成件 |
 | 基础件 | `FnbDropdown` | 新增。触发器 + 浮层 + click-outside |
+| | `FnbDivider` | 新增。分隔线，强/弱两档 + 可带标题（见 §7.5） |
 | 全局件 | `FnbBackToTop` | 基于已有 `FnbFloatButton` 薄封装 + 滚动阈值 |
 | | `FnbLoadingBar` | 顶部加载指示条，**自实现替换 `nprogress`**（见 §7.3） |
 | | `FnbLink` | 统一链接件，`external` 为语法糖（见 §7.4） |
@@ -364,11 +365,27 @@ dist 实测（Chromium，16px 根字号）：
 - **默认外链图标用纯 CSS 实现**（`::after` + SVG data URI 作 `mask`，颜色随 `currentColor`）。库不携带任何图标资源（`FnbIcon` 亦只接收外部传入的组件），且此法使非 Vue 使用者写 `class="fnb-link fnb-link--external"` 同样得到图标。
 - **不做 `RouterLink` 适配**：`<RouterLink class="fnb-link">` 直接可用。这是「CSS 是产品」的直接红利，不要为路由链接单独造组件。
 
-### 7.5 布局层的 CSS/JS 分界
+### 7.5 `FnbDivider`
+
+两个项目并存两种分隔线，故需两档，非过度设计：
+
+| 档 | 线宽 / 颜色 | 用途 | 现有出处 |
+|---|---|---|---|
+| 弱（默认） | 1px `--fnb-divider` | 列表项之间 | PicaComicNow `1px solid #eee` |
+| 强（`strong`） | `var(--fnb-weight-border)` + `--fnb-border` | section 边界 | 两项目多处 `3px solid #000` |
+
+- props：`strong` / `dashed` / `vertical` / `titlePlacement`（`left | center | right`，默认 `center`），标题走默认 slot。
+- **Divider 不参与 weight 维度的 shadow 部分**——它是线不是块，无阴影。强档线宽复用 `--fnb-weight-border`，以与同处容器的边框等宽。
+- 垂直档在 flex 行内用 `align-self: stretch`，不设固定高度。
+- `base.css` 中 `<hr>` 直接套用弱档样式，使 `.fnb-prose` 内的分节符与 `FnbDivider` 外观一致（PixivNow `NovelReader` 的 `.page-divider` 由此复用）。
+
+**迁移注记**：PicaComicNow 的分隔线颜色全部硬编码（`#000` / `#eee`），未走 `--fnb-border` / `--fnb-divider`——与其品牌色硬编码 30 处同源，迁移 spec 需计入。
+
+### 7.6 布局层的 CSS/JS 分界
 
 布局件是本库唯一带显著行为的一层。分界：`layout.css` 提供全部外观与**状态类**（`.fnb-sider--open`、`.fnb-header--hidden`、`.fnb-header--not-at-top`），Vue 只负责在正确时机切换这些类。非 Vue 使用者自行切类即可获得同样效果。
 
-### 7.6 修复 Teleport 主题逃逸
+### 7.7 修复 Teleport 主题逃逸
 
 **现存 bug**：`FnbConfigProvider` 将 `--fnb-*` 与 `dark` class 施加于 `.fnb-config-provider` 这个 div，而 `FnbMessageProvider`、`FnbDialogProvider`、`FnbImage` 预览层均 `Teleport(to='body')`——传送出去的内容**同时拿不到主题变量和暗色 class**。粉色主题 + 暗色下开弹窗，会看到蓝色阴影的亮色弹窗。
 
