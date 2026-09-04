@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress'
 import { vitepressDemoPlugin } from 'vitepress-demo-plugin'
 import { fileURLToPath, URL } from 'node:url'
-import { version } from '../../package.json'
+import { version } from '../../packages/vue/package.json'
 
 export default defineConfig({
   title: 'fnb-ui',
@@ -46,7 +46,9 @@ export default defineConfig({
     resolve: {
       alias: {
         // Preview against source directly — no build step needed.
-        'fnb-ui': fileURLToPath(new URL('../../src/index.ts', import.meta.url)),
+        'fnb-ui': fileURLToPath(
+          new URL('../../packages/vue/src/index.ts', import.meta.url)
+        ),
       },
     },
     define: {

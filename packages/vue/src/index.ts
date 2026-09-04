@@ -1,4 +1,3 @@
-import './styles/index.scss'
 import type { App, Component, Plugin } from 'vue'
 import FnbAlert from './components/FnbAlert.vue'
 import FnbButton from './components/FnbButton.vue'

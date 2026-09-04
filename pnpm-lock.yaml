@@ -63,6 +63,17 @@ importers:
         specifier: ^3.3.5
         version: 3.3.5(typescript@5.9.3)
 
+  packages/core: {}
+
+  packages/vue:
+    dependencies:
+      '@fnb-ui/core':
+        specifier: workspace:*
+        version: link:../core
+      vue:
+        specifier: ^3.5.0
+        version: 3.5.39(typescript@5.9.3)
+
 packages:
 
   '@algolia/abtesting@1.21.1':
