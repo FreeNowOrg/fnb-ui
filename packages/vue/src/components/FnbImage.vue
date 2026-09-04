@@ -11,12 +11,18 @@
   )
 Teleport(to='body')
   Transition(name='fnb-image-preview')
-    .fnb-image__overlay(v-if='showPreview', @click='showPreview = false')
+    .fnb-image__overlay(
+      v-if='showPreview',
+      :class='themeClass',
+      :style='themeStyle',
+      @click='showPreview = false'
+    )
       img(:src='previewSrc || src', :alt='alt')
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { useThemeScope } from '../providers/useThemeScope'
 
 const props = defineProps<{
   src: string
@@ -26,6 +32,7 @@ const props = defineProps<{
 }>()
 
 const showPreview = ref(false)
+const { themeClass, themeStyle } = useThemeScope()
 
 function handleError(e: Event) {
   if (props.fallback) {

@@ -14,3 +14,4 @@ export {
 export type { FnbTokenName, FnbBreakpoint } from './tokens'
 export { pixivTheme, picaTheme } from './themes'
 export type { FnbThemeOverrides } from './themes'
+export { lockScroll } from './logic/scroll-lock'

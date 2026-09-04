@@ -1,4 +1,3 @@
 // Importing this file emits the :root / .dark token declarations into the
-// single bundled style.css. Mixins (_fnb.scss) are intentionally NOT used
-// here — they emit nothing and are consumed per-component.
+// single bundled style.css.
 @use 'variables';

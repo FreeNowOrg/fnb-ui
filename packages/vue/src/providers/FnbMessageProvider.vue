@@ -1,7 +1,12 @@
 <template lang="pug">
 slot
 Teleport(to='body')
-  TransitionGroup.fnb-message-container(name='fnb-message', tag='div')
+  TransitionGroup.fnb-message-container(
+    name='fnb-message',
+    tag='div',
+    :class='themeClass',
+    :style='themeStyle'
+  )
     .fnb-message(
       v-for='m in messages',
       :key='m.id',
@@ -19,6 +24,7 @@ import type {
   FnbMessageOptions,
   FnbMessageType,
 } from './message-context'
+import { useThemeScope } from './useThemeScope'
 
 interface MessageItem {
   id: number
@@ -29,6 +35,7 @@ interface MessageItem {
 const messages = reactive<MessageItem[]>([])
 const timers = new Map<number, ReturnType<typeof setTimeout>>()
 let nextId = 0
+const { themeClass, themeStyle } = useThemeScope()
 
 function remove(id: number) {
   const timer = timers.get(id)
@@ -72,63 +79,3 @@ onUnmounted(() => {
   timers.clear()
 })
 </script>
-
-<style scoped lang="scss">
-@use '../styles/fnb' as *;
-
-.fnb-message-container {
-  position: fixed;
-  top: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10000;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  pointer-events: none;
-}
-
-.fnb-message {
-  @include fnb-border-sm;
-  @include fnb-shadow-sm;
-  padding: 0.75rem 1.5rem;
-  font-weight: 700;
-  max-width: 80vw;
-  background: var(--fnb-surface);
-  color: var(--fnb-text);
-  pointer-events: auto;
-
-  &--success {
-    background: var(--fnb-success);
-    color: var(--fnb-on-light);
-  }
-
-  &--warning {
-    background: var(--fnb-highlight);
-    color: var(--fnb-on-light);
-  }
-
-  &--error {
-    background: var(--fnb-danger);
-    color: var(--fnb-on-brand);
-  }
-}
-
-.fnb-message-enter-active,
-.fnb-message-leave-active {
-  transition:
-    transform 250ms ease-out,
-    opacity 250ms ease-out;
-}
-
-.fnb-message-enter-from {
-  opacity: 0;
-  transform: translateY(-20px);
-}
-
-.fnb-message-leave-to {
-  opacity: 0;
-  transform: translateY(-10px);
-}
-</style>

@@ -35,5 +35,6 @@ const cssVars = computed<CSSProperties>(() => {
 provide(fnbConfigKey, {
   themeOverrides: mergedOverrides,
   dark: mergedDark,
+  cssVars,
 })
 </script>
