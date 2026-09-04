@@ -24,7 +24,17 @@ export const color = {
   bronze: '#f0b27a',
 } as const
 
-/** Dark-mode overrides. Only keys that actually differ are listed. */
+/**
+ * Dark-mode overrides. Only keys that actually differ are listed.
+ *
+ * The generator emits these under a bare `.dark` selector (see
+ * scripts/gen-tokens.mjs), not `.fnb-dark`. This is intentional: it aligns
+ * with the `.dark` convention used by Tailwind's class strategy and Nuxt
+ * color-mode, so a host page toggling `.dark` on its root switches fnb-ui's
+ * theme along with the rest of the page for free. Do not rename this to
+ * `.fnb-dark` — that would silently break every consumer relying on that
+ * convention.
+ */
 export const colorDark = {
   bg: '#14151b',
   bgAlt: '#1d2029',
