@@ -15,14 +15,25 @@ describe('.fnb-input-group', () => {
   })
 
   it('zeroes member shadows and lifts the shadow to the group', () => {
-    expect(css).toMatch(/\.fnb-input-group > \*[^{]*\{[^}]*box-shadow: none/)
+    // Anchored to `\s*\{` so this only matches the baseline
+    // ".fnb-input-group > *" rule, not ".fnb-input-group > *:hover".
+    expect(css).toMatch(/\.fnb-input-group > \*\s*\{[^}]*box-shadow: none/)
   })
 
   it('suppresses the press transform inside a group', () => {
-    expect(css).toMatch(/\.fnb-input-group > \*[^{]*\{[^}]*transform: none/)
+    expect(css).toMatch(/\.fnb-input-group > \*\s*\{[^}]*transform: none/)
   })
 
   it('uses an inset outline for focus so seams do not break', () => {
     expect(css).toContain('outline-offset: -2px')
+  })
+
+  it('keeps the focus state shadow-free so the seam does not break', () => {
+    // A member's own :focus rule (e.g. .fnb-input:focus) outranks the
+    // ".fnb-input-group > *" baseline on specificity, so the group's
+    // focus/focus-visible rule must reassert box-shadow: none itself.
+    expect(css).toMatch(
+      /\.fnb-input-group > \*:focus,\s*\.fnb-input-group > \*:focus-visible\s*\{[^}]*box-shadow: none/
+    )
   })
 })

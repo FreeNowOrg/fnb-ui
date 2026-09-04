@@ -229,9 +229,13 @@
 }
 
 /* Focus must not use box-shadow here (see above): an inset outline keeps the
-   seam intact and does not affect layout. z-index lifts it over neighbours. */
+   seam intact and does not affect layout. z-index lifts it over neighbours.
+   box-shadow: none is reasserted because a member's own :focus rule (e.g.
+   .fnb-input:focus) has higher specificity than the ".fnb-input-group > *"
+   baseline above and would otherwise punch the shadow back through. */
 .fnb-input-group > *:focus,
 .fnb-input-group > *:focus-visible {
+  box-shadow: none;
   outline: 2px solid var(--fnb-brand);
   outline-offset: -2px;
   position: relative;
