@@ -99,7 +99,7 @@ packages:
   "private": true,
   "type": "module",
   "packageManager": "pnpm@11.1.3",
-  "engines": { "node": ">=20.19.0" },
+  "engines": { "node": ">=22.6.0" },
   "scripts": {
     "build": "pnpm -r --filter './packages/*' build",
     "verify": "pnpm build && node scripts/verify-dist.mjs",
@@ -200,15 +200,15 @@ export default defineConfig({
     "module": "ESNext",
     "moduleResolution": "bundler",
     "strict": true,
-    "declaration": true,
-    "emitDeclarationOnly": true,
     "skipLibCheck": true,
     "verbatimModuleSyntax": true,
-    "outDir": "dist"
+    "noEmit": true
   },
-  "include": ["src"]
+  "include": ["src", "tests"]
 }
 ```
+
+> 不要设 `emitDeclarationOnly`：它与 `typecheck` 脚本的 `tsc --noEmit` 互斥，tsc 会直接报错。`.d.ts` 由 `vite-plugin-dts` 在构建时产出，不需要 tsc 发射。
 
 - [ ] **Step 4: 写 vue 包**
 
@@ -287,12 +287,12 @@ export default defineConfig({
 
 ```bash
 mkdir -p packages/vue/src/styles
-cp packages/core/src/styles/_fnb.scss packages/core/src/styles/_variables.scss packages/vue/src/styles/
-printf "@use 'variables';\n" > packages/vue/src/styles/index.scss
-printf "@forward 'fnb';\n" > packages/vue/src/styles/fnb.scss
+cp packages/core/src/styles/_fnb.scss packages/vue/src/styles/
 ```
 
-> 这些过渡文件在 Task 10 全部删除。它们的存在期就是「样式还没外提完」的期限。
+**只复制 `_fnb.scss` 这一个文件。** 不要另建 `fnb.scss`——`@use '../styles/fnb'` 会同时匹配 `_fnb.scss` 与 `fnb.scss`，两者并存时 SCSS 报 ambiguous import 直接构建失败。也不要复制 `_variables.scss`：token 由 `tokens.css` 提供，SFC 里的 mixin 只引用 `var(--fnb-*)`，不需要 SCSS 变量。
+
+> 这个过渡文件在 Task 10 删除。它的存在期就是「样式还没外提完」的期限。
 
 - [ ] **Step 6: 根 vitest 配置**
 
@@ -318,8 +318,8 @@ export default defineConfig({
 
 22 个 spec 文件中的 `from '../src'` 全部仍然正确（`packages/vue/tests/` 相对 `packages/vue/src/`）。执行一次确认：
 
-Run: `grep -rn "from '\.\./src'" packages/vue/tests/ | wc -l`
-Expected: 22
+Run: `grep -rl "from '\.\./src'" packages/vue/tests/ | wc -l`
+Expected: 22（`-l` 数文件；用 `-n` 数的是匹配行数，会大于 22）
 
 - [ ] **Step 8: 安装并验证全绿**
 
@@ -486,6 +486,12 @@ export const zIndex = {
   imagePreview: '500',
 } as const
 
+export const font = {
+  sans: "'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', system-ui, sans-serif",
+  display: "'Archivo Black', 'Noto Sans SC', system-ui, sans-serif",
+  mono: "'Space Grotesk', ui-monospace, monospace",
+} as const
+
 /** Layout sizes multiple components must agree on. */
 export const layout = {
   headerHeight: '56px',
@@ -511,6 +517,7 @@ export const tokens = {
   spacing,
   motion,
   zIndex,
+  font,
   layout,
 } as const
 
@@ -527,6 +534,8 @@ export type FnbTokenName =
   | Kebab<keyof typeof color>
   | 'brand-hover'
   | 'shadow-color'
+  | 'radius'
+  | `font-${keyof typeof font}`
   | Kebab<keyof typeof layout>
 ```
 
@@ -547,6 +556,7 @@ import {
   spacing,
   motion,
   zIndex,
+  font,
   layout,
   breakpoints,
 } from '../src/tokens/index.ts'
@@ -568,7 +578,12 @@ push('brand-hover', 'color-mix(in oklab, var(--fnb-brand), #fff 17%)')
 push('shadow-color', 'var(--fnb-border)')
 
 lines.push('')
-lines.push('  /* Zero radius is intrinsic to this design language. */')
+lines.push('  /* Fonts */')
+for (const [k, v] of Object.entries(font)) push(`font-${k}`, v)
+
+lines.push('')
+lines.push('  /* Zero radius is intrinsic to this design language — one variable,')
+lines.push('     not a scale: there is no size/weight dimension for corners. */')
 push('radius', '0')
 
 lines.push('')
@@ -627,6 +642,7 @@ export {
   spacing,
   motion,
   zIndex,
+  font,
   layout,
 } from './tokens'
 export type { FnbTokenName, FnbBreakpoint } from './tokens'
@@ -1259,7 +1275,8 @@ git commit -m "feat: add .fnb-input-group for seamless control joining"
 2. 删除 `@use '../styles/fnb' as *;`。
 3. 把 `@include` 按下表展开为显式声明。
 4. `@keyframes` 加 `fnb-` 前缀并去重（全库只保留一份）。
-5. 删除 SFC 中的整个 `<style>` 块。
+5. **圆角变量收敛**：把遇到的 `var(--fnb-radius-sm)`（实扫 6 处）与 `var(--fnb-radius-lg)` 一律替换为 `var(--fnb-radius)`。生成器只产出这一个圆角变量——零圆角是本设计语言的固有属性，不存在 size/weight 那样的分档。
+6. 删除 SFC 中的整个 `<style>` 块。
 
 **mixin → weight 映射**（本表是决策，不要另行判断）：
 
@@ -1786,7 +1803,7 @@ git commit -m "feat(core): add scoped prose typography layer"
 **Files:**
 - Delete: `packages/vue/src/styles/`（Task 1 的过渡文件）
 - Delete: `packages/core/src/styles/_fnb.scss`、`packages/core/src/styles/_variables.scss`、`packages/core/src/styles/index.scss`
-- Modify: `packages/core/vite.config.ts`（入口加 CSS）
+- Modify: `packages/core/src/index.ts`（顶部 import 样式入口）
 - Modify: `scripts/verify-dist.mjs`
 - Modify: `README.md`
 
