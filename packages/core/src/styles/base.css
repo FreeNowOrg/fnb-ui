@@ -1,0 +1,118 @@
+/* ==========================================================================
+   Prose typography
+   Scoped to .fnb-prose on purpose: bare element selectors (h1, p, a, table...)
+   would leak into the host page the moment this stylesheet is imported. The
+   only unscoped names allowed here are explicit .fnb-* classes, which require
+   an opt-in class on the consumer's markup just like .fnb-link does.
+   ========================================================================== */
+
+.fnb-prose {
+  color: var(--fnb-text);
+  line-height: 1.7;
+}
+
+.fnb-prose h1,
+.fnb-prose h2,
+.fnb-prose h3,
+.fnb-prose h4 {
+  font-family: var(--fnb-font-display, inherit);
+  font-weight: 900;
+  line-height: 1.25;
+  margin: 1.5em 0 0.5em;
+}
+
+.fnb-prose h1 {
+  font-size: 2rem;
+}
+.fnb-prose h2 {
+  font-size: 1.5rem;
+}
+.fnb-prose h3 {
+  font-size: 1.25rem;
+}
+.fnb-prose h4 {
+  font-size: 1.1rem;
+}
+
+.fnb-prose p,
+.fnb-prose ul,
+.fnb-prose ol {
+  margin: 0.5em 0;
+}
+
+.fnb-prose ul,
+.fnb-prose ol {
+  padding-inline-start: 1.5em;
+}
+
+.fnb-prose pre {
+  overflow: auto;
+  background: var(--fnb-skeleton);
+  padding: var(--fnb-space-1);
+  border: var(--fnb-w1-border) solid var(--fnb-border);
+}
+
+.fnb-prose table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.fnb-prose th,
+.fnb-prose td {
+  border: var(--fnb-w1-border) solid var(--fnb-divider);
+  padding: var(--fnb-space-2);
+  text-align: start;
+}
+
+/* --- Divider ----------------------------------------------------------------
+   .fnb-divider is a standalone utility, usable outside .fnb-prose (e.g.
+   between cards or sections) — the same opt-in-class pattern as .fnb-link.
+   Kept as its own rule rather than merged with `.fnb-prose hr`: a future
+   FnbDivider component is planned to grow modifiers (dashed, vertical,
+   captioned) on this class, and those should not silently change how a bare
+   <hr> renders inside prose content.
+   -------------------------------------------------------------------------- */
+
+.fnb-divider {
+  border: none;
+  border-top: 1px solid var(--fnb-divider);
+  margin: var(--fnb-space-6) 0;
+}
+
+.fnb-prose hr {
+  border: none;
+  border-top: 1px solid var(--fnb-divider);
+  margin: var(--fnb-space-6) 0;
+}
+
+/* --- Links ------------------------------------------------------------------
+   Usable on a bare <a> or on a framework's router link component — adding the
+   class is all it takes. That is the point of keeping CSS as the product.
+   -------------------------------------------------------------------------- */
+
+.fnb-link {
+  color: var(--fnb-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 2px;
+  transition: color var(--fnb-duration-fast);
+}
+
+.fnb-link:hover {
+  color: var(--fnb-brand);
+}
+
+.fnb-link--plain {
+  text-decoration: none;
+}
+
+.fnb-prose a {
+  color: var(--fnb-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 2px;
+}
+
+.fnb-prose a:hover {
+  color: var(--fnb-brand);
+}

@@ -1,3 +1,4 @@
 /* Importing this file emits the whole design system into one stylesheet. */
 @import './tokens.css';
+@import './base.css';
 @import './components.css';
