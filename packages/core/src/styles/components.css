@@ -230,9 +230,15 @@
 
 /* Focus must not use box-shadow here (see above): an inset outline keeps the
    seam intact and does not affect layout. z-index lifts it over neighbours.
-   box-shadow: none is reasserted because a member's own :focus rule (e.g.
-   .fnb-input:focus) has higher specificity than the ".fnb-input-group > *"
-   baseline above and would otherwise punch the shadow back through. */
+   box-shadow: none is reasserted here because it relies on source order, not
+   specificity: ".fnb-input-group > *:focus" and a member's own rule (e.g.
+   ".fnb-input:focus") are BOTH (0,2,0) — one class + one pseudo-class. This
+   block wins only because it is declared later in the file.
+   Do not add a colored box-shadow to any member's own :focus/:focus-visible
+   rule (.fnb-button:focus, .fnb-select__trigger:focus, etc.) below this
+   block — same specificity placed after this reassertion would punch the
+   shadow back through and reopen the seam. Any such rule must be declared
+   above this ".fnb-input-group" section instead. */
 .fnb-input-group > *:focus,
 .fnb-input-group > *:focus-visible {
   box-shadow: none;
