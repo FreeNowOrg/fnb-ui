@@ -193,6 +193,54 @@
   transform: rotate(180deg);
 }
 
+.fnb-select__dropdown {
+  box-sizing: border-box;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  border: var(--fnb-w2-border) solid var(--fnb-border);
+  box-shadow: var(--fnb-w2-shadow) var(--fnb-w2-shadow) 0 0
+    var(--fnb-shadow-color);
+  border-radius: var(--fnb-radius);
+  background: var(--fnb-surface);
+  z-index: var(--fnb-z-base);
+  overflow: hidden;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.fnb-select__option {
+  padding: 0.4rem 0.75rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.fnb-select__option:hover,
+.fnb-select__option--focused {
+  background: var(--fnb-highlight);
+  color: var(--fnb-on-light);
+}
+
+.fnb-select__option--selected {
+  background: var(--fnb-brand);
+  color: var(--fnb-on-brand);
+  font-weight: 700;
+}
+
+.fnb-select__dropdown-enter-active,
+.fnb-select__dropdown-leave-active {
+  transition: all 0.15s ease;
+}
+
+.fnb-select__dropdown-enter-from,
+.fnb-select__dropdown-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+
 @keyframes fnb-spin {
   to {
     transform: rotate(360deg);
@@ -489,4 +537,301 @@
 .fnb-icon > img {
   width: 1em;
   height: 1em;
+}
+
+/* ==========================================================================
+   Composite components
+   ========================================================================== */
+
+/* --- Tabs --------------------------------------------------------------- */
+
+.fnb-tabs__nav {
+  display: flex;
+  gap: 3px;
+}
+
+.fnb-tabs__tab {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  padding: 0.5rem 1rem;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 700;
+  color: var(--fnb-text-muted);
+  background: transparent;
+  border: 3px solid transparent;
+  cursor: pointer;
+  transition:
+    color 150ms,
+    background 150ms;
+}
+
+.fnb-tabs__tab:hover:not(.fnb-tabs__tab--active) {
+  color: var(--fnb-text);
+  background: color-mix(in srgb, var(--fnb-brand) 15%, var(--fnb-surface));
+}
+
+.fnb-tabs__tab--active {
+  color: var(--fnb-on-brand);
+  font-weight: 900;
+  background: var(--fnb-brand);
+  border-color: var(--fnb-border);
+}
+
+.fnb-tabs__panels {
+  margin-top: 1rem;
+}
+
+/* segment: boxed equal-width nav (the PixivNow look) */
+.fnb-tabs--segment .fnb-tabs__nav {
+  border: var(--fnb-w3-border) solid var(--fnb-border);
+  border-radius: var(--fnb-radius);
+  padding: 3px;
+  background: var(--fnb-surface);
+}
+
+/* line: underline-style nav */
+.fnb-tabs--line .fnb-tabs__nav {
+  border-bottom: 3px solid var(--fnb-border);
+  gap: 0;
+}
+
+.fnb-tabs--line .fnb-tabs__tab {
+  flex: 0 0 auto;
+  border: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -3px;
+}
+
+.fnb-tabs--line .fnb-tabs__tab--active {
+  color: var(--fnb-brand);
+  background: transparent;
+  border-bottom-color: var(--fnb-brand);
+}
+
+.fnb-tabs--line .fnb-tabs__tab:hover:not(.fnb-tabs__tab--active) {
+  background: transparent;
+  color: var(--fnb-text);
+}
+
+.fnb-tabs--small .fnb-tabs__tab {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.85rem;
+}
+
+.fnb-tabs--large .fnb-tabs__tab {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.1rem;
+}
+
+/* --- Table -------------------------------------------------------------- */
+
+.fnb-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.fnb-table th,
+.fnb-table td {
+  border: var(--fnb-w1-border) solid var(--fnb-border);
+  border-radius: var(--fnb-radius);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.fnb-table th {
+  background: var(--fnb-bg);
+  font-weight: 700;
+}
+
+.fnb-table tr:hover td {
+  background: var(--fnb-bg);
+}
+
+/* --- Pagination ----------------------------------------------------------- */
+
+.fnb-pagination {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.fnb-pagination__btn {
+  --fnb-control-h: var(--fnb-control-h-sm);
+  --fnb-control-font: var(--fnb-control-font-sm);
+  --fnb-control-px: var(--fnb-control-px-sm);
+  --fnb-weight-border: var(--fnb-w2-border);
+  --fnb-weight-shadow: var(--fnb-w2-shadow);
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--fnb-control-h);
+  height: var(--fnb-control-h);
+  padding-inline: var(--fnb-space-1);
+  font-size: var(--fnb-control-font);
+  font-family: inherit;
+  font-weight: 700;
+  border: var(--fnb-weight-border) solid var(--fnb-border);
+  border-radius: var(--fnb-radius);
+  box-shadow: var(--fnb-weight-shadow) var(--fnb-weight-shadow) 0 0
+    var(--fnb-shadow-color);
+  background: var(--fnb-surface);
+  cursor: pointer;
+  transition:
+    transform var(--fnb-duration-fast),
+    box-shadow var(--fnb-duration-fast);
+}
+
+.fnb-pagination__btn:hover,
+.fnb-pagination__btn:active {
+  transform: translate(1.5px, 1.5px);
+  box-shadow: 0 0 0 0 var(--fnb-border);
+}
+
+.fnb-pagination__btn--active {
+  background: var(--fnb-brand);
+  color: var(--fnb-on-brand);
+}
+
+.fnb-pagination__btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.fnb-pagination__ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--fnb-control-h-sm);
+  height: var(--fnb-control-h-sm);
+  color: var(--fnb-text-muted);
+}
+
+/* --- Scrollbar -------------------------------------------------------------- */
+
+.fnb-scrollbar {
+  overflow: auto;
+}
+
+.fnb-scrollbar--x {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.fnb-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.fnb-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.fnb-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--fnb-text-muted);
+  border-radius: var(--fnb-radius);
+}
+
+.fnb-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--fnb-text);
+}
+
+/* --- Image ------------------------------------------------------------------ */
+
+.fnb-image {
+  display: inline-block;
+}
+
+.fnb-image--preview {
+  cursor: zoom-in;
+}
+
+.fnb-image__img {
+  max-width: 100%;
+  display: block;
+}
+
+.fnb-image__overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--fnb-z-image-preview);
+  cursor: zoom-out;
+}
+
+.fnb-image__overlay img {
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+}
+
+.fnb-image-preview-enter-active,
+.fnb-image-preview-leave-active {
+  transition: opacity 0.2s;
+}
+
+.fnb-image-preview-enter-from,
+.fnb-image-preview-leave-to {
+  opacity: 0;
+}
+
+/* --- FloatButton -------------------------------------------------------------- */
+
+.fnb-float-button {
+  position: fixed;
+  z-index: var(--fnb-z-sticky-header);
+}
+
+.fnb-float-button:hover .fnb-float-button__menu {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.fnb-float-button__main {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: var(--fnb-w3-border) solid var(--fnb-border);
+  box-shadow: var(--fnb-w3-shadow) var(--fnb-w3-shadow) 0 0
+    var(--fnb-shadow-color);
+  background: var(--fnb-surface);
+  cursor: pointer;
+  font-size: 1.25rem;
+  border-radius: var(--fnb-radius);
+  transition:
+    transform var(--fnb-duration-fast),
+    box-shadow var(--fnb-duration-fast);
+}
+
+.fnb-float-button__main:hover,
+.fnb-float-button__main:active {
+  transform: translate(1.5px, 1.5px);
+  box-shadow: 0 0 0 0 var(--fnb-border);
+}
+
+.fnb-float-button__menu {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-bottom: 0.5rem;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(4px);
+  transition: all 200ms ease-out;
 }

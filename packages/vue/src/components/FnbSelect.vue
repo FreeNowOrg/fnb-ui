@@ -11,13 +11,13 @@
   )
     span.fnb-select__label {{ currentLabel }}
     span.fnb-select__arrow(:class='{ "fnb-select__arrow--flipped": open }') ▼
-  Transition(name='fnb-select-dropdown')
+  Transition(name='fnb-select__dropdown')
     ul.fnb-select__dropdown(v-if='open', role='listbox')
       li.fnb-select__option(
         v-for='(opt, i) in options',
         :key='opt.value',
         :id='`fnb-opt-${opt.value}`',
-        :class='{ selected: opt.value === modelValue, focused: i === focusedIndex }',
+        :class='{ "fnb-select__option--selected": opt.value === modelValue, "fnb-select__option--focused": i === focusedIndex }',
         :aria-selected='opt.value === modelValue',
         role='option',
         @click='select(opt.value)'
