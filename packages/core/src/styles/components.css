@@ -1,0 +1,200 @@
+/* ==========================================================================
+   Controls
+   Geometry comes from two orthogonal variable groups:
+     --fnb-control-*  size   (height / font-size / padding-inline)
+     --fnb-weight-*   weight (border-width + shadow offset, always paired)
+   Never grow a single-line control with padding-block: line-height differences
+   between components then push them out of alignment.
+   ========================================================================== */
+
+.fnb-button,
+.fnb-input,
+.fnb-select__trigger {
+  box-sizing: border-box;
+  height: var(--fnb-control-h);
+  padding-inline: var(--fnb-control-px);
+  font-size: var(--fnb-control-font);
+  font-family: inherit;
+  border: var(--fnb-weight-border) solid var(--fnb-border);
+  box-shadow: var(--fnb-weight-shadow) var(--fnb-weight-shadow) 0 0
+    var(--fnb-shadow-color);
+  border-radius: var(--fnb-radius);
+  color: var(--fnb-text);
+}
+
+/* --- Button --------------------------------------------------------------- */
+
+.fnb-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  background: var(--fnb-bg);
+  font-weight: 900;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    transform var(--fnb-duration-fast),
+    box-shadow var(--fnb-duration-fast);
+}
+
+.fnb-button:hover,
+.fnb-button:active {
+  transform: translate(1.5px, 1.5px);
+  box-shadow: 0 0 0 0 var(--fnb-border);
+}
+
+.fnb-button--primary {
+  background: var(--fnb-brand);
+  color: var(--fnb-on-brand);
+}
+
+.fnb-button--success {
+  background: var(--fnb-success);
+  color: var(--fnb-on-light);
+}
+
+.fnb-button--danger {
+  background: var(--fnb-danger);
+  color: var(--fnb-on-brand);
+}
+
+.fnb-button--sm {
+  --fnb-control-h: var(--fnb-control-h-sm);
+  --fnb-control-font: var(--fnb-control-font-sm);
+  --fnb-control-px: var(--fnb-control-px-sm);
+  --fnb-weight-border: var(--fnb-w2-border);
+  --fnb-weight-shadow: var(--fnb-w2-shadow);
+  font-weight: 700;
+}
+
+.fnb-button--lg {
+  --fnb-control-h: var(--fnb-control-h-lg);
+  --fnb-control-font: var(--fnb-control-font-lg);
+  --fnb-control-px: var(--fnb-control-px-lg);
+  --fnb-weight-border: var(--fnb-w4-border);
+  --fnb-weight-shadow: var(--fnb-w4-shadow);
+}
+
+.fnb-button--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.fnb-button--loading {
+  cursor: wait;
+}
+
+.fnb-button__spinner {
+  display: inline-flex;
+  animation: fnb-spin 1s linear infinite;
+}
+
+/* Icon slot reads slightly larger than text for optical balance */
+.fnb-button .fnb-icon {
+  font-size: 1.25em;
+}
+
+/* --- Input ---------------------------------------------------------------- */
+
+.fnb-input {
+  width: 100%;
+  background: var(--fnb-surface);
+  outline: none;
+  transition: box-shadow var(--fnb-duration-fast);
+}
+
+.fnb-input:focus {
+  box-shadow: var(--fnb-weight-shadow) var(--fnb-weight-shadow) 0 0
+    var(--fnb-brand);
+}
+
+.fnb-input--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* --- Tag ------------------------------------------------------------------
+   A Tag is an inline marker, not a control: it stays on w1 at every size and
+   never joins the control height scale. Do not "align" it with Button/Card.
+   -------------------------------------------------------------------------- */
+
+.fnb-tag {
+  --fnb-weight-border: var(--fnb-w1-border);
+  --fnb-weight-shadow: var(--fnb-w1-shadow);
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding-inline: var(--fnb-space-2);
+  font-size: 12px;
+  font-family: inherit;
+  background: var(--fnb-surface);
+  color: var(--fnb-text);
+  border: var(--fnb-weight-border) solid var(--fnb-border);
+  box-shadow: var(--fnb-weight-shadow) var(--fnb-weight-shadow) 0 0
+    var(--fnb-shadow-color);
+  border-radius: var(--fnb-radius);
+  transition:
+    transform var(--fnb-duration-fast),
+    box-shadow var(--fnb-duration-fast);
+}
+
+.fnb-tag--active {
+  background: var(--fnb-highlight);
+  color: var(--fnb-on-light);
+  font-weight: 700;
+}
+
+.fnb-tag--clickable {
+  cursor: pointer;
+}
+
+.fnb-tag--clickable:hover,
+.fnb-tag--clickable:active {
+  transform: translate(1.5px, 1.5px);
+  box-shadow: 0 0 0 0 var(--fnb-border);
+}
+
+/* --- Select --------------------------------------------------------------- */
+
+.fnb-select {
+  position: relative;
+  display: inline-block;
+  min-width: 6rem;
+}
+
+.fnb-select__trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4em;
+  background: var(--fnb-surface);
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform var(--fnb-duration-fast),
+    box-shadow var(--fnb-duration-fast);
+}
+
+.fnb-select__trigger:hover {
+  transform: translate(1.5px, 1.5px);
+  box-shadow: none;
+}
+
+.fnb-select__arrow {
+  font-size: 0.6em;
+  transition: transform var(--fnb-duration);
+}
+
+.fnb-select__arrow--flipped {
+  transform: rotate(180deg);
+}
+
+@keyframes fnb-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

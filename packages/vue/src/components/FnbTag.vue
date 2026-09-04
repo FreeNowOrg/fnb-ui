@@ -33,23 +33,3 @@ const colorStyle = computed(() => {
   return { 'background-color': props.color }
 })
 </script>
-
-<style scoped lang="scss">
-@use '../styles/fnb' as *;
-
-.fnb-tag {
-  @include fnb-tag;
-
-  &--active {
-    background: var(--fnb-highlight);
-    color: var(--fnb-on-light);
-    font-weight: 700;
-  }
-
-  &--clickable {
-    cursor: pointer;
-
-    @include fnb-press;
-  }
-}
-</style>

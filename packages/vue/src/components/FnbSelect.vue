@@ -1,6 +1,6 @@
 <template lang="pug">
-.fnb-select(:class='{ open }', ref='rootEl')
-  button.fnb-select-trigger(
+.fnb-select(:class='{ "fnb-select--open": open }', ref='rootEl')
+  button.fnb-select__trigger(
     @click='open = !open',
     @keydown='onTriggerKeydown',
     type='button',
@@ -9,11 +9,11 @@
     aria-haspopup='listbox',
     :aria-activedescendant='open ? `fnb-opt-${modelValue}` : undefined'
   )
-    span.fnb-select-label {{ currentLabel }}
-    span.fnb-select-arrow(:class='{ flipped: open }') ▼
+    span.fnb-select__label {{ currentLabel }}
+    span.fnb-select__arrow(:class='{ "fnb-select__arrow--flipped": open }') ▼
   Transition(name='fnb-select-dropdown')
-    ul.fnb-select-dropdown(v-if='open', role='listbox')
-      li.fnb-select-option(
+    ul.fnb-select__dropdown(v-if='open', role='listbox')
+      li.fnb-select__option(
         v-for='(opt, i) in options',
         :key='opt.value',
         :id='`fnb-opt-${opt.value}`',
@@ -106,88 +106,3 @@ onBeforeUnmount(() =>
   document.removeEventListener('pointerdown', onDocPointerDown)
 )
 </script>
-
-<style scoped lang="scss">
-@use '../styles/fnb' as *;
-
-.fnb-select {
-  position: relative;
-  display: inline-block;
-  min-width: 6rem;
-}
-
-.fnb-select-trigger {
-  width: 100%;
-  @include fnb-border-sm;
-  @include fnb-shadow-xs;
-  padding: 0.3rem 0.75rem;
-  background: var(--fnb-surface);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.4em;
-  font-weight: 700;
-  font-size: 0.85rem;
-  font-family: inherit;
-  color: var(--fnb-text);
-  transition: all 150ms;
-
-  &:hover {
-    transform: translate(1.5px, 1.5px);
-    box-shadow: none;
-  }
-}
-
-.fnb-select-arrow {
-  font-size: 0.6rem;
-  transition: transform 0.2s;
-  &.flipped {
-    transform: rotate(180deg);
-  }
-}
-
-.fnb-select-dropdown {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  width: 100%;
-  @include fnb-border-sm;
-  @include fnb-shadow-sm;
-  background: var(--fnb-surface);
-  z-index: 50;
-  overflow: hidden;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.fnb-select-option {
-  padding: 0.4rem 0.75rem;
-  cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 600;
-
-  &:hover,
-  &.focused {
-    background: var(--fnb-highlight);
-    color: var(--fnb-on-light);
-  }
-
-  &.selected {
-    background: var(--fnb-brand);
-    color: var(--fnb-on-brand);
-    font-weight: 700;
-  }
-}
-
-.fnb-select-dropdown-enter-active,
-.fnb-select-dropdown-leave-active {
-  transition: all 0.15s ease;
-}
-.fnb-select-dropdown-enter-from,
-.fnb-select-dropdown-leave-to {
-  opacity: 0;
-  transform: translateY(-4px);
-}
-</style>

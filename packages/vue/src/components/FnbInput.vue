@@ -32,17 +32,3 @@ function onInput(e: Event) {
   emit('update:modelValue', (e.target as HTMLInputElement).value)
 }
 </script>
-
-<style scoped lang="scss">
-@use '../styles/fnb' as *;
-
-.fnb-input {
-  @include fnb-input;
-  width: 100%;
-
-  &--disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-}
-</style>
