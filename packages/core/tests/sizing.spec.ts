@@ -59,8 +59,8 @@ describe('control sizing', () => {
 
   it('keeps Tag on w1 and out of the control size scale', () => {
     const b = block('.fnb-tag')
-    expect(b).toContain('--fnb-weight-border: var(--fnb-w1-border)')
-    expect(b).toContain('--fnb-weight-shadow: var(--fnb-w1-shadow)')
+    expect(b).toContain('border: var(--fnb-w1-border)')
+    expect(b).toContain('var(--fnb-w1-shadow)')
     expect(b).not.toContain('var(--fnb-control-h)')
   })
 
@@ -69,5 +69,35 @@ describe('control sizing', () => {
     expect(sm).toContain('--fnb-control-h: var(--fnb-control-h-sm)')
     expect(sm).toContain('--fnb-weight-border: var(--fnb-w2-border)')
     expect(sm).toContain('--fnb-weight-shadow: var(--fnb-w2-shadow)')
+  })
+})
+
+describe('weight variables do not leak down the tree', () => {
+  // --fnb-weight-* inherits, so an element that redefines it retunes every
+  // descendant reading the bare name — a Card would drag the Buttons inside it
+  // off w3, contradicting spec §5.2 ("weight is picked by element type").
+  // Only two shapes may redefine it: a wrapper whose whole job is to retune its
+  // members, and a leaf control that has no control descendants. Everything
+  // else references --fnb-wN-* directly. Adding a selector here is a design
+  // decision — read the weight note at the top of components.css first.
+  const ALLOWED_TO_REDEFINE = [
+    '.fnb-input-group--sm',
+    '.fnb-input-group--lg',
+    '.fnb-button--sm',
+    '.fnb-button--lg',
+    '.fnb-pagination__btn',
+  ]
+
+  it('is redefined only by group wrappers and leaf controls', () => {
+    const ruleRe = /([^{}]+)\{([^}]*)\}/g
+    let m: RegExpExecArray | null
+    const offenders: string[] = []
+    while ((m = ruleRe.exec(cssNoComments))) {
+      if (!/--fnb-weight-(border|shadow):/.test(m[2]!)) continue
+      for (const sel of m[1]!.split(',').map((s) => s.trim())) {
+        if (!ALLOWED_TO_REDEFINE.includes(sel)) offenders.push(sel)
+      }
+    }
+    expect(offenders).toEqual([])
   })
 })

@@ -5,6 +5,25 @@
      --fnb-weight-*   weight (border-width + shadow offset, always paired)
    Never grow a single-line control with padding-block: line-height differences
    between components then push them out of alignment.
+
+   WEIGHT: redefine --fnb-weight-* or reference --fnb-wN-* directly?
+   Custom properties inherit, so redefining --fnb-weight-border /
+   --fnb-weight-shadow on an element retunes every descendant that reads the
+   bare name — a Card or a Tag doing so drags the Buttons and Inputs placed
+   inside it off the w3 baseline. Per spec §5.2 the weight tier is chosen by
+   ELEMENT TYPE, never by whichever ancestor last touched the variable.
+
+     - Redefine --fnb-weight-* ONLY where cascading to descendants is the
+       point (.fnb-input-group--sm/--lg retunes its members on purpose) or
+       where the element is a leaf control with no control descendants
+       (.fnb-button--sm/--lg).
+     - Everywhere else — containers, overlays, inline markers: reference the
+       tier variable directly, e.g. `border-width: var(--fnb-w3-border)`.
+       Alert, Message, Dialog, FloatButton, Select dropdown, Progress track
+       and Table cells already do this.
+
+   Border and shadow still move together as one tier; only the plumbing
+   differs.
    ========================================================================== */
 
 .fnb-button,
@@ -118,11 +137,12 @@
 /* --- Tag ------------------------------------------------------------------
    A Tag is an inline marker, not a control: it stays on w1 at every size and
    never joins the control height scale. Do not "align" it with Button/Card.
+   w1 is referenced directly rather than by redefining --fnb-weight-* (see the
+   weight note at the top of this file): a Tag may wrap a Button or an icon
+   control, which must stay on w3.
    -------------------------------------------------------------------------- */
 
 .fnb-tag {
-  --fnb-weight-border: var(--fnb-w1-border);
-  --fnb-weight-shadow: var(--fnb-w1-shadow);
   box-sizing: border-box;
   display: inline-flex;
   align-items: center;
@@ -132,8 +152,8 @@
   font-family: inherit;
   background: var(--fnb-surface);
   color: var(--fnb-text);
-  border: var(--fnb-weight-border) solid var(--fnb-border);
-  box-shadow: var(--fnb-weight-shadow) var(--fnb-weight-shadow) 0 0
+  border: var(--fnb-w1-border) solid var(--fnb-border);
+  box-shadow: var(--fnb-w1-shadow) var(--fnb-w1-shadow) 0 0
     var(--fnb-shadow-color);
   border-radius: var(--fnb-radius);
   transition:
@@ -355,14 +375,19 @@
   transition: all var(--fnb-duration-fast);
 }
 
+/* Tier referenced directly, not redefined as --fnb-weight-* (see the weight
+   note at the top of this file): a Card is a container, and a Button or Input
+   placed inside it must stay on its own w3 baseline. */
 .fnb-card--shadow-sm {
-  --fnb-weight-border: var(--fnb-w2-border);
-  --fnb-weight-shadow: var(--fnb-w2-shadow);
+  border-width: var(--fnb-w2-border);
+  box-shadow: var(--fnb-w2-shadow) var(--fnb-w2-shadow) 0 0
+    var(--fnb-shadow-color);
 }
 
 .fnb-card--shadow-lg {
-  --fnb-weight-border: var(--fnb-w4-border);
-  --fnb-weight-shadow: var(--fnb-w4-shadow);
+  border-width: var(--fnb-w4-border);
+  box-shadow: var(--fnb-w4-shadow) var(--fnb-w4-shadow) 0 0
+    var(--fnb-shadow-color);
 }
 
 .fnb-card--shadow-none {
