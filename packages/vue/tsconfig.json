@@ -10,5 +10,8 @@
     "noEmit": true,
     "types": ["vite/client"]
   },
-  "include": ["src", "tests"]
+  "vueCompilerOptions": {
+    "plugins": ["@vue/language-plugin-pug"]
+  },
+  "include": ["src/**/*.vue", "src", "tests"]
 }
