@@ -260,9 +260,30 @@
     var(--fnb-shadow-color);
 }
 
+/* Every rule below pairs a child selector for plain members with a DESCENDANT
+   selector for ".fnb-select__trigger". This is mandatory, not defensive:
+   FnbSelect's root is a bare ".fnb-select" positioning wrapper that owns no
+   border, no shadow and no focus — the real control is the trigger nested one
+   level inside it. A child selector alone therefore lands on the wrapper,
+   which has nothing to reset, and the trigger keeps its own shadow, its press
+   transform and the browser's default focus ring, tearing a black seam into
+   the pill. Do NOT "simplify" these to a bare descendant
+   ".fnb-input-group *": that also swallows ".fnb-select__dropdown" and its
+   options, an absolutely positioned overlay outside the pill that must keep
+   its own border and shadow.
+   Any future member whose bordered control is not the group's direct child
+   must be added to these selector lists the same way. */
+
+/* The wrapper has no box of its own; make it a flex box so the trigger fills
+   the slot the group hands it. */
+.fnb-input-group > .fnb-select {
+  display: flex;
+}
+
 /* Members drop their own shadow — hard shadows would occlude each other —
    and drop the press transform, which would tear the seam open. */
-.fnb-input-group > * {
+.fnb-input-group > *,
+.fnb-input-group .fnb-select__trigger {
   box-shadow: none;
   transform: none;
 }
@@ -271,7 +292,8 @@
   margin-inline-start: calc(-1 * var(--fnb-weight-border));
 }
 
-.fnb-input-group > *:hover {
+.fnb-input-group > *:hover,
+.fnb-input-group .fnb-select__trigger:hover {
   transform: none;
   box-shadow: none;
 }
@@ -281,14 +303,18 @@
    box-shadow: none is reasserted here because it relies on source order, not
    specificity: ".fnb-input-group > *:focus" and a member's own rule (e.g.
    ".fnb-input:focus") are BOTH (0,2,0) — one class + one pseudo-class. This
-   block wins only because it is declared later in the file.
+   block wins only because it is declared later in the file. (The trigger
+   selectors are (0,3,0) and win outright, but they are kept here so both
+   halves of the rule stay together.)
    Do not add a colored box-shadow to any member's own :focus/:focus-visible
    rule (.fnb-button:focus, .fnb-select__trigger:focus, etc.) below this
    block — same specificity placed after this reassertion would punch the
    shadow back through and reopen the seam. Any such rule must be declared
    above this ".fnb-input-group" section instead. */
 .fnb-input-group > *:focus,
-.fnb-input-group > *:focus-visible {
+.fnb-input-group > *:focus-visible,
+.fnb-input-group .fnb-select__trigger:focus,
+.fnb-input-group .fnb-select__trigger:focus-visible {
   box-shadow: none;
   outline: 2px solid var(--fnb-brand);
   outline-offset: -2px;
