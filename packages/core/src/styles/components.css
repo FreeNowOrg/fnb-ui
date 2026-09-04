@@ -198,3 +198,58 @@
     transform: rotate(360deg);
   }
 }
+
+/* --- Input group ----------------------------------------------------------
+   Joins controls into one pill. Members must share the same border width for
+   the negative margin to land exactly on the seam — guaranteed because every
+   member reads --fnb-weight-border from this group.
+   -------------------------------------------------------------------------- */
+
+.fnb-input-group {
+  display: inline-flex;
+  align-items: stretch;
+  box-shadow: var(--fnb-weight-shadow) var(--fnb-weight-shadow) 0 0
+    var(--fnb-shadow-color);
+}
+
+/* Members drop their own shadow — hard shadows would occlude each other —
+   and drop the press transform, which would tear the seam open. */
+.fnb-input-group > * {
+  box-shadow: none;
+  transform: none;
+}
+
+.fnb-input-group > * + * {
+  margin-inline-start: calc(-1 * var(--fnb-weight-border));
+}
+
+.fnb-input-group > *:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Focus must not use box-shadow here (see above): an inset outline keeps the
+   seam intact and does not affect layout. z-index lifts it over neighbours. */
+.fnb-input-group > *:focus,
+.fnb-input-group > *:focus-visible {
+  outline: 2px solid var(--fnb-brand);
+  outline-offset: -2px;
+  position: relative;
+  z-index: var(--fnb-z-base);
+}
+
+.fnb-input-group--sm {
+  --fnb-control-h: var(--fnb-control-h-sm);
+  --fnb-control-font: var(--fnb-control-font-sm);
+  --fnb-control-px: var(--fnb-control-px-sm);
+  --fnb-weight-border: var(--fnb-w2-border);
+  --fnb-weight-shadow: var(--fnb-w2-shadow);
+}
+
+.fnb-input-group--lg {
+  --fnb-control-h: var(--fnb-control-h-lg);
+  --fnb-control-font: var(--fnb-control-font-lg);
+  --fnb-control-px: var(--fnb-control-px-lg);
+  --fnb-weight-border: var(--fnb-w4-border);
+  --fnb-weight-shadow: var(--fnb-w4-shadow);
+}

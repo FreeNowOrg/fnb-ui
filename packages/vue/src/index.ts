@@ -9,6 +9,7 @@ import FnbFloatButton from './components/FnbFloatButton.vue'
 import FnbIcon from './components/FnbIcon.vue'
 import FnbImage from './components/FnbImage.vue'
 import FnbInput from './components/FnbInput.vue'
+import FnbInputGroup from './components/FnbInputGroup.vue'
 import FnbMessageProvider from './providers/FnbMessageProvider.vue'
 import FnbPagination from './components/FnbPagination.vue'
 import FnbProgress from './components/FnbProgress.vue'
@@ -34,6 +35,7 @@ export {
   FnbIcon,
   FnbImage,
   FnbInput,
+  FnbInputGroup,
   FnbMessageProvider,
   FnbPagination,
   FnbProgress,
@@ -79,6 +81,7 @@ const components: Record<string, Component> = {
   FnbIcon,
   FnbImage,
   FnbInput,
+  FnbInputGroup,
   FnbMessageProvider,
   FnbPagination,
   FnbProgress,
