@@ -28,6 +28,7 @@
 
 1. **两个项目的重复 CSS 与组件被消灭**——不是库里组件变多。
 2. **组件默认状态开箱即生产可用、互相对齐**——使用方不需要为了让 Button / Input / Select 排在一起而各自调尺寸。当前做不到这点（见 §5），这不叫组件库。
+3. **CSS 层可脱离任何框架独立使用**——由 monorepo 的包边界强制（见 §3），而非仅靠约定。
 
 ### 非目标
 
@@ -58,21 +59,45 @@
 
 ---
 
-## 3. 架构分层
+## 3. 包结构
+
+仓库为 pnpm monorepo。**CSS 是核心导出，框架封装是外围。**
 
 ```
-src/tokens/index.ts          真源（TS，带类型）
-      │ scripts/gen-tokens.mjs
-      ▼
-src/styles/
-  tokens.css        :root 默认值 + .dark 覆写        ← 生成，勿手改
-  base.css          .fnb-prose 正文排版层             ← 新增
-  components.css    .fnb-button / .fnb-card / …      ← 从 SFC 外提
-  layout.css        .fnb-header / .fnb-sider / …     ← 新增
-  index.css         汇总入口
+packages/
+  core/                       @fnb-ui/core —— 核心导出
+    src/tokens/index.ts         token 真源（TS，带类型）
+    src/styles/                 ← scripts/gen-tokens.mjs 产出 tokens.css
+      tokens.css                  :root 默认值 + .dark 覆写   ← 生成，勿手改
+      base.css                    .fnb-prose 正文排版层
+      components.css              .fnb-button / .fnb-card / …  ← 从 SFC 外提
+      layout.css                  .fnb-header / .fnb-sider / …
+      index.css                   汇总入口
+    src/logic/                  框架无关逻辑
+  vue/                        @fnb-ui/vue —— Vue 3 薄封装，依赖 core
+    src/components/
+    src/providers/
+    src/composables/
+website/                      VitePress 文档站
 ```
 
-Vue 层只提供行为与结构，`import 'fnb-ui/style.css'` 之外不产出任何样式。
+**core 双入口**，使纯 CSS 使用者不会拉进任何 JS：
+
+```jsonc
+// packages/core/package.json
+"exports": {
+  "./style.css": "./dist/style.css",   // 纯 CSS，零 JS
+  ".":           "./dist/index.js"     // tokens 常量 + 类型 + 框架无关逻辑
+}
+```
+
+**包边界即第一原则的强制**：`@fnb-ui/vue` 不含任何 CSS 文件，物理上无法把样式塞回 SFC。将来 `@fnb-ui/vanilla` / `react` / `web-components` 与 vue 平级，同样只依赖 core。
+
+### logic 层的范围
+
+23 个组件中**仅 6 个**含框架无关逻辑：`Select`（open + click-outside + 键盘导航）、`Pagination`（页码窗口计算，纯函数）、`Dialog`（promise 化 + scroll-lock）、`Message`（队列 + 定时器）、`Image`（预览 + scroll-lock）、`Tabs`（激活项）。其余 16 个是 props→class 的映射，在 vue 包中即为数行模板。
+
+**不现在拆独立 `@fnb-ui/headless` 包**：6 个组件的逻辑量不足以支撑一个包。但 `core/src/logic/` 的目录与 exports 边界已经画好，将来真要拆分时成本接近零。
 
 ### 主题的三层作用域
 
@@ -90,7 +115,7 @@ Vue 层只提供行为与结构，`import 'fnb-ui/style.css'` 之外不产出任
 
 ### 4.1 真源与生成
 
-`src/tokens/index.ts` 为唯一定义，`scripts/gen-tokens.mjs` 生成 `src/styles/tokens.css`。生成产物提交进仓库（便于 review diff），并在 CI 校验"重新生成后无差异"。
+`packages/core/src/tokens/index.ts` 为唯一定义，`scripts/gen-tokens.mjs` 生成 `packages/core/src/styles/tokens.css`。生成产物提交进仓库（便于 review diff），并在 CI 校验"重新生成后无差异"。
 
 ### 4.2 原始层 → 语义层
 
@@ -114,7 +139,7 @@ Vue 层只提供行为与结构，`import 'fnb-ui/style.css'` 之外不产出任
 - `.dark { --fnb-shadow-color: #2f5ea8 }` 是**硬编码的蓝**，未引用 brand。粉色主题下暗色硬阴影仍是蓝的。
 - `--fnb-brand-hover` 是独立硬编码值，覆盖 brand 后不跟随。
 
-**视觉等价约束**：派生值必须与现有色值视觉等价。实现时逐个比对派生结果与原值，做一次性的前后并排对比供人工确认（不要边改边翻转覆写）；无法在可接受误差内等价的，保留硬编码并在 `tokens/index.ts` 注明原因。这是本期唯一允许的视觉变化点。
+**视觉等价约束**：派生值必须与现有色值视觉等价。实现时逐个比对派生结果与原值，做一次性的前后并排对比供人工确认（不要边改边翻转覆写）；无法在可接受误差内等价的，保留硬编码并在 `core/src/tokens/index.ts` 注明原因。这是本期唯一允许的视觉变化点。
 
 ### 4.3 补齐 scale
 
@@ -133,11 +158,11 @@ Vue 层只提供行为与结构，`import 'fnb-ui/style.css'` 之外不产出任
 
 **CSS 变量在 `@media` 查询条件里不生效**——`@media (min-width: var(--fnb-bp-md))` 静默失效，不报错。`@custom-media` 尚未落地可用。
 
-因此 breakpoint 在 `tokens/index.ts` 定义后，只生成 **SCSS 变量**（供 `@media` 使用）与 **TS 常量导出**（供 `useMediaQuery` 使用），**不生成 CSS 变量**。生成脚本需对 breakpoint 分组做此特殊处理。
+因此 breakpoint 在 `core/src/tokens/index.ts` 定义后，只生成 **SCSS 变量**（供 `@media` 使用）与 **TS 常量导出**（供 `useMediaQuery` 使用），**不生成 CSS 变量**。生成脚本需对 breakpoint 分组做此特殊处理。
 
 ### 4.5 类型收紧
 
-`FnbThemeOverrides` 从 `Record<string, string>` 收紧为 token 名的联合类型，写错即报错、有补全。类型由 `tokens/index.ts` 推导，不手写维护。
+`FnbThemeOverrides` 从 `Record<string, string>` 收紧为 token 名的联合类型，写错即报错、有补全。类型由 `core/src/tokens/index.ts` 推导，由 core 导出、vue 包重导出，不手写维护。
 
 ### 4.6 覆盖粒度：只做全局 token
 
@@ -151,7 +176,7 @@ Vue 层只提供行为与结构，`import 'fnb-ui/style.css'` 之外不产出任
 
 ### 4.8 主题预设
 
-`src/themes/index.ts` 导出 `pixivTheme` / `picaTheme` 等预设对象。同一份预设两用：传给 `FnbProvider`（动态），或由脚本生成 CSS 片段直接引入（静态）。
+`packages/core/src/themes/index.ts` 导出 `pixivTheme` / `picaTheme` 等预设对象（属 core，因其为纯数据）。同一份预设两用：传给 `FnbProvider`（动态），或由脚本生成 CSS 片段直接引入（静态）。
 
 ---
 
@@ -407,6 +432,7 @@ const { class: themeClass, style: themeStyle } = useThemeScope()
 4. 嵌套两层 `FnbProvider`，内层覆盖生效且不影响外层；卸载内层后外层主题正确恢复。
 5. `scripts/gen-tokens.mjs` 重新运行后 `tokens.css` 无 diff。
 6. 全库 SFC 中 `<style>` 块数量为 0。
+6b. **包边界**：`packages/vue/dist` 中不存在任何 `.css` 文件；`@fnb-ui/core/style.css` 的引入不触发任何 JS 加载。
 7. `FnbLink` 同时传 `external` 与自定义 `suffix-icon` 时，图标被覆盖而 `target` / `rel` 仍生效（正交性）。
 8. `tokens.css` 中不含任何 breakpoint 变量；SCSS 变量与 TS 常量各生成一份且取值一致。
 9. **同类控件三维对齐**：同一 size 下 `FnbButton` / `FnbInput` / `FnbSelect` 的 `height`、`borderTopWidth`、`boxShadow` 三项计算值完全相等，sm/md/lg 三档均需通过。
