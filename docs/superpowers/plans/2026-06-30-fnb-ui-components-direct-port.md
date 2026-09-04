@@ -46,6 +46,7 @@ Every component task below follows this procedure. Each task states the source p
 ### Task 1: FnbCard
 
 **Files:**
+
 - Create: `src/components/FnbCard.vue`
 - Test: `tests/FnbCard.spec.ts`
 - Modify: `src/index.ts`
@@ -103,6 +104,7 @@ Expected: PASS (3/3).
 
 Run: `pnpm test && pnpm lint && pnpm typecheck && pnpm verify`
 Then:
+
 ```bash
 git add src/components/FnbCard.vue tests/FnbCard.spec.ts src/index.ts
 git commit -m "feat(card): port FnbCard from PixivNow"
@@ -113,6 +115,7 @@ git commit -m "feat(card): port FnbCard from PixivNow"
 ### Task 2: FnbTag
 
 **Files:**
+
 - Create: `src/components/FnbTag.vue`
 - Test: `tests/FnbTag.spec.ts`
 - Modify: `src/index.ts`
@@ -169,6 +172,7 @@ describe('FnbTag', () => {
 - [ ] **Step 5: Verify + commit**
 
 Run: `pnpm test && pnpm lint && pnpm typecheck && pnpm verify`
+
 ```bash
 git add src/components/FnbTag.vue tests/FnbTag.spec.ts src/index.ts
 git commit -m "feat(tag): port FnbTag from PixivNow"
@@ -179,6 +183,7 @@ git commit -m "feat(tag): port FnbTag from PixivNow"
 ### Task 3: FnbInput
 
 **Files:**
+
 - Create: `src/components/FnbInput.vue`
 - Test: `tests/FnbInput.spec.ts`
 - Modify: `src/index.ts`
@@ -215,7 +220,12 @@ describe('FnbInput', () => {
 
   it('forwards type, placeholder, disabled, readonly to the input', () => {
     const w = mount(FnbInput, {
-      props: { type: 'password', placeholder: 'pw', disabled: true, readonly: true },
+      props: {
+        type: 'password',
+        placeholder: 'pw',
+        disabled: true,
+        readonly: true,
+      },
     })
     const el = w.find('input').element
     expect(el.type).toBe('password')
@@ -230,6 +240,7 @@ describe('FnbInput', () => {
 - [ ] **Step 3: Port + register.**
 - [ ] **Step 4: GREEN** — `pnpm test tests/FnbInput.spec.ts` → PASS (3/3).
 - [ ] **Step 5: Verify + commit**
+
 ```bash
 git add src/components/FnbInput.vue tests/FnbInput.spec.ts src/index.ts
 git commit -m "feat(input): port FnbInput from PixivNow"
@@ -240,6 +251,7 @@ git commit -m "feat(input): port FnbInput from PixivNow"
 ### Task 4: FnbProgress
 
 **Files:**
+
 - Create: `src/components/FnbProgress.vue`
 - Test: `tests/FnbProgress.spec.ts`
 - Modify: `src/index.ts`
@@ -278,7 +290,9 @@ describe('FnbProgress', () => {
   })
 
   it('shows the rounded value label when showValue is set', () => {
-    const w = mount(FnbProgress, { props: { percentage: 42.6, showValue: true } })
+    const w = mount(FnbProgress, {
+      props: { percentage: 42.6, showValue: true },
+    })
     expect(w.text()).toContain('43%')
   })
 })
@@ -288,6 +302,7 @@ describe('FnbProgress', () => {
 - [ ] **Step 3: Port + register.**
 - [ ] **Step 4: GREEN** — PASS (4/4). (If the root class differs from `fnb-progress`, reconcile to the source.)
 - [ ] **Step 5: Verify + commit**
+
 ```bash
 git add src/components/FnbProgress.vue tests/FnbProgress.spec.ts src/index.ts
 git commit -m "feat(progress): port FnbProgress from PixivNow"
@@ -298,6 +313,7 @@ git commit -m "feat(progress): port FnbProgress from PixivNow"
 ### Task 5: FnbScrollbar
 
 **Files:**
+
 - Create: `src/components/FnbScrollbar.vue`
 - Test: `tests/FnbScrollbar.spec.ts`
 - Modify: `src/index.ts`
@@ -335,6 +351,7 @@ describe('FnbScrollbar', () => {
 
 - [ ] **Step 2: RED** → FAIL. **Step 3:** Port + register. **Step 4: GREEN** → PASS (2/2).
 - [ ] **Step 5: Verify + commit**
+
 ```bash
 git add src/components/FnbScrollbar.vue tests/FnbScrollbar.spec.ts src/index.ts
 git commit -m "feat(scrollbar): port FnbScrollbar from PixivNow"
@@ -345,6 +362,7 @@ git commit -m "feat(scrollbar): port FnbScrollbar from PixivNow"
 ### Task 6: FnbEllipsis
 
 **Files:**
+
 - Create: `src/components/FnbEllipsis.vue`
 - Test: `tests/FnbEllipsis.spec.ts`
 - Modify: `src/index.ts`
@@ -385,6 +403,7 @@ describe('FnbEllipsis', () => {
 
 - [ ] **Step 2: RED** → FAIL. **Step 3:** Port + register. **Step 4: GREEN** → PASS (3/3).
 - [ ] **Step 5: Verify + commit**
+
 ```bash
 git add src/components/FnbEllipsis.vue tests/FnbEllipsis.spec.ts src/index.ts
 git commit -m "feat(ellipsis): port FnbEllipsis from PixivNow"
@@ -395,6 +414,7 @@ git commit -m "feat(ellipsis): port FnbEllipsis from PixivNow"
 ### Task 7: FnbTable
 
 **Files:**
+
 - Create: `src/components/FnbTable.vue`
 - Test: `tests/FnbTable.spec.ts`
 - Modify: `src/index.ts`
@@ -428,6 +448,7 @@ describe('FnbTable', () => {
 
 - [ ] **Step 2: RED** → FAIL. **Step 3:** Port + register. **Step 4: GREEN** → PASS (1/1). (If the root is a wrapper `div` around `<table>`, the `find('table')` still holds.)
 - [ ] **Step 5: Verify + commit**
+
 ```bash
 git add src/components/FnbTable.vue tests/FnbTable.spec.ts src/index.ts
 git commit -m "feat(table): port FnbTable from PixivNow"
@@ -438,6 +459,7 @@ git commit -m "feat(table): port FnbTable from PixivNow"
 ### Task 8: FnbResult
 
 **Files:**
+
 - Create: `src/components/FnbResult.vue`
 - Test: `tests/FnbResult.spec.ts`
 - Modify: `src/index.ts`
@@ -460,7 +482,9 @@ import { FnbResult } from '../src'
 
 describe('FnbResult', () => {
   it('renders title and description', () => {
-    const w = mount(FnbResult, { props: { title: 'Not found', description: 'gone' } })
+    const w = mount(FnbResult, {
+      props: { title: 'Not found', description: 'gone' },
+    })
     expect(w.text()).toContain('Not found')
     expect(w.text()).toContain('gone')
   })
@@ -480,6 +504,7 @@ describe('FnbResult', () => {
 
 - [ ] **Step 2: RED** → FAIL. **Step 3:** Port + register. **Step 4: GREEN** → PASS (3/3).
 - [ ] **Step 5: Verify + commit**
+
 ```bash
 git add src/components/FnbResult.vue tests/FnbResult.spec.ts src/index.ts
 git commit -m "feat(result): port FnbResult from PixivNow"
@@ -490,6 +515,7 @@ git commit -m "feat(result): port FnbResult from PixivNow"
 ### Task 9: FnbAlert (renamed from FnbMbox)
 
 **Files:**
+
 - Create: `src/components/FnbAlert.vue`
 - Test: `tests/FnbAlert.spec.ts`
 - Modify: `src/index.ts`
@@ -540,6 +566,7 @@ describe('FnbAlert', () => {
 
 - [ ] **Step 2: RED** → FAIL. **Step 3:** Port + rename `fnb-mbox*`→`fnb-alert*` + register `FnbAlert`. **Step 4: GREEN** → PASS (4/4).
 - [ ] **Step 5: Verify + commit**
+
 ```bash
 git add src/components/FnbAlert.vue tests/FnbAlert.spec.ts src/index.ts
 git commit -m "feat(alert): port FnbMbox from PixivNow as FnbAlert"
@@ -550,6 +577,7 @@ git commit -m "feat(alert): port FnbMbox from PixivNow as FnbAlert"
 ### Task 10: FnbFloatButton
 
 **Files:**
+
 - Create: `src/components/FnbFloatButton.vue`
 - Test: `tests/FnbFloatButton.spec.ts`
 - Modify: `src/index.ts`
@@ -579,7 +607,9 @@ describe('FnbFloatButton', () => {
   })
 
   it('renders the menu slot', () => {
-    const w = mount(FnbFloatButton, { slots: { menu: '<a class="m">menu-item</a>' } })
+    const w = mount(FnbFloatButton, {
+      slots: { menu: '<a class="m">menu-item</a>' },
+    })
     expect(w.find('a.m').exists()).toBe(true)
   })
 
@@ -594,6 +624,7 @@ describe('FnbFloatButton', () => {
 
 - [ ] **Step 2: RED** → FAIL. **Step 3:** Port + register. **Step 4: GREEN** → PASS (3/3).
 - [ ] **Step 5: Verify + commit**
+
 ```bash
 git add src/components/FnbFloatButton.vue tests/FnbFloatButton.spec.ts src/index.ts
 git commit -m "feat(float-button): port FnbFloatButton from PixivNow"
@@ -604,6 +635,7 @@ git commit -m "feat(float-button): port FnbFloatButton from PixivNow"
 ### Task 11: FnbSkeleton
 
 **Files:**
+
 - Create: `src/components/FnbSkeleton.vue`
 - Test: `tests/FnbSkeleton.spec.ts`
 - Modify: `src/index.ts`
@@ -654,6 +686,7 @@ describe('FnbSkeleton', () => {
 
 - [ ] **Step 2: RED** → FAIL. **Step 3:** Port + inline `@keyframes imgProgress` + register. **Step 4: GREEN** → PASS (4/4).
 - [ ] **Step 5: Verify + commit**
+
 ```bash
 git add src/components/FnbSkeleton.vue tests/FnbSkeleton.spec.ts src/index.ts
 git commit -m "feat(skeleton): port FnbSkeleton from PixivNow (inline imgProgress keyframes)"
@@ -664,6 +697,7 @@ git commit -m "feat(skeleton): port FnbSkeleton from PixivNow (inline imgProgres
 ### Task 12: FnbSpin
 
 **Files:**
+
 - Create: `src/components/FnbSpin.vue`
 - Test: `tests/FnbSpin.spec.ts`
 - Modify: `src/index.ts`
@@ -707,6 +741,7 @@ describe('FnbSpin', () => {
 
 - [ ] **Step 2: RED** → FAIL. **Step 3:** Port + inline `svg.spin` rule + `@keyframes spin` + register. **Step 4: GREEN** → PASS (3/3).
 - [ ] **Step 5: Verify + commit**
+
 ```bash
 git add src/components/FnbSpin.vue tests/FnbSpin.spec.ts src/index.ts
 git commit -m "feat(spin): port FnbSpin from PixivNow (inline spin keyframes)"
@@ -717,6 +752,7 @@ git commit -m "feat(spin): port FnbSpin from PixivNow (inline spin keyframes)"
 ### Task 13: FnbImage
 
 **Files:**
+
 - Create: `src/components/FnbImage.vue`
 - Test: `tests/FnbImage.spec.ts`
 - Modify: `src/index.ts`
@@ -746,13 +782,18 @@ describe('FnbImage', () => {
   })
 
   it('swaps to fallback on error', async () => {
-    const w = mount(FnbImage, { props: { src: '/broken.png', fallback: '/fallback.png' } })
+    const w = mount(FnbImage, {
+      props: { src: '/broken.png', fallback: '/fallback.png' },
+    })
     await w.find('img').trigger('error')
     expect(w.find('img').element.getAttribute('src')).toBe('/fallback.png')
   })
 
   it('opens the teleported preview on click', async () => {
-    const w = mount(FnbImage, { props: { src: '/a.png', previewSrc: '/big.png' }, attachTo: document.body })
+    const w = mount(FnbImage, {
+      props: { src: '/a.png', previewSrc: '/big.png' },
+      attachTo: document.body,
+    })
     await w.find('img').trigger('click')
     const preview = document.body.querySelector('img[src="/big.png"]')
     expect(preview).not.toBeNull()
@@ -765,6 +806,7 @@ describe('FnbImage', () => {
 
 - [ ] **Step 2: RED** → FAIL. **Step 3:** Port + rename transition + add scoped fade CSS + register. **Step 4: GREEN** → PASS (3/3).
 - [ ] **Step 5: Verify + commit**
+
 ```bash
 git add src/components/FnbImage.vue tests/FnbImage.spec.ts src/index.ts
 git commit -m "feat(image): port FnbImage from PixivNow (self-contained preview transition)"
@@ -775,6 +817,7 @@ git commit -m "feat(image): port FnbImage from PixivNow (self-contained preview 
 ### Task 14: FnbPagination
 
 **Files:**
+
 - Create: `src/components/FnbPagination.vue`
 - Test: `tests/FnbPagination.spec.ts`
 - Modify: `src/index.ts`
@@ -798,7 +841,9 @@ import { FnbPagination } from '../src'
 describe('FnbPagination', () => {
   it('renders a button for each page when total is small', () => {
     // 30 items / 10 per page = 3 pages
-    const w = mount(FnbPagination, { props: { page: 1, itemCount: 30, pageSize: 10 } })
+    const w = mount(FnbPagination, {
+      props: { page: 1, itemCount: 30, pageSize: 10 },
+    })
     const labels = w.findAll('button').map((b) => b.text())
     expect(labels).toContain('1')
     expect(labels).toContain('2')
@@ -806,7 +851,9 @@ describe('FnbPagination', () => {
   })
 
   it('emits update:page when a page button is clicked', async () => {
-    const w = mount(FnbPagination, { props: { page: 1, itemCount: 30, pageSize: 10 } })
+    const w = mount(FnbPagination, {
+      props: { page: 1, itemCount: 30, pageSize: 10 },
+    })
     const pageTwo = w.findAll('button').find((b) => b.text() === '2')!
     await pageTwo.trigger('click')
     expect(w.emitted('update:page')).toEqual([[2]])
@@ -814,12 +861,16 @@ describe('FnbPagination', () => {
 
   it('shows an ellipsis when pages exceed pageSlot', () => {
     // 200 items / 10 = 20 pages, default pageSlot 7
-    const w = mount(FnbPagination, { props: { page: 10, itemCount: 200, pageSize: 10 } })
+    const w = mount(FnbPagination, {
+      props: { page: 10, itemCount: 200, pageSize: 10 },
+    })
     expect(w.text()).toContain('...')
   })
 
   it('does not emit when clicking the current page', async () => {
-    const w = mount(FnbPagination, { props: { page: 1, itemCount: 30, pageSize: 10 } })
+    const w = mount(FnbPagination, {
+      props: { page: 1, itemCount: 30, pageSize: 10 },
+    })
     const pageOne = w.findAll('button').find((b) => b.text() === '1')!
     await pageOne.trigger('click')
     // clamped/no-op: either no event or emits the same page — assert it never moves off 1
@@ -833,6 +884,7 @@ describe('FnbPagination', () => {
 
 - [ ] **Step 2: RED** → FAIL. **Step 3:** Port + register. **Step 4: GREEN** → PASS (4/4).
 - [ ] **Step 5: Verify + commit**
+
 ```bash
 git add src/components/FnbPagination.vue tests/FnbPagination.spec.ts src/index.ts
 git commit -m "feat(pagination): port FnbPagination from PixivNow"
@@ -843,6 +895,7 @@ git commit -m "feat(pagination): port FnbPagination from PixivNow"
 ### Task 15: FnbSelect
 
 **Files:**
+
 - Create: `src/components/FnbSelect.vue`
 - Test: `tests/FnbSelect.spec.ts`
 - Modify: `src/index.ts`
@@ -864,7 +917,9 @@ function onDocPointerDown(e: PointerEvent) {
   }
 }
 onMounted(() => document.addEventListener('pointerdown', onDocPointerDown))
-onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocPointerDown))
+onBeforeUnmount(() =>
+  document.removeEventListener('pointerdown', onDocPointerDown)
+)
 ```
 
 Bind `ref="rootEl"` on the component's root element (replacing whatever element the source passed to `onClickOutside`). Also add explicit `import { ref, computed } from 'vue'` for the other composition APIs the source uses. Style uses `@include fnb-border-sm`, `fnb-shadow-xs`, `fnb-shadow-sm` → add `@use '../styles/fnb' as *;`. Keep the source's keyboard/ARIA logic and the local `fnb-select-dropdown` Transition (its CSS is already scoped in the source).
@@ -892,15 +947,21 @@ describe('FnbSelect', () => {
 
   it('opens the listbox on trigger click and lists options', async () => {
     const w = mount(FnbSelect, { props: { options, modelValue: 'light' } })
-    await w.find('[role="combobox"], button, .fnb-select__trigger').trigger('click')
+    await w
+      .find('[role="combobox"], button, .fnb-select__trigger')
+      .trigger('click')
     expect(w.text()).toContain('Light')
     expect(w.text()).toContain('Dark')
   })
 
   it('emits update:modelValue when an option is chosen', async () => {
     const w = mount(FnbSelect, { props: { options, modelValue: 'light' } })
-    await w.find('[role="combobox"], button, .fnb-select__trigger').trigger('click')
-    const darkOption = w.findAll('[role="option"], li').find((n) => n.text().includes('Dark'))!
+    await w
+      .find('[role="combobox"], button, .fnb-select__trigger')
+      .trigger('click')
+    const darkOption = w
+      .findAll('[role="option"], li')
+      .find((n) => n.text().includes('Dark'))!
     await darkOption.trigger('click')
     expect(w.emitted('update:modelValue')).toEqual([['dark']])
   })
@@ -913,6 +974,7 @@ describe('FnbSelect', () => {
 - [ ] **Step 5: Verify + commit**
 
 Run full gates (`pnpm test && pnpm lint && pnpm typecheck && pnpm verify`).
+
 ```bash
 git add src/components/FnbSelect.vue tests/FnbSelect.spec.ts src/index.ts
 git commit -m "feat(select): port FnbSelect from PixivNow (internal click-outside, no vueuse)"
@@ -923,6 +985,7 @@ git commit -m "feat(select): port FnbSelect from PixivNow (internal click-outsid
 ## Self-Review
 
 **Spec coverage (this plan targets spec §5 "直接移植" + the `FnbMbox→FnbAlert` rename):**
+
 - Direct-port list (FnbCard, FnbInput, FnbSelect, FnbTag, FnbTable, FnbPagination, FnbProgress, FnbSkeleton, FnbSpin, FnbScrollbar, FnbImage, FnbFloatButton, FnbEllipsis, FnbResult) → Tasks 1–8, 10–15. All 14 present.
 - Rename `FnbMbox → FnbAlert` → Task 9.
 - Spec §6.3 behavior fidelity → enforced in Global Constraints + the "preserve verbatim" port procedure.
@@ -930,6 +993,7 @@ git commit -m "feat(select): port FnbSelect from PixivNow (internal click-outsid
 - Out of scope (later plans): FnbTabs/Provider/Hook (Plan 3), docs site (Plan 4), Nuxt + publish (Plan 5), ThemeToggle (stays in consuming projects).
 
 **Decisions baked in (flagged for the executor):**
+
 - No `@vueuse/core` dependency — FnbSelect uses an internal click-outside listener (Task 15).
 - Inherited animations/transitions are inlined per-component (Tasks 11 imgProgress, 12 spin, 13 preview fade), matching FnbButton's precedent — no global animation sheet, no foundation churn.
 

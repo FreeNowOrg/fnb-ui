@@ -13,11 +13,11 @@ press interaction.
 
 ## Props
 
-| Prop       | Type                                            | Default     |
-| ---------- | ----------------------------------------------- | ----------- |
+| Prop       | Type                                              | Default     |
+| ---------- | ------------------------------------------------- | ----------- |
 | `variant`  | `'default' \| 'primary' \| 'success' \| 'danger'` | `'default'` |
-| `size`     | `'sm' \| 'md' \| 'lg'`                          | `'md'`      |
-| `loading`  | `boolean`                                       | `false`     |
-| `disabled` | `boolean`                                       | `false`     |
-| `tag`      | `string`                                        | —           |
-| `href`     | `string`                                        | —           |
+| `size`     | `'sm' \| 'md' \| 'lg'`                            | `'md'`      |
+| `loading`  | `boolean`                                         | `false`     |
+| `disabled` | `boolean`                                         | `false`     |
+| `tag`      | `string`                                          | —           |
+| `href`     | `string`                                          | —           |

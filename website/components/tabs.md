@@ -20,11 +20,11 @@ the boxed nav; `size` adjusts density.
 
 ### FnbTabs
 
-| Prop    | Type                                | Default    |
-| ------- | ----------------------------------- | ---------- |
-| `value` | `string` (v-model:value)            | —          |
-| `type`  | `'line' \| 'segment'`               | `'line'`   |
-| `size`  | `'small' \| 'medium' \| 'large'`    | `'medium'` |
+| Prop    | Type                             | Default    |
+| ------- | -------------------------------- | ---------- |
+| `value` | `string` (v-model:value)         | —          |
+| `type`  | `'line' \| 'segment'`            | `'line'`   |
+| `size`  | `'small' \| 'medium' \| 'large'` | `'medium'` |
 
 ### FnbTabPane
 

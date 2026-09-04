@@ -5,12 +5,23 @@
   "type": "module",
   "license": "MIT",
   "author": "FreeNowOrg",
-  "repository": { "type": "git", "url": "git+https://github.com/FreeNowOrg/fnb-ui.git", "directory": "packages/core" },
-  "sideEffects": ["**/*.css"],
-  "files": ["dist"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FreeNowOrg/fnb-ui.git",
+    "directory": "packages/core"
+  },
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "files": [
+    "dist"
+  ],
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
     "./style.css": "./dist/style.css",
     "./package.json": "./package.json"
   },

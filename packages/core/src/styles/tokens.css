@@ -25,7 +25,8 @@
   --fnb-shadow-color: var(--fnb-border);
 
   /* Fonts */
-  --fnb-font-sans: 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', system-ui, sans-serif;
+  --fnb-font-sans:
+    'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', system-ui, sans-serif;
   --fnb-font-display: 'Archivo Black', 'Noto Sans SC', system-ui, sans-serif;
   --fnb-font-mono: 'Space Grotesk', ui-monospace, monospace;
 

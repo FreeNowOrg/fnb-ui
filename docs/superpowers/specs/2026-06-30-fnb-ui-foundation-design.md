@@ -29,13 +29,13 @@
 
 ## 2. 项目身份
 
-| 项 | 值 |
-|---|---|
-| npm 包名 | `fnb-ui`（无 scope，已确认 npm 上未被占用） |
-| GitHub 仓库 | `FreeNowOrg/fnb-ui` |
-| 组件前缀 | `Fnb`（承载 Free Neubrutalism，保留） |
-| License | MIT（public） |
-| 包管理器 | pnpm |
+| 项          | 值                                          |
+| ----------- | ------------------------------------------- |
+| npm 包名    | `fnb-ui`（无 scope，已确认 npm 上未被占用） |
+| GitHub 仓库 | `FreeNowOrg/fnb-ui`                         |
+| 组件前缀    | `Fnb`（承载 Free Neubrutalism，保留）       |
+| License     | MIT（public）                               |
+| 包管理器    | pnpm                                        |
 
 ---
 
@@ -43,19 +43,19 @@
 
 > 调研时点 2026-06-30，版本均经 `registry.npmjs.org` 实时查询。用户要求尽量采用 Vite 团队的 Rust 工具链（Vite 8 / Rolldown / Oxc），下表为务实落地结论。
 
-| 用途 | 包 | 版本 | 说明 / 坑 |
-|---|---|---|---|
-| 构建/打包 | `vite` | `^8.1.1` | **Rolldown 已内置为默认打包器**，无需 `rolldown-vite` 或 override。Node ≥20.19/22.12 |
-| Vue SFC | `@vitejs/plugin-vue` | `^6.0.7` | peer 已含 `vite ^8` |
-| 类型声明 | `vite-plugin-dts` | `^5.0.3` | 5.x 已转 `unplugin-dts` 内核、适配 Rolldown/Vue。**构建后必须人工核验 `.d.ts` 完整性** |
-| 类型检查器 | `vue-tsc` | `^3.3.5` | Volar 系；与下方 Pug 插件同版本线 |
-| Pug 类型检查 | `@vue/language-plugin-pug` | `^3.3.5` | 模板用 Pug **必须**挂这个，否则 vue-tsc 看不懂 `template lang="pug"` |
-| Pug 编译 | `pug` | `^3.0.4` | `@vitejs/plugin-vue` 构建期调用 |
-| 样式 | `sass-embedded` | `^1.100.0` | Vite 官方推荐，比纯 `sass` 快 |
-| Lint(JS/TS) | `oxlint` | `^1.72.0` | stable、生产可用。**只 lint `<script>`，不碰 `<template>`** |
-| 格式化 | `prettier` + `@prettier/plugin-pug` | `^3.9.4` / `^3.4.2` | 见下方"为什么不用 oxfmt" |
-| 文档站 | `vitepress` | `^1.6.4` | 自带 Vite 5；够用且稳 |
-| 文档 demo | `vitepress-demo-plugin` | `^1.5.1` | Markdown 内嵌 live 组件 + 源码展示 |
+| 用途         | 包                                  | 版本                | 说明 / 坑                                                                              |
+| ------------ | ----------------------------------- | ------------------- | -------------------------------------------------------------------------------------- |
+| 构建/打包    | `vite`                              | `^8.1.1`            | **Rolldown 已内置为默认打包器**，无需 `rolldown-vite` 或 override。Node ≥20.19/22.12   |
+| Vue SFC      | `@vitejs/plugin-vue`                | `^6.0.7`            | peer 已含 `vite ^8`                                                                    |
+| 类型声明     | `vite-plugin-dts`                   | `^5.0.3`            | 5.x 已转 `unplugin-dts` 内核、适配 Rolldown/Vue。**构建后必须人工核验 `.d.ts` 完整性** |
+| 类型检查器   | `vue-tsc`                           | `^3.3.5`            | Volar 系；与下方 Pug 插件同版本线                                                      |
+| Pug 类型检查 | `@vue/language-plugin-pug`          | `^3.3.5`            | 模板用 Pug **必须**挂这个，否则 vue-tsc 看不懂 `template lang="pug"`                   |
+| Pug 编译     | `pug`                               | `^3.0.4`            | `@vitejs/plugin-vue` 构建期调用                                                        |
+| 样式         | `sass-embedded`                     | `^1.100.0`          | Vite 官方推荐，比纯 `sass` 快                                                          |
+| Lint(JS/TS)  | `oxlint`                            | `^1.72.0`           | stable、生产可用。**只 lint `<script>`，不碰 `<template>`**                            |
+| 格式化       | `prettier` + `@prettier/plugin-pug` | `^3.9.4` / `^3.4.2` | 见下方"为什么不用 oxfmt"                                                               |
+| 文档站       | `vitepress`                         | `^1.6.4`            | 自带 Vite 5；够用且稳                                                                  |
+| 文档 demo    | `vitepress-demo-plugin`             | `^1.5.1`            | Markdown 内嵌 live 组件 + 源码展示                                                     |
 
 ### 关键决策与理由
 
@@ -108,12 +108,12 @@ export default defineConfig({
 ```jsonc
 {
   "exports": {
-    ".":            { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
-    "./style.css":  "./dist/style.css",
-    "./package.json": "./package.json"
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./style.css": "./dist/style.css",
+    "./package.json": "./package.json",
     // "./nuxt" 在 Nuxt module 落地时追加（§8）
   },
-  "sideEffects": ["**/*.css", "**/*.scss"]
+  "sideEffects": ["**/*.css", "**/*.scss"],
 }
 ```
 
@@ -129,16 +129,16 @@ export default defineConfig({
 
 ### 新增 / API 化（PixivNow 已有雏形，纳库时正式定义接口）
 
-| 组件 | 来源 | 处置 |
-|---|---|---|
+| 组件          | 来源                                                                     | 处置                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| ------------- | ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **`FnbIcon`** | PixivNow `app/components/FnbIcon.vue`（无 props 的 `i.fnb-icon` 包裹器） | 对标 naive `NIcon` 加 props：`size`(`number→px`/`string`)、`color`、`component`（直接传图标组件，免插槽）。`inheritAttrs:false` + 默认可覆盖的 `aria-hidden`。**砍掉** naive 的 `depth`（依赖主题 opacity token，YAGNI）与 nesting 警告。样式走 naive 路线：包裹 `<i>` 只设 `font-size`/`color` + `fill: currentColor`，靠图标自带 `currentColor` 着色；不强制 `stroke`、不写 `.tabler-icon` 特例（tabler 的 `fill="none"` presentation attribute 自然胜出）。`FnbButton` 的 `:deep(.fnb-icon)` 即指此 class，纳库后成正式契约。 |
 
 ### 改名（对齐主流命名）
 
-| 现名 | 新名 | 依据 |
-|---|---|---|
-| `FnbMbox` | **`FnbAlert`** | 带 type/closable/header 的静态内联提示 = naive `n-alert` / element `el-alert` |
-| `FnbToast` + `useToast` | **`FnbMessage` 体系 + `useMessage()`** | 轻量飘条统一用 naive 的 "Message" 术语；"Toast" 偏 shadcn/chakra |
+| 现名                    | 新名                                   | 依据                                                                          |
+| ----------------------- | -------------------------------------- | ----------------------------------------------------------------------------- |
+| `FnbMbox`               | **`FnbAlert`**                         | 带 type/closable/header 的静态内联提示 = naive `n-alert` / element `el-alert` |
+| `FnbToast` + `useToast` | **`FnbMessage` 体系 + `useMessage()`** | 轻量飘条统一用 naive 的 "Message" 术语；"Toast" 偏 shadcn/chakra              |
 
 > 其余保持不变的组件名（Button/Card/Input/Select/Tag/Table/Pagination/Progress/Skeleton/Image/Result/Ellipsis/Scrollbar/FloatButton）本就与 naive/element/ant 对齐。`FnbSpin` 采用 naive 风（`n-spin`，包裹内容加 loading 遮罩），已确认不改名为 Loading。
 
@@ -160,9 +160,9 @@ export default defineConfig({
 抛弃现有扁平 `tabs: [{key,label}]` prop，改 naive 风组合式 + provide/inject：
 
 ```pug
-FnbTabs(v-model:value="active" type="segment" size="small")
-  FnbTabPane(name="light" tab="Light") …panel content…
-  FnbTabPane(name="dark" tab="Dark") …panel content…
+FnbTabs(v-model:value='active', type='segment', size='small')
+  FnbTabPane(name='light', tab='Light') …panel content…
+  FnbTabPane(name='dark', tab='Dark') …panel content…
 ```
 
 - `FnbTabs` props：`value`(v-model) · `type`（`line` | `segment`）· `size`（`small` | `medium` | `large`）。
@@ -174,11 +174,11 @@ FnbTabs(v-model:value="active" type="segment" size="small")
 
 抛弃现有"模块级单例 `ref` + `FnbProvider` 直接渲染"的做法，改 naive 风 **provide/inject 上下文 + hook**，解决 SSR 安全、作用域隔离、可测试性：
 
-| Provider | Hook | 职责 | 替代 |
-|---|---|---|---|
-| `FnbConfigProvider` | （inject 内部用） | 主题 token 覆写（`theme-overrides`）+ 暗色模式注入 | 新增 |
-| `FnbMessageProvider` | `useMessage()` | 轻量飘条（info/success/warning/error） | 旧 `useToast` + `FnbToast` |
-| `FnbDialogProvider` | `useDialog()` | 确认/对话框（返回 Promise） | 旧 `useDialog` + `FnbDialog` |
+| Provider             | Hook              | 职责                                               | 替代                         |
+| -------------------- | ----------------- | -------------------------------------------------- | ---------------------------- |
+| `FnbConfigProvider`  | （inject 内部用） | 主题 token 覆写（`theme-overrides`）+ 暗色模式注入 | 新增                         |
+| `FnbMessageProvider` | `useMessage()`    | 轻量飘条（info/success/warning/error）             | 旧 `useToast` + `FnbToast`   |
+| `FnbDialogProvider`  | `useDialog()`     | 确认/对话框（返回 Promise）                        | 旧 `useDialog` + `FnbDialog` |
 
 - **实现以 naive 源码为蓝本**（已克隆至 `../naive-ui`，见 `src/message/src/`、`src/dialog/src/`）。地道 Vue3 形态：`context.ts` 暴露 typed `InjectionKey` → Provider 组件 `defineComponent` 内持有 `reactive` 列表、构造 `api` 对象、`provide(key, api)`、用 `Teleport` 渲染各条目 → `useMessage()`/`useDialog()` 仅 `inject(key, null)`，无 Provider 时 `throw`。message api 形如 `create/info/success/warning/error/destroyAll`，返回带 `.destroy()` 的 handle。**避免 React 味写法**（render-prop、prop-drilling、模块级单例）。
 - `useMessage()` / `useDialog()` **读 inject 进来的上下文**，不再是模块级全局单例。组件树外层需挂对应 Provider。

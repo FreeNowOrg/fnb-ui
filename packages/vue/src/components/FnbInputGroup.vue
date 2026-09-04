@@ -1,5 +1,7 @@
 <template lang="pug">
-.fnb-input-group(:class='size !== "md" ? `fnb-input-group--${size}` : undefined')
+.fnb-input-group(
+  :class='size !== "md" ? `fnb-input-group--${size}` : undefined'
+)
   slot
 </template>
 

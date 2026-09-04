@@ -26,28 +26,28 @@
 
 ## File Structure
 
-| 路径 | 责任 |
-|---|---|
-| `pnpm-workspace.yaml` | **修改**。`packages: ['packages/*', 'website']` |
-| `package.json`（根） | **修改**。变为 private workspace root，只留跨包脚本与共享 devDeps |
-| `packages/core/package.json` | **新建**。`@fnb-ui/core`，双入口 exports |
-| `packages/core/src/tokens/index.ts` | **新建**。token 唯一真源 + 类型 |
-| `packages/core/src/themes/index.ts` | **新建**。`pixivTheme` / `picaTheme` 预设（纯数据） |
-| `packages/core/src/styles/tokens.css` | **生成物**，勿手改 |
-| `packages/core/src/styles/_breakpoints.scss` | **生成物**，勿手改 |
-| `packages/core/src/styles/base.css` | **新建**。`.fnb-prose` 排版层 + `<hr>` |
-| `packages/core/src/styles/components.css` | **新建**。全部组件样式（外提自 19 个 SFC） |
-| `packages/core/src/styles/index.css` | **新建**。汇总入口 |
-| `packages/core/src/logic/` | **新建**。框架无关逻辑（本计划内先放 `scroll-lock.ts`） |
-| `packages/core/src/index.ts` | **新建**。导出 tokens / themes / types / logic |
-| `packages/core/scripts/gen-tokens.mjs` | **新建**。真源 → tokens.css + _breakpoints.scss |
-| `packages/vue/package.json` | **新建**。`@fnb-ui/vue`，依赖 `@fnb-ui/core` |
-| `packages/vue/src/components/*.vue` | **迁移 + 修改** ×19。删 `<style>`；`FnbSelect` 类名改 BEM |
-| `packages/vue/src/providers/*.vue` | **迁移 + 修改**。删 `<style>`；Teleport 根元素接主题 |
-| `packages/vue/src/providers/useThemeScope.ts` | **新建**。Teleport 内容的主题作用域 |
-| `packages/vue/tests/*.spec.ts` | **迁移**。22 个现有 spec 原样迁入 |
-| `scripts/verify-dist.mjs` | **修改**。改为逐包校验，补 CSS 层与包边界断言 |
-| `src/`（旧） | **删除**（内容已分流至两个包） |
+| 路径                                          | 责任                                                              |
+| --------------------------------------------- | ----------------------------------------------------------------- |
+| `pnpm-workspace.yaml`                         | **修改**。`packages: ['packages/*', 'website']`                   |
+| `package.json`（根）                          | **修改**。变为 private workspace root，只留跨包脚本与共享 devDeps |
+| `packages/core/package.json`                  | **新建**。`@fnb-ui/core`，双入口 exports                          |
+| `packages/core/src/tokens/index.ts`           | **新建**。token 唯一真源 + 类型                                   |
+| `packages/core/src/themes/index.ts`           | **新建**。`pixivTheme` / `picaTheme` 预设（纯数据）               |
+| `packages/core/src/styles/tokens.css`         | **生成物**，勿手改                                                |
+| `packages/core/src/styles/_breakpoints.scss`  | **生成物**，勿手改                                                |
+| `packages/core/src/styles/base.css`           | **新建**。`.fnb-prose` 排版层 + `<hr>`                            |
+| `packages/core/src/styles/components.css`     | **新建**。全部组件样式（外提自 19 个 SFC）                        |
+| `packages/core/src/styles/index.css`          | **新建**。汇总入口                                                |
+| `packages/core/src/logic/`                    | **新建**。框架无关逻辑（本计划内先放 `scroll-lock.ts`）           |
+| `packages/core/src/index.ts`                  | **新建**。导出 tokens / themes / types / logic                    |
+| `packages/core/scripts/gen-tokens.mjs`        | **新建**。真源 → tokens.css + _breakpoints.scss                   |
+| `packages/vue/package.json`                   | **新建**。`@fnb-ui/vue`，依赖 `@fnb-ui/core`                      |
+| `packages/vue/src/components/*.vue`           | **迁移 + 修改** ×19。删 `<style>`；`FnbSelect` 类名改 BEM         |
+| `packages/vue/src/providers/*.vue`            | **迁移 + 修改**。删 `<style>`；Teleport 根元素接主题              |
+| `packages/vue/src/providers/useThemeScope.ts` | **新建**。Teleport 内容的主题作用域                               |
+| `packages/vue/tests/*.spec.ts`                | **迁移**。22 个现有 spec 原样迁入                                 |
+| `scripts/verify-dist.mjs`                     | **修改**。改为逐包校验，补 CSS 层与包边界断言                     |
+| `src/`（旧）                                  | **删除**（内容已分流至两个包）                                    |
 
 **测试策略**：尺寸对齐在新架构下**由构造保证**（所有控件引用同一组变量），故用**静态 CSS 断言**验证（解析 CSS 文本，断言变量引用与无硬编码），不引入浏览器测试依赖。组件行为沿用现有 `@vue/test-utils` 单测。
 
@@ -58,6 +58,7 @@
 纯搬迁任务，**不改任何行为**。验收标准是现有 22 个 spec 文件全部继续通过。
 
 **Files:**
+
 - Modify: `pnpm-workspace.yaml`, `package.json`
 - Create: `packages/core/package.json`, `packages/core/vite.config.ts`, `packages/core/tsconfig.json`, `packages/core/src/index.ts`, `packages/core/src/styles/index.scss`
 - Create: `packages/vue/package.json`, `packages/vue/vite.config.ts`, `packages/vue/tsconfig.json`
@@ -66,6 +67,7 @@
 - Move: `tests/*` → `packages/vue/tests/`
 
 **Interfaces:**
+
 - Produces: 工作区包 `@fnb-ui/core`、`@fnb-ui/vue`；vue 包经 `workspace:*` 依赖 core
 
 - [ ] **Step 1: 建立包目录并搬迁文件**
@@ -149,7 +151,11 @@ packages:
   "type": "module",
   "license": "MIT",
   "author": "FreeNowOrg",
-  "repository": { "type": "git", "url": "git+https://github.com/FreeNowOrg/fnb-ui.git", "directory": "packages/core" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FreeNowOrg/fnb-ui.git",
+    "directory": "packages/core"
+  },
   "sideEffects": ["**/*.css"],
   "files": ["dist"],
   "types": "./dist/index.d.ts",
@@ -222,7 +228,11 @@ export default defineConfig({
   "type": "module",
   "license": "MIT",
   "author": "FreeNowOrg",
-  "repository": { "type": "git", "url": "git+https://github.com/FreeNowOrg/fnb-ui.git", "directory": "packages/vue" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FreeNowOrg/fnb-ui.git",
+    "directory": "packages/vue"
+  },
   "files": ["dist"],
   "types": "./dist/index.d.ts",
   "exports": {
@@ -336,15 +346,18 @@ git commit -m "refactor: split into @fnb-ui/core and @fnb-ui/vue packages"
 ```
 
 ---
+
 ## Task 2: token 真源与生成脚本
 
 **Files:**
+
 - Create: `packages/core/src/tokens/index.ts`
 - Create: `packages/core/scripts/gen-tokens.mjs`
 - Create: `packages/core/tests/tokens.spec.ts`
 - Modify: `packages/core/src/index.ts`
 
 **Interfaces:**
+
 - Produces: `tokens` 常量对象；类型 `FnbTokenName`（可覆写 token 名的联合类型）、`FnbBreakpoint`；常量 `breakpoints: Record<'sm'|'md'|'lg'|'xl', number>`
 - Produces: 生成物 `packages/core/src/styles/tokens.css`、`packages/core/src/styles/_breakpoints.scss`
 
@@ -582,8 +595,12 @@ lines.push('  /* Fonts */')
 for (const [k, v] of Object.entries(font)) push(`font-${k}`, v)
 
 lines.push('')
-lines.push('  /* Zero radius is intrinsic to this design language — one variable,')
-lines.push('     not a scale: there is no size/weight dimension for corners. */')
+lines.push(
+  '  /* Zero radius is intrinsic to this design language — one variable,'
+)
+lines.push(
+  '     not a scale: there is no size/weight dimension for corners. */'
+)
 push('radius', '0')
 
 lines.push('')
@@ -609,7 +626,9 @@ lines.push('}')
 lines.push('')
 lines.push('.dark {')
 for (const [k, v] of Object.entries(colorDark)) push(kebab(k), v)
-lines.push('  /* Keep the hard shadow visible on dark ground; derives from brand */')
+lines.push(
+  '  /* Keep the hard shadow visible on dark ground; derives from brand */'
+)
 push('shadow-color', 'color-mix(in oklab, var(--fnb-brand), #000 27%)')
 lines.push('}')
 lines.push('')
@@ -665,6 +684,7 @@ git commit -m "feat(core): add TS token source of truth with CSS generator"
 ## Task 3: 主题类型收紧与预设
 
 **Files:**
+
 - Create: `packages/core/src/themes/index.ts`
 - Modify: `packages/core/src/index.ts`
 - Modify: `packages/vue/src/providers/config-context.ts`
@@ -672,6 +692,7 @@ git commit -m "feat(core): add TS token source of truth with CSS generator"
 - Create: `packages/vue/tests/themes.spec.ts`
 
 **Interfaces:**
+
 - Consumes: Task 2 的 `FnbTokenName`
 - Produces: core 导出 `FnbThemeOverrides = Partial<Record<FnbTokenName, string>>`、`pixivTheme`、`picaTheme`；vue 包重导出三者
 
@@ -778,11 +799,13 @@ git commit -m "feat(core): narrow FnbThemeOverrides to token names, add presets"
 ```
 
 ---
+
 ## Task 4: 控件基线与 size/weight 落地
 
 本任务建立 `components.css` 并外提 4 个控件类组件。它们是尺寸系统的承载者，必须先于其余组件完成。
 
 **Files:**
+
 - Create: `packages/core/src/styles/components.css`
 - Create: `packages/core/src/styles/index.css`
 - Modify: `packages/vue/src/components/FnbButton.vue`（删 `<style>`）
@@ -792,6 +815,7 @@ git commit -m "feat(core): narrow FnbThemeOverrides to token names, add presets"
 - Create: `packages/core/tests/sizing.spec.ts`
 
 **Interfaces:**
+
 - Consumes: Task 2 生成的 `tokens.css` 变量
 - Produces: CSS 类 `.fnb-button`、`.fnb-input`、`.fnb-tag`、`.fnb-select` / `.fnb-select__trigger` / `.fnb-select__dropdown`（BEM 化后的名字，Task 5 的 group 依赖它们）
 
@@ -1117,12 +1141,14 @@ git commit -m "feat(core): add control baseline with orthogonal size/weight"
 ## Task 5: `.fnb-input-group` 拼接
 
 **Files:**
+
 - Modify: `packages/core/src/styles/components.css`
 - Create: `packages/core/tests/input-group.spec.ts`
 - Create: `packages/vue/src/components/FnbInputGroup.vue`
 - Modify: `packages/vue/src/index.ts`
 
 **Interfaces:**
+
 - Consumes: Task 4 的控件基线与 `--fnb-weight-border`
 - Produces: 类 `.fnb-input-group` / `--sm` / `--lg`；组件 `FnbInputGroup`（props: `size?: 'sm' | 'md' | 'lg'`）
 
@@ -1233,7 +1259,9 @@ Expected: FAIL — 4 个断言均未命中
 
 ```vue
 <template lang="pug">
-.fnb-input-group(:class='size !== "md" ? `fnb-input-group--${size}` : undefined')
+.fnb-input-group(
+  :class='size !== "md" ? `fnb-input-group--${size}` : undefined'
+)
   slot
 </template>
 
@@ -1257,15 +1285,18 @@ git commit -m "feat: add .fnb-input-group for seamless control joining"
 ```
 
 ---
+
 ## Task 6: 外提展示类组件样式
 
 8 个纯外观组件：`Card`、`Alert`、`Result`、`Skeleton`、`Spin`、`Progress`、`Icon`、`Ellipsis`。
 
 **Files:**
+
 - Modify: `packages/core/src/styles/components.css`
 - Modify: `packages/vue/src/components/{FnbCard,FnbAlert,FnbResult,FnbSkeleton,FnbSpin,FnbProgress,FnbIcon,FnbEllipsis}.vue`（删 `<style>`）
 
 **Interfaces:**
+
 - Consumes: `tokens.css` 变量；Task 4 已定义的 `@keyframes fnb-spin`
 - Produces: 类 `.fnb-card` `.fnb-alert` `.fnb-result` `.fnb-skeleton` `.fnb-spin` `.fnb-progress` `.fnb-icon` `.fnb-ellipsis` 及其修饰类
 
@@ -1280,12 +1311,12 @@ git commit -m "feat: add .fnb-input-group for seamless control joining"
 
 **mixin → weight 映射**（本表是决策，不要另行判断）：
 
-| 组件 | 原 mixin | 目标 weight | 变化 |
-|---|---|---|---|
-| `FnbCard` | `fnb-border` + `fnb-shadow` | **w3** | 无 |
-| `FnbAlert` | `fnb-border` + `fnb-shadow-sm` | **w3** | shadow 4px → 6px |
-| `FnbProgress` | `fnb-border-sm` | **w1** 的 border，无 shadow | 无 |
-| 其余 5 个 | 无 mixin | — | 无 |
+| 组件          | 原 mixin                       | 目标 weight                 | 变化             |
+| ------------- | ------------------------------ | --------------------------- | ---------------- |
+| `FnbCard`     | `fnb-border` + `fnb-shadow`    | **w3**                      | 无               |
+| `FnbAlert`    | `fnb-border` + `fnb-shadow-sm` | **w3**                      | shadow 4px → 6px |
+| `FnbProgress` | `fnb-border-sm`                | **w1** 的 border，无 shadow | 无               |
+| 其余 5 个     | 无 mixin                       | —                           | 无               |
 
 `FnbCard` 原本还按 props 切换 `fnb-shadow-sm` / `fnb-shadow-lg`，改为切换 weight 变量：
 
@@ -1352,10 +1383,12 @@ git commit -m "refactor: extract presentational component styles into core CSS"
 6 个组件：`Tabs`、`Table`、`Pagination`、`Scrollbar`、`Image`、`FloatButton`，外加 Task 4 未处理的 `Select` 下拉部分。
 
 **Files:**
+
 - Modify: `packages/core/src/styles/components.css`
 - Modify: `packages/vue/src/components/{FnbTabs,FnbTable,FnbPagination,FnbScrollbar,FnbImage,FnbFloatButton}.vue`（删 `<style>`）
 
 **Interfaces:**
+
 - Consumes: `tokens.css` 变量；Task 4 的控件基线
 - Produces: 类 `.fnb-tabs` `.fnb-table` `.fnb-pagination` `.fnb-scrollbar` `.fnb-image` `.fnb-float-button` `.fnb-select__dropdown` 及修饰类
 
@@ -1363,23 +1396,23 @@ git commit -m "refactor: extract presentational component styles into core CSS"
 
 **`:deep()` 移除**（scoped 撤销后 `:deep()` 无意义）：
 
-| 位置 | 原写法 | 改为 |
-|---|---|---|
+| 位置       | 原写法                 | 改为                           |
+| ---------- | ---------------------- | ------------------------------ |
 | `FnbTable` | `:deep(th), :deep(td)` | `.fnb-table th, .fnb-table td` |
-| `FnbTable` | `:deep(th)` | `.fnb-table th` |
-| `FnbTable` | `:deep(tr:hover td)` | `.fnb-table tr:hover td` |
+| `FnbTable` | `:deep(th)`            | `.fnb-table th`                |
+| `FnbTable` | `:deep(tr:hover td)`   | `.fnb-table tr:hover td`       |
 
 （`FnbButton` 的 `:deep(.fnb-icon)` 已在 Task 4 处理为 `.fnb-button .fnb-icon`。）
 
 **mixin → weight 映射**：
 
-| 组件 | 原 mixin | 目标 |
-|---|---|---|
-| `FnbTabs` | `fnb-border` | **w3** |
-| `FnbTable` | `fnb-border-sm` | **w1** 的 border（结构线，无 shadow） |
-| `FnbPagination` | `fnb-border-sm` + `fnb-shadow-xs` + `fnb-press` | 页码按钮走**控件基线**（`--fnb-control-*` + `--fnb-weight-*`），默认 `sm` 档 |
-| `FnbFloatButton` | `fnb-border` + `fnb-shadow-sm` + `fnb-press` | **w3** |
-| `FnbSelect` 下拉 | `fnb-border-sm` + `fnb-shadow-sm` | **w2** |
+| 组件             | 原 mixin                                        | 目标                                                                         |
+| ---------------- | ----------------------------------------------- | ---------------------------------------------------------------------------- |
+| `FnbTabs`        | `fnb-border`                                    | **w3**                                                                       |
+| `FnbTable`       | `fnb-border-sm`                                 | **w1** 的 border（结构线，无 shadow）                                        |
+| `FnbPagination`  | `fnb-border-sm` + `fnb-shadow-xs` + `fnb-press` | 页码按钮走**控件基线**（`--fnb-control-*` + `--fnb-weight-*`），默认 `sm` 档 |
+| `FnbFloatButton` | `fnb-border` + `fnb-shadow-sm` + `fnb-press`    | **w3**                                                                       |
+| `FnbSelect` 下拉 | `fnb-border-sm` + `fnb-shadow-sm`               | **w2**                                                                       |
 
 `FnbPagination` 的页码按钮改用控件基线，使其与 Button/Input 天然同高：
 
@@ -1441,6 +1474,7 @@ git commit -m "refactor: extract composite component styles into core CSS"
 ## Task 8: 外提 Provider 样式并修复 Teleport 主题逃逸
 
 **Files:**
+
 - Modify: `packages/core/src/styles/components.css`
 - Create: `packages/core/src/logic/scroll-lock.ts`
 - Modify: `packages/core/src/index.ts`
@@ -1451,6 +1485,7 @@ git commit -m "refactor: extract composite component styles into core CSS"
 - Create: `packages/vue/tests/theme-scope.spec.ts`
 
 **Interfaces:**
+
 - Consumes: Task 3 的 `FnbThemeOverrides`
 - Produces: core 导出 `lockScroll(): () => void`；vue 导出内部 composable `useThemeScope(): { class: ComputedRef<string[]>, style: ComputedRef<CSSProperties> }`
 - Produces: `FnbConfigContext` 新增字段 `cssVars: ComputedRef<CSSProperties>`
@@ -1465,12 +1500,22 @@ git commit -m "refactor: extract composite component styles into core CSS"
 import { describe, it, expect } from 'vitest'
 import { defineComponent, h } from 'vue'
 import { mount } from '@vue/test-utils'
-import { FnbConfigProvider, FnbDialogProvider, useDialog, picaTheme } from '../src'
+import {
+  FnbConfigProvider,
+  FnbDialogProvider,
+  useDialog,
+  picaTheme,
+} from '../src'
 
 const Opener = defineComponent({
   setup() {
     const dialog = useDialog()
-    return () => h('button', { onClick: () => dialog.confirm({ title: 'x', content: 'y' }) }, 'open')
+    return () =>
+      h(
+        'button',
+        { onClick: () => dialog.confirm({ title: 'x', content: 'y' }) },
+        'open'
+      )
   },
 })
 
@@ -1478,7 +1523,9 @@ describe('teleported content theme scope', () => {
   it('carries theme vars and dark class onto the teleported root', async () => {
     mount(FnbConfigProvider, {
       props: { themeOverrides: picaTheme, dark: true },
-      slots: { default: () => h(FnbDialogProvider, null, { default: () => h(Opener) }) },
+      slots: {
+        default: () => h(FnbDialogProvider, null, { default: () => h(Opener) }),
+      },
       attachTo: document.body,
     })
     document.querySelector('button')!.dispatchEvent(new MouseEvent('click'))
@@ -1549,7 +1596,12 @@ export function useThemeScope(): {
 `FnbDialogProvider.vue`：在 setup 中 `const { themeClass, themeStyle } = useThemeScope()`，模板里 `.fnb-dialog-overlay` 改为：
 
 ```pug
-.fnb-dialog-overlay(v-if='state', :class='themeClass', :style='themeStyle', @click.self='resolve(false)')
+.fnb-dialog-overlay(
+  v-if='state',
+  :class='themeClass',
+  :style='themeStyle',
+  @click.self='resolve(false)'
+)
 ```
 
 `FnbMessageProvider.vue`：`TransitionGroup.fnb-message-container` 加同样的 `:class='themeClass'` 与 `:style='themeStyle'`。
@@ -1597,10 +1649,10 @@ export { lockScroll } from './logic/scroll-lock'
 
 按 Task 6 的规则外提两个 Provider 的样式。mixin 映射：
 
-| 组件 | 原 mixin | 目标 weight |
-|---|---|---|
-| `FnbDialogProvider` | `fnb-border` + `fnb-shadow-lg` | **w4** |
-| `FnbMessageProvider` | `fnb-border-sm` + `fnb-shadow-sm` | **w3** |
+| 组件                 | 原 mixin                          | 目标 weight |
+| -------------------- | --------------------------------- | ----------- |
+| `FnbDialogProvider`  | `fnb-border` + `fnb-shadow-lg`    | **w4**      |
+| `FnbMessageProvider` | `fnb-border-sm` + `fnb-shadow-sm` | **w3**      |
 
 同时把两者的硬编码 z-index 换成 `var(--fnb-z-dialog-overlay)`、`var(--fnb-z-dialog)`、`var(--fnb-z-message)`。
 
@@ -1620,14 +1672,17 @@ git commit -m "fix: carry theme scope into teleported content, extract provider 
 ```
 
 ---
+
 ## Task 9: base.css 排版层
 
 **Files:**
+
 - Create: `packages/core/src/styles/base.css`
 - Modify: `packages/core/src/styles/index.css`
 - Create: `packages/core/tests/base.spec.ts`
 
 **Interfaces:**
+
 - Produces: 类 `.fnb-prose`（作用域根）、`.fnb-link` / `.fnb-link--plain`、`hr` 默认样式
 
 **约束**：排版层**不得裸改** `h1` / `p` / `a` 等元素选择器——那会污染宿主页面。一切限定在 `.fnb-prose` 内，唯一例外是 `.fnb-link` 这种显式类。
@@ -1700,10 +1755,18 @@ Expected: FAIL — `ENOENT: base.css`
   margin: 1.5em 0 0.5em;
 }
 
-.fnb-prose h1 { font-size: 2rem; }
-.fnb-prose h2 { font-size: 1.5rem; }
-.fnb-prose h3 { font-size: 1.25rem; }
-.fnb-prose h4 { font-size: 1.1rem; }
+.fnb-prose h1 {
+  font-size: 2rem;
+}
+.fnb-prose h2 {
+  font-size: 1.5rem;
+}
+.fnb-prose h3 {
+  font-size: 1.25rem;
+}
+.fnb-prose h4 {
+  font-size: 1.1rem;
+}
 
 .fnb-prose p,
 .fnb-prose ul,
@@ -1801,6 +1864,7 @@ git commit -m "feat(core): add scoped prose typography layer"
 ## Task 10: 清理与收口
 
 **Files:**
+
 - Delete: `packages/vue/src/styles/`（Task 1 的过渡文件）
 - Delete: `packages/core/src/styles/_fnb.scss`、`packages/core/src/styles/_variables.scss`、`packages/core/src/styles/index.scss`
 - Modify: `packages/core/src/index.ts`（顶部 import 样式入口）
@@ -1808,6 +1872,7 @@ git commit -m "feat(core): add scoped prose typography layer"
 - Modify: `README.md`
 
 **Interfaces:**
+
 - Produces: `packages/core/dist/style.css`（完整设计系统单文件）、`packages/vue/dist/index.js`（不含任何 CSS）
 
 - [ ] **Step 1: 删除过渡与废弃文件**
@@ -1872,7 +1937,8 @@ import { readdirSync } from 'node:fs'
 const vueDist = resolve(root, 'packages/vue/dist')
 if (existsSync(vueDist)) {
   const stray = readdirSync(vueDist).filter((f) => f.endsWith('.css'))
-  if (stray.length) errors.push(`packages/vue/dist ships CSS: ${stray.join(', ')}`)
+  if (stray.length)
+    errors.push(`packages/vue/dist ships CSS: ${stray.join(', ')}`)
 }
 ```
 
@@ -1932,26 +1998,26 @@ git commit -m "chore: drop SCSS layer, enforce package boundary in verify-dist"
 
 **1. Spec 覆盖检查**
 
-| Spec 章节 | 对应任务 |
-|---|---|
-| §3 包结构、core 双入口、logic 范围 | Task 1、Task 8 Step 6、Task 10 Step 2 |
-| §4.1 真源与生成 | Task 2 |
-| §4.2 原始层→语义层、color-mix 派生 | Task 2 Step 4（比例经浏览器实测：white 17%、black 27%） |
+| Spec 章节                                               | 对应任务                                                   |
+| ------------------------------------------------------- | ---------------------------------------------------------- |
+| §3 包结构、core 双入口、logic 范围                      | Task 1、Task 8 Step 6、Task 10 Step 2                      |
+| §4.1 真源与生成                                         | Task 2                                                     |
+| §4.2 原始层→语义层、color-mix 派生                      | Task 2 Step 4（比例经浏览器实测：white 17%、black 27%）    |
 | §4.3 补齐 scale（spacing/motion/z-index/header-height） | Task 2 Step 3；z-index 落地于 Task 7 Step 2、Task 8 Step 7 |
-| §4.4 breakpoint 不生成 CSS 变量 | Task 2 Step 4 + 测试断言 |
-| §4.5 类型收紧 | Task 3 |
-| §4.6 只做全局 token 粒度 | Task 3（`Partial<Record<FnbTokenName, string>>` 即平铺） |
-| §4.7 业务 token 出库 | Task 2 测试断言 + Task 10 verify 断言 |
-| §4.8 主题预设 | Task 3 |
-| §5.2 size/weight 正交 | Task 2（token）+ Task 4（落地） |
-| §5.3 实现约束（显式 height、禁 padding-block） | Task 4 Step 1 测试 + Step 3 注释 |
-| §5.4 `.fnb-input-group`（含焦点内描边） | Task 5 |
-| §5.5 破坏性变更 | Task 4、6、7、8 的 weight 映射表逐条落实 |
-| §6.1 外提范围 | Task 4、6、7、8 合计 19 个 SFC |
-| §6.2 `:deep()` / keyframes 去重 / 前缀 | Task 6 Step 3、Task 7 `:deep()` 表 |
-| §6.3 base.css | Task 9 |
-| §7.6 Teleport 主题逃逸 | Task 8 |
-| §8 验证标准 1–10 | Task 10 Step 5 + 各任务测试 |
+| §4.4 breakpoint 不生成 CSS 变量                         | Task 2 Step 4 + 测试断言                                   |
+| §4.5 类型收紧                                           | Task 3                                                     |
+| §4.6 只做全局 token 粒度                                | Task 3（`Partial<Record<FnbTokenName, string>>` 即平铺）   |
+| §4.7 业务 token 出库                                    | Task 2 测试断言 + Task 10 verify 断言                      |
+| §4.8 主题预设                                           | Task 3                                                     |
+| §5.2 size/weight 正交                                   | Task 2（token）+ Task 4（落地）                            |
+| §5.3 实现约束（显式 height、禁 padding-block）          | Task 4 Step 1 测试 + Step 3 注释                           |
+| §5.4 `.fnb-input-group`（含焦点内描边）                 | Task 5                                                     |
+| §5.5 破坏性变更                                         | Task 4、6、7、8 的 weight 映射表逐条落实                   |
+| §6.1 外提范围                                           | Task 4、6、7、8 合计 19 个 SFC                             |
+| §6.2 `:deep()` / keyframes 去重 / 前缀                  | Task 6 Step 3、Task 7 `:deep()` 表                         |
+| §6.3 base.css                                           | Task 9                                                     |
+| §7.6 Teleport 主题逃逸                                  | Task 8                                                     |
+| §8 验证标准 1–10                                        | Task 10 Step 5 + 各任务测试                                |
 
 **未覆盖（有意）**：§7.1–§7.5 的布局层（`FnbLayout` / `FnbHeader` / `FnbSider` / `FnbDropdown` / `FnbDivider` / `FnbLoadingBar` / `FnbLink` 组件形态 / `FnbBackToTop`）属阶段③，由后续 plan 承接。本 plan 只在 Task 9 提供了 `.fnb-link` 与 `.fnb-divider` 的**样式**，Vue 组件留给阶段③。
 
@@ -1959,14 +2025,14 @@ git commit -m "chore: drop SCSS layer, enforce package boundary in verify-dist"
 
 **3. 类型一致性检查**
 
-| 名称 | 定义处 | 使用处 | 一致 |
-|---|---|---|---|
-| `FnbTokenName` | Task 2 `core/src/tokens` | Task 3 `FnbThemeOverrides`、Task 10 verify | ✓ |
-| `FnbThemeOverrides` | Task 3 `core/src/themes` | Task 3 vue 重导出、Task 8 context | ✓ |
-| `breakpoints` | Task 2 | Task 2 测试、Task 3 vue 重导出 | ✓ |
-| `lockScroll()` | Task 8 `core/src/logic/scroll-lock` | Task 8 DialogProvider | ✓ |
-| `useThemeScope()` → `{ themeClass, themeStyle }` | Task 8 | Task 8 三处 Teleport 绑定 | ✓ |
-| `cssVars` | Task 8 `FnbConfigContext` | Task 8 `useThemeScope` | ✓ |
-| `.fnb-select__trigger` | Task 4 | Task 4 sizing 测试、Task 7 下拉 | ✓ |
-| `--fnb-weight-border` / `--fnb-weight-shadow` | Task 2 生成 | Task 4/5/6/7/8 | ✓ |
-| `@keyframes fnb-spin` | Task 4 | Task 6 `FnbSpin` 引用 | ✓ |
+| 名称                                             | 定义处                              | 使用处                                     | 一致 |
+| ------------------------------------------------ | ----------------------------------- | ------------------------------------------ | ---- |
+| `FnbTokenName`                                   | Task 2 `core/src/tokens`            | Task 3 `FnbThemeOverrides`、Task 10 verify | ✓    |
+| `FnbThemeOverrides`                              | Task 3 `core/src/themes`            | Task 3 vue 重导出、Task 8 context          | ✓    |
+| `breakpoints`                                    | Task 2                              | Task 2 测试、Task 3 vue 重导出             | ✓    |
+| `lockScroll()`                                   | Task 8 `core/src/logic/scroll-lock` | Task 8 DialogProvider                      | ✓    |
+| `useThemeScope()` → `{ themeClass, themeStyle }` | Task 8                              | Task 8 三处 Teleport 绑定                  | ✓    |
+| `cssVars`                                        | Task 8 `FnbConfigContext`           | Task 8 `useThemeScope`                     | ✓    |
+| `.fnb-select__trigger`                           | Task 4                              | Task 4 sizing 测试、Task 7 下拉            | ✓    |
+| `--fnb-weight-border` / `--fnb-weight-shadow`    | Task 2 生成                         | Task 4/5/6/7/8                             | ✓    |
+| `@keyframes fnb-spin`                            | Task 4                              | Task 6 `FnbSpin` 引用                      | ✓    |

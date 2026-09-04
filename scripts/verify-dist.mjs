@@ -58,7 +58,8 @@ contains('packages/vue/dist/index.d.ts', 'FnbButton')
 const vueDist = resolve(root, 'packages/vue/dist')
 if (existsSync(vueDist)) {
   const stray = readdirSync(vueDist).filter((f) => f.endsWith('.css'))
-  if (stray.length) errors.push(`packages/vue/dist ships CSS: ${stray.join(', ')}`)
+  if (stray.length)
+    errors.push(`packages/vue/dist ships CSS: ${stray.join(', ')}`)
 }
 
 if (errors.length) {

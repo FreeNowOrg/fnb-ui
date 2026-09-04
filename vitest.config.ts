@@ -8,7 +8,10 @@ export default defineConfig({
     alias: {
       // Resolve to core's source, not its build output: tests must see
       // changes to core immediately, without an intermediate `pnpm build`.
-      '@fnb-ui/core': resolve(import.meta.dirname, 'packages/core/src/index.ts'),
+      '@fnb-ui/core': resolve(
+        import.meta.dirname,
+        'packages/core/src/index.ts'
+      ),
     },
   },
   test: {

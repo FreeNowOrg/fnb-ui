@@ -33,6 +33,7 @@
 ### Task 1: FnbTabs + FnbTabPane (compositional, self-registering)
 
 **Files:**
+
 - Create: `src/components/tabs-context.ts`
 - Create: `src/components/FnbTabs.vue`
 - Create: `src/components/FnbTabPane.vue`
@@ -40,6 +41,7 @@
 - Modify: `src/index.ts`
 
 **Interfaces — Produces:**
+
 - `tabs-context.ts`: `FnbTabPaneInfo` (`{ name: string; tab?: string; tabSlot?: Slot }`), `FnbTabsContext` (`{ activeName: ComputedRef<string | undefined>; registerPane(p: FnbTabPaneInfo): void; unregisterPane(name: string): void }`), `fnbTabsKey: InjectionKey<FnbTabsContext>`.
 - `FnbTabs`: props `value?: string` (v-model:value), `type?: 'line' | 'segment'` (default `'line'`), `size?: 'small' | 'medium' | 'large'` (default `'medium'`); emits `update:value: [value: string]`; default slot holds `FnbTabPane`s.
 - `FnbTabPane`: props `name: string` (required), `tab?: string`; default slot = panel; named slot `tab` = rich nav label.
@@ -58,8 +60,16 @@ function mountTabs(props = {}) {
     props: { value: 'a', ...props },
     slots: {
       default: () => [
-        h(FnbTabPane, { name: 'a', tab: 'Apple' }, { default: () => 'Panel A' }),
-        h(FnbTabPane, { name: 'b', tab: 'Banana' }, { default: () => 'Panel B' }),
+        h(
+          FnbTabPane,
+          { name: 'a', tab: 'Apple' },
+          { default: () => 'Panel A' }
+        ),
+        h(
+          FnbTabPane,
+          { name: 'b', tab: 'Banana' },
+          { default: () => 'Panel B' }
+        ),
       ],
     },
   })
@@ -99,7 +109,11 @@ describe('FnbTabs', () => {
       props: { value: 'x' },
       slots: {
         default: () => [
-          h(FnbTabPane, { name: 'x' }, { tab: () => h('span', { class: 'ico' }, '★'), default: () => 'PX' }),
+          h(
+            FnbTabPane,
+            { name: 'x' },
+            { tab: () => h('span', { class: 'ico' }, '★'), default: () => 'PX' }
+          ),
         ],
       },
     })
@@ -145,15 +159,15 @@ export const fnbTabsKey: InjectionKey<FnbTabsContext> = Symbol('fnb-tabs')
 .fnb-tabs(:class='[`fnb-tabs--${type}`, `fnb-tabs--${size}`]')
   .fnb-tabs__nav(role='tablist')
     button.fnb-tabs__tab(
-      v-for='pane in panes'
-      :key='pane.name'
-      type='button'
-      role='tab'
-      :aria-selected='pane.name === activeName'
-      :class='{ "fnb-tabs__tab--active": pane.name === activeName }'
+      v-for='pane in panes',
+      :key='pane.name',
+      type='button',
+      role='tab',
+      :aria-selected='pane.name === activeName',
+      :class='{ "fnb-tabs__tab--active": pane.name === activeName }',
       @click='select(pane.name)'
     )
-      component(v-if='pane.tabSlot' :is='{ render: pane.tabSlot }')
+      component(v-if='pane.tabSlot', :is='{ render: pane.tabSlot }')
       template(v-else) {{ pane.tab ?? pane.name }}
   .fnb-tabs__panels
     slot
@@ -289,7 +303,7 @@ provide(fnbTabsKey, {
 
 ```vue
 <template lang="pug">
-.fnb-tabs__panel(v-show='isActive' role='tabpanel')
+.fnb-tabs__panel(v-show='isActive', role='tabpanel')
   slot
 </template>
 
@@ -335,6 +349,7 @@ Expected: PASS (6/6).
 - [ ] **Step 8: Gates + commit**
 
 Run: `pnpm test && pnpm lint && pnpm typecheck && pnpm verify`
+
 ```bash
 git add src/components/tabs-context.ts src/components/FnbTabs.vue src/components/FnbTabPane.vue tests/FnbTabs.spec.ts src/index.ts
 git commit -m "feat(tabs): add compositional FnbTabs + FnbTabPane"
@@ -345,12 +360,14 @@ git commit -m "feat(tabs): add compositional FnbTabs + FnbTabPane"
 ### Task 2: FnbConfigProvider (theme-overrides + dark)
 
 **Files:**
+
 - Create: `src/providers/config-context.ts`
 - Create: `src/providers/FnbConfigProvider.vue`
 - Test: `tests/FnbConfigProvider.spec.ts`
 - Modify: `src/index.ts`
 
 **Interfaces — Produces:**
+
 - `config-context.ts`: `FnbThemeOverrides` (`Record<string, string>`), `FnbConfigContext` (`{ themeOverrides: ComputedRef<FnbThemeOverrides>; dark: ComputedRef<boolean> }`), `fnbConfigKey: InjectionKey<FnbConfigContext>`.
 - `FnbConfigProvider`: props `themeOverrides?: FnbThemeOverrides` (token names without `--fnb-` prefix), `dark?: boolean`; renders a `<div class="fnb-config-provider">` with inline `--fnb-*` vars + `.dark` class; merges over any parent `FnbConfigProvider` and re-provides the merged config.
 
@@ -375,9 +392,15 @@ describe('FnbConfigProvider', () => {
   })
 
   it('toggles the dark class', () => {
-    const light = mount(FnbConfigProvider, { props: {}, slots: { default: 'x' } })
+    const light = mount(FnbConfigProvider, {
+      props: {},
+      slots: { default: 'x' },
+    })
     expect(light.classes()).not.toContain('dark')
-    const dark = mount(FnbConfigProvider, { props: { dark: true }, slots: { default: 'x' } })
+    const dark = mount(FnbConfigProvider, {
+      props: { dark: true },
+      slots: { default: 'x' },
+    })
     expect(dark.classes()).toContain('dark')
   })
 
@@ -422,7 +445,7 @@ export const fnbConfigKey: InjectionKey<FnbConfigContext> = Symbol('fnb-config')
 
 ```vue
 <template lang="pug">
-.fnb-config-provider(:class='{ dark: mergedDark }' :style='cssVars')
+.fnb-config-provider(:class='{ dark: mergedDark }', :style='cssVars')
   slot
 </template>
 
@@ -466,7 +489,10 @@ provide(fnbConfigKey, {
 
 ```ts
 import FnbConfigProvider from './providers/FnbConfigProvider.vue'
-export type { FnbThemeOverrides, FnbConfigContext } from './providers/config-context'
+export type {
+  FnbThemeOverrides,
+  FnbConfigContext,
+} from './providers/config-context'
 ```
 
 - [ ] **Step 6: Run test, confirm GREEN** — `pnpm test tests/FnbConfigProvider.spec.ts` → PASS (3/3).
@@ -483,6 +509,7 @@ git commit -m "feat(config-provider): add FnbConfigProvider (theme-overrides + d
 ### Task 3: FnbMessageProvider + useMessage
 
 **Files:**
+
 - Create: `src/providers/message-context.ts`
 - Create: `src/providers/FnbMessageProvider.vue`
 - Create: `src/composables/useMessage.ts`
@@ -490,6 +517,7 @@ git commit -m "feat(config-provider): add FnbConfigProvider (theme-overrides + d
 - Modify: `src/index.ts`
 
 **Interfaces — Produces:**
+
 - `message-context.ts`: `FnbMessageType` (`'info' | 'success' | 'warning' | 'error'`), `FnbMessageOptions` (`{ duration?: number }`), `FnbMessageHandle` (`{ destroy: () => void }`), `FnbMessageApi` (`{ info; success; warning; error }`, each `(content: string, options?: FnbMessageOptions) => FnbMessageHandle`), `fnbMessageKey: InjectionKey<FnbMessageApi>`.
 - `FnbMessageProvider`: no props; renders default slot + a teleported top-center stack.
 - `useMessage(): FnbMessageApi` — injects the api; throws if no provider.
@@ -585,7 +613,10 @@ export interface FnbMessageHandle {
 }
 
 export type FnbMessageApi = {
-  [K in FnbMessageType]: (content: string, options?: FnbMessageOptions) => FnbMessageHandle
+  [K in FnbMessageType]: (
+    content: string,
+    options?: FnbMessageOptions
+  ) => FnbMessageHandle
 }
 
 export const fnbMessageKey: InjectionKey<FnbMessageApi> = Symbol('fnb-message')
@@ -601,7 +632,9 @@ import type { FnbMessageApi } from '../providers/message-context'
 export function useMessage(): FnbMessageApi {
   const api = inject(fnbMessageKey, null)
   if (!api) {
-    throw new Error('[fnb-ui] useMessage() requires an outer <FnbMessageProvider>')
+    throw new Error(
+      '[fnb-ui] useMessage() requires an outer <FnbMessageProvider>'
+    )
   }
   return api
 }
@@ -615,11 +648,11 @@ Visuals ported from PixivNow `FnbToast.vue` (top-center stack, type colors, slid
 <template lang="pug">
 slot
 Teleport(to='body')
-  TransitionGroup.fnb-message-container(name='fnb-message' tag='div')
+  TransitionGroup.fnb-message-container(name='fnb-message', tag='div')
     .fnb-message(
-      v-for='m in messages'
-      :key='m.id'
-      :class='`fnb-message--${m.type}`'
+      v-for='m in messages',
+      :key='m.id',
+      :class='`fnb-message--${m.type}`',
       role='alert'
     ) {{ m.content }}
 </template>
@@ -761,6 +794,7 @@ git commit -m "feat(message): add FnbMessageProvider + useMessage"
 ### Task 4: FnbDialogProvider + useDialog (Promise-based confirm)
 
 **Files:**
+
 - Create: `src/providers/dialog-context.ts`
 - Create: `src/providers/FnbDialogProvider.vue`
 - Create: `src/composables/useDialog.ts`
@@ -768,6 +802,7 @@ git commit -m "feat(message): add FnbMessageProvider + useMessage"
 - Modify: `src/index.ts`
 
 **Interfaces — Produces:**
+
 - `dialog-context.ts`: `FnbDialogOptions` (`{ title: string; content: string; positiveText?: string; negativeText?: string }`), `FnbDialogApi` (`{ confirm(options: FnbDialogOptions): Promise<boolean> }`), `fnbDialogKey: InjectionKey<FnbDialogApi>`.
 - `FnbDialogProvider`: no props; renders default slot + a teleported overlay dialog using `FnbButton`.
 - `useDialog(): FnbDialogApi` — injects; throws if no provider.
@@ -803,7 +838,10 @@ describe('useDialog', () => {
 
   it('opens a dialog showing title and content', async () => {
     const w = mountWithProvider()
-    ;(w.vm.$refs.child as any).dialog.confirm({ title: 'Delete?', content: 'Sure?' })
+    ;(w.vm.$refs.child as any).dialog.confirm({
+      title: 'Delete?',
+      content: 'Sure?',
+    })
     await w.vm.$nextTick()
     const el = document.body.querySelector('.fnb-dialog')
     expect(el).not.toBeNull()
@@ -813,9 +851,14 @@ describe('useDialog', () => {
 
   it('resolves true on positive click', async () => {
     const w = mountWithProvider()
-    const p = (w.vm.$refs.child as any).dialog.confirm({ title: 't', content: 'c' })
+    const p = (w.vm.$refs.child as any).dialog.confirm({
+      title: 't',
+      content: 'c',
+    })
     await w.vm.$nextTick()
-    const positive = document.body.querySelector('.fnb-dialog__footer .fnb-button--primary') as HTMLElement
+    const positive = document.body.querySelector(
+      '.fnb-dialog__footer .fnb-button--primary'
+    ) as HTMLElement
     positive.click()
     await w.vm.$nextTick()
     await expect(p).resolves.toBe(true)
@@ -824,9 +867,15 @@ describe('useDialog', () => {
 
   it('resolves false on negative click', async () => {
     const w = mountWithProvider()
-    const p = (w.vm.$refs.child as any).dialog.confirm({ title: 't', content: 'c', negativeText: 'Cancel' })
+    const p = (w.vm.$refs.child as any).dialog.confirm({
+      title: 't',
+      content: 'c',
+      negativeText: 'Cancel',
+    })
     await w.vm.$nextTick()
-    const buttons = [...document.body.querySelectorAll('.fnb-dialog__footer .fnb-button')] as HTMLElement[]
+    const buttons = [
+      ...document.body.querySelectorAll('.fnb-dialog__footer .fnb-button'),
+    ] as HTMLElement[]
     const negative = buttons.find((b) => b.textContent?.includes('Cancel'))!
     negative.click()
     await w.vm.$nextTick()
@@ -876,7 +925,9 @@ import type { FnbDialogApi } from '../providers/dialog-context'
 export function useDialog(): FnbDialogApi {
   const api = inject(fnbDialogKey, null)
   if (!api) {
-    throw new Error('[fnb-ui] useDialog() requires an outer <FnbDialogProvider>')
+    throw new Error(
+      '[fnb-ui] useDialog() requires an outer <FnbDialogProvider>'
+    )
   }
   return api
 }
@@ -891,14 +942,18 @@ Visuals ported from PixivNow `FnbDialog.vue` (overlay, neubrutalist card, displa
 slot
 Teleport(to='body')
   Transition(name='fnb-dialog')
-    .fnb-dialog-overlay(v-if='state' @click.self='resolve(false)')
-      .fnb-dialog(role='dialog' aria-modal='true')
-        button.fnb-dialog__close(type='button' aria-label='关闭' @click='resolve(false)') ×
+    .fnb-dialog-overlay(v-if='state', @click.self='resolve(false)')
+      .fnb-dialog(role='dialog', aria-modal='true')
+        button.fnb-dialog__close(
+          type='button',
+          aria-label='关闭',
+          @click='resolve(false)'
+        ) ×
         .fnb-dialog__header {{ state.title }}
         .fnb-dialog__body {{ state.content }}
         .fnb-dialog__footer
-          FnbButton(v-if='state.negativeText' @click='resolve(false)') {{ state.negativeText }}
-          FnbButton(variant='primary' @click='resolve(true)') {{ state.positiveText ?? '确定' }}
+          FnbButton(v-if='state.negativeText', @click='resolve(false)') {{ state.negativeText }}
+          FnbButton(variant='primary', @click='resolve(true)') {{ state.positiveText ?? '确定' }}
 </template>
 
 <script lang="ts" setup>
@@ -1042,11 +1097,13 @@ git commit -m "feat(dialog): add FnbDialogProvider + useDialog (promise confirm)
 ### Task 5: FnbProvider (aggregate config + message + dialog)
 
 **Files:**
+
 - Create: `src/providers/FnbProvider.vue`
 - Test: `tests/FnbProvider.spec.ts`
 - Modify: `src/index.ts`
 
 **Interfaces — Produces:**
+
 - `FnbProvider`: props `themeOverrides?: FnbThemeOverrides`, `dark?: boolean` (passed through to `FnbConfigProvider`); nests `FnbConfigProvider > FnbMessageProvider > FnbDialogProvider > slot`, so a single wrap enables `useMessage`/`useDialog` and config.
 
 - [ ] **Step 1: Write the failing test**
@@ -1064,7 +1121,12 @@ const Child = defineComponent({
     const message = useMessage()
     const dialog = useDialog()
     message.success('ready')
-    return () => h('div', { class: 'ok' }, typeof dialog.confirm === 'function' ? 'ok' : 'bad')
+    return () =>
+      h(
+        'div',
+        { class: 'ok' },
+        typeof dialog.confirm === 'function' ? 'ok' : 'bad'
+      )
   },
 })
 
@@ -1095,7 +1157,7 @@ describe('FnbProvider', () => {
 
 ```vue
 <template lang="pug">
-FnbConfigProvider(:theme-overrides='themeOverrides' :dark='dark')
+FnbConfigProvider(:theme-overrides='themeOverrides', :dark='dark')
   FnbMessageProvider
     FnbDialogProvider
       slot
@@ -1121,6 +1183,7 @@ defineProps<{
 - [ ] **Step 6: Full gates + commit**
 
 Run: `pnpm test && pnpm lint && pnpm typecheck && pnpm verify`
+
 ```bash
 git add src/providers/FnbProvider.vue tests/FnbProvider.spec.ts src/index.ts
 git commit -m "feat(provider): add aggregate FnbProvider (config + message + dialog)"
@@ -1131,6 +1194,7 @@ git commit -m "feat(provider): add aggregate FnbProvider (config + message + dia
 ## Self-Review
 
 **Spec coverage (spec §6 + §7 layer-2):**
+
 - §6.1 Tabs composable (`FnbTabs`+`FnbTabPane`, `value`/`type`/`size`, `name`/`tab`, rich `#tab` slot) → Task 1.
 - §6.2 Provider/Hook: `FnbConfigProvider` (theme-overrides + dark) → Task 2; `FnbMessageProvider`+`useMessage` → Task 3; `FnbDialogProvider`+`useDialog` (Promise) → Task 4; aggregate `FnbProvider` → Task 5. `useMessage`/`useDialog` read inject, throw without provider → Tasks 3/4.
 - §6.3 behavior fidelity → visuals ported from PixivNow `FnbTabs`/`FnbToast`/`FnbDialog` in each task; only API changed.

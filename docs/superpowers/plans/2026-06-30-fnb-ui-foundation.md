@@ -28,6 +28,7 @@
 Establish every config file and prove `pnpm build` emits an ESM bundle + `.d.ts` from an (almost) empty entry. No styles or components yet.
 
 **Files:**
+
 - Create: `tsconfig.json`
 - Create: `vite.config.ts`
 - Create: `.oxlintrc.json`
@@ -37,6 +38,7 @@ Establish every config file and prove `pnpm build` emits an ESM bundle + `.d.ts`
 - Modify: `package.json` (add `test` script + test devDeps)
 
 **Interfaces:**
+
 - Consumes: nothing (first task).
 - Produces: `src/index.ts` as the single library entry (`build.lib.entry.index`). Later tasks add exports to it. Build emits `dist/index.js` and `dist/index.d.ts`.
 
@@ -79,13 +81,13 @@ In `package.json` `scripts`, add (keep existing scripts):
     "emitDeclarationOnly": true,
     "outDir": "dist",
     "types": ["node", "vitest/globals"],
-    "baseUrl": "."
+    "baseUrl": ".",
   },
   "vueCompilerOptions": {
-    "plugins": ["@vue/language-plugin-pug"]
+    "plugins": ["@vue/language-plugin-pug"],
   },
   "include": ["src/**/*.ts", "src/**/*.vue", "tests/**/*.ts"],
-  "exclude": ["dist", "node_modules"]
+  "exclude": ["dist", "node_modules"],
 }
 ```
 
@@ -130,7 +132,7 @@ export default defineConfig({
   "singleQuote": true,
   "tabWidth": 2,
   "trailingComma": "es5",
-  "plugins": ["@prettier/plugin-pug"]
+  "plugins": ["@prettier/plugin-pug"],
 }
 ```
 
@@ -141,8 +143,8 @@ export default defineConfig({
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["typescript", "unicorn"],
   "categories": {
-    "correctness": "error"
-  }
+    "correctness": "error",
+  },
 }
 ```
 
@@ -207,12 +209,14 @@ git commit -m "chore: set up vite library build, ts, lint, format, vitest"
 Port the design-system tokens (light + dark, `.dark` trigger, **no** `--pixiv-*`) and the SCSS mixins. Prove they compile into a single `dist/style.css`.
 
 **Files:**
+
 - Create: `src/styles/_variables.scss`
 - Create: `src/styles/_fnb.scss`
 - Create: `src/styles/index.scss`
 - Modify: `src/index.ts` (import the style entry)
 
 **Interfaces:**
+
 - Consumes: `src/index.ts` from Task 1.
 - Produces:
   - `src/styles/_fnb.scss` exposing mixins `fnb-border`, `fnb-border-sm`, `fnb-shadow`, `fnb-shadow-sm`, `fnb-shadow-lg`, `fnb-shadow-xs`, `fnb-press`, `fnb-card`, `fnb-btn`, `fnb-tag`, `fnb-input` — consumed by components via `@use '../styles/fnb' as *;`.
@@ -352,7 +356,8 @@ Port the design-system tokens (light + dark, `.dark` trigger, **no** `--pixiv-*`
   --fnb-radius-lg: 0;
 
   // Typography
-  --fnb-font-sans: 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', system-ui, sans-serif;
+  --fnb-font-sans:
+    'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', system-ui, sans-serif;
   --fnb-font-display: 'Archivo Black', 'Noto Sans SC', system-ui, sans-serif;
   --fnb-font-mono: 'Space Grotesk', ui-monospace, monospace;
 
@@ -431,6 +436,7 @@ Port `FnbButton` (Pug + SCSS), drive it with Vitest, wire it into `src/index.ts`
 > **Pug note:** the template below is ported verbatim from a working PixivNow SFC, so no new Pug authoring is needed. If you adjust the template, first consult the `pug-vue-pitfalls` skill.
 
 **Files:**
+
 - Create: `tests/FnbButton.spec.ts`
 - Create: `src/components/FnbButton.vue`
 - Create: `scripts/verify-dist.mjs`
@@ -438,6 +444,7 @@ Port `FnbButton` (Pug + SCSS), drive it with Vitest, wire it into `src/index.ts`
 - Modify: `package.json` (add `verify` script)
 
 **Interfaces:**
+
 - Consumes: mixins from `src/styles/_fnb.scss` (Task 2) via `@use '../styles/fnb' as *;`.
 - Produces:
   - `FnbButton` — Vue SFC. Props: `variant?: 'default' | 'primary' | 'success' | 'danger'` (default `'default'`), `size?: 'sm' | 'md' | 'lg'` (default `'md'`), `loading?: boolean`, `disabled?: boolean`, `tag?: string`, `href?: string`. Slots: `default`, `icon`.
@@ -489,16 +496,25 @@ Ported from PixivNow, with the explicit mixin `@use` added and `:deep(.fnb-icon)
 ```vue
 <template lang="pug">
 component.fnb-button(
-  :is='tag || (href ? "a" : "button")'
-  :class='[`fnb-button--${variant}`, `fnb-button--${size}`, { "fnb-button--disabled": disabled || loading, "fnb-button--loading": loading }]'
-  :disabled='(tag === "button" || !tag) ? (disabled || loading) : undefined'
-  :href='href'
+  :is='tag || (href ? "a" : "button")',
+  :class='[`fnb-button--${variant}`, `fnb-button--${size}`, { "fnb-button--disabled": disabled || loading, "fnb-button--loading": loading }]',
+  :disabled='tag === "button" || !tag ? disabled || loading : undefined',
+  :href='href',
   v-bind='$attrs'
 )
   span.fnb-button__spinner(v-if='loading')
-    svg.spin(viewBox='0 0 24 24' width='1em' height='1em')
-      circle(cx='12' cy='12' r='10' fill='none' stroke='currentColor' stroke-width='3' stroke-dasharray='31.4 31.4' stroke-linecap='round')
-  slot(name='icon' v-if='!loading')
+    svg.spin(viewBox='0 0 24 24', width='1em', height='1em')
+      circle(
+        cx='12',
+        cy='12',
+        r='10',
+        fill='none',
+        stroke='currentColor',
+        stroke-width='3',
+        stroke-dasharray='31.4 31.4',
+        stroke-linecap='round'
+      )
+  slot(name='icon', v-if='!loading')
   slot
 </template>
 
@@ -676,7 +692,9 @@ present('dist/index.d.ts')
 contains('dist/index.d.ts', 'FnbButton')
 
 if (errors.length) {
-  console.error('verify-dist FAILED:\n' + errors.map((e) => `  - ${e}`).join('\n'))
+  console.error(
+    'verify-dist FAILED:\n' + errors.map((e) => `  - ${e}`).join('\n')
+  )
   process.exit(1)
 }
 console.log('verify-dist OK')
@@ -720,11 +738,13 @@ Port + API-ify PixivNow's `FnbIcon` (currently a prop-less `i.fnb-icon` wrapper)
 > **Pug note:** the template introduces a `<component :is>` + `slot` branch — if anything behaves oddly, consult the `pug-vue-pitfalls` skill.
 
 **Files:**
+
 - Create: `tests/FnbIcon.spec.ts`
 - Create: `src/components/FnbIcon.vue`
 - Modify: `src/index.ts` (export `FnbIcon` + add to `components` map)
 
 **Interfaces:**
+
 - Consumes: nothing from `src/styles` (self-contained scoped styles); registered alongside `FnbButton` in `src/index.ts`.
 - Produces:
   - `FnbIcon` — Vue SFC. Props: `size?: number | string` (number → `${n}px`, string passthrough; unset → inherits `1em`), `color?: string`, `component?: Component` (rendered in place of the default slot). Default slot used when `component` is absent. `inheritAttrs: false`; renders `<i class="fnb-icon">` with a default `aria-hidden="true"` that `$attrs` can override.
@@ -766,7 +786,9 @@ describe('FnbIcon', () => {
 
   it('defaults aria-hidden=true and lets $attrs override it', () => {
     expect(mount(FnbIcon).attributes('aria-hidden')).toBe('true')
-    const w = mount(FnbIcon, { attrs: { 'aria-hidden': 'false', 'aria-label': 'star' } })
+    const w = mount(FnbIcon, {
+      attrs: { 'aria-hidden': 'false', 'aria-label': 'star' },
+    })
     expect(w.attributes('aria-hidden')).toBe('false')
     expect(w.attributes('aria-label')).toBe('star')
   })
@@ -782,8 +804,8 @@ Expected: FAIL — `FnbIcon` is not exported from `../src`.
 
 ```vue
 <template lang="pug">
-i.fnb-icon(aria-hidden='true' :style='iconStyle' v-bind='$attrs')
-  component(v-if='component' :is='component')
+i.fnb-icon(aria-hidden='true', :style='iconStyle', v-bind='$attrs')
+  component(v-if='component', :is='component')
   slot(v-else)
 </template>
 
@@ -887,6 +909,7 @@ git commit -m "feat(icon): add FnbIcon primitive (naive NIcon-style)"
 ## Self-Review
 
 **Spec coverage (this plan targets spec §11 phases 1–2 + a phase-3 sample):**
+
 - §3 toolchain (Vite 8/Rolldown, plugin-vue, dts, vue-tsc + pug language plugin, sass-embedded, oxlint, prettier+pug) → Task 1. Vitest added per user decision (not originally in §3 table).
 - §4 build & artifacts (ESM-only, `external: ['vue']`, single `style.css`, dts, exports) → Task 1 (config) + Task 3 (verification). `exports` already in `package.json`.
 - §7 token model (two-layer; `--fnb-*` only; `.dark` trigger) → Task 2.

@@ -101,11 +101,11 @@ website/                      VitePress 文档站
 
 ### 主题的三层作用域
 
-| 层 | 谁提供 | 作用域 | 运行时开销 | 用途 |
-|---|---|---|---|---|
-| 默认值 | `tokens.css` 的 `:root` | 全局 | 零 | 库自带 |
-| 项目常驻主题 | 项目自写 `:root { --fnb-brand: … }` | 全局 | 零 | PixivNow 蓝 / PicaComicNow 粉 |
-| 运行时覆盖 | `FnbProvider :theme-overrides` | 作用域，可嵌套 | 内联 style | 动态换肤、局部主题 |
+| 层           | 谁提供                              | 作用域         | 运行时开销 | 用途                          |
+| ------------ | ----------------------------------- | -------------- | ---------- | ----------------------------- |
+| 默认值       | `tokens.css` 的 `:root`             | 全局           | 零         | 库自带                        |
+| 项目常驻主题 | 项目自写 `:root { --fnb-brand: … }` | 全局           | 零         | PixivNow 蓝 / PicaComicNow 粉 |
+| 运行时覆盖   | `FnbProvider :theme-overrides`      | 作用域，可嵌套 | 内联 style | 动态换肤、局部主题            |
 
 **禁令：`FnbProvider` 不得写入 `document.documentElement`。** 注入 `:root` 会带来副作用（SSR 渲染不出，首屏闪默认主题）、破坏 Provider 嵌套（后挂载者覆盖先挂载者，卸载顺序还会出错）、污染宿主页面根节点。作用域内联注入是既定方案，不要改。
 
@@ -121,17 +121,20 @@ website/                      VitePress 文档站
 
 两个项目的调色板结构完全对称，差异只在 brand 及其淡化出的 bg：
 
-| 角色 | PixivNow | PicaComicNow |
-|---|---|---|
-| brand | `#4993ff` | `#FF5C8A` |
-| bg | `#eef2ff` | `#FFF0F3` |
+| 角色      | PixivNow  | PicaComicNow      |
+| --------- | --------- | ----------------- |
+| brand     | `#4993ff` | `#FF5C8A`         |
+| bg        | `#eef2ff` | `#FFF0F3`         |
 | highlight | `#FFE066` | `#FFE066`（相同） |
-| danger | `#FF5555` | `#FF5555`（相同） |
+| danger    | `#FF5555` | `#FF5555`（相同） |
 
 因此**原始 token 保持极少数**，语义 token 由原始 token 用 `color-mix(in oklab, …)` 派生，纯 CSS 零运行时。目标形态是项目接入只需：
 
 ```css
-:root { --fnb-brand: #ff5c8a; --fnb-bg: #fff0f3; }
+:root {
+  --fnb-brand: #ff5c8a;
+  --fnb-bg: #fff0f3;
+}
 ```
 
 必须派生化的两处漏色（当前实现的实际缺陷）：
@@ -188,14 +191,14 @@ website/                      VitePress 文档站
 
 dist 实测（Chromium，16px 根字号）：
 
-| 组件 | 实测高度 | border | shadow | naive-ui 对应档 | Ant Design 对应档 |
-|---|---|---|---|---|---|
-| `FnbButton` sm | 35.8px | 2px | 4px | small 28 | small 24 |
-| `FnbButton` md | **52.5px** | **3px** | **6px** | medium 34 | middle 32 |
-| `FnbButton` lg | 62.5px | 3px | 6px | large 40 | large 40 |
-| `FnbInput` | **42.5px** | **2px** | **4px** | — | — |
-| `FnbTag` | 27.8px | 2px | 3px | — | — |
-| `FnbCard` | — | 3px | 6px | — | — |
+| 组件           | 实测高度   | border  | shadow  | naive-ui 对应档 | Ant Design 对应档 |
+| -------------- | ---------- | ------- | ------- | --------------- | ----------------- |
+| `FnbButton` sm | 35.8px     | 2px     | 4px     | small 28        | small 24          |
+| `FnbButton` md | **52.5px** | **3px** | **6px** | medium 34       | middle 32         |
+| `FnbButton` lg | 62.5px     | 3px     | 6px     | large 40        | large 40          |
+| `FnbInput`     | **42.5px** | **2px** | **4px** | —               | —                 |
+| `FnbTag`       | 27.8px     | 2px     | 3px     | —               | —                 |
+| `FnbCard`      | —          | 3px     | 6px     | —               | —                 |
 
 四项症状：
 
@@ -208,11 +211,14 @@ dist 实测（Chromium，16px 根字号）：
 
 ```scss
 .fnb-select-trigger {
-  border: none; box-shadow: none;      // 拆掉组件边框与阴影
-  border-right: 2px solid …;            // 手动补分隔线
+  border: none;
+  box-shadow: none; // 拆掉组件边框与阴影
+  border-right: 2px solid …; // 手动补分隔线
   background: transparent;
-  height: 100%;                         // 强行拉高对齐 ← 无统一 control-height 的直接后果
-  &:hover { transform: none }           // 拆掉按压动效
+  height: 100%; // 强行拉高对齐 ← 无统一 control-height 的直接后果
+  &:hover {
+    transform: none;
+  } // 拆掉按压动效
 }
 ```
 
@@ -222,22 +228,22 @@ dist 实测（Chromium，16px 根字号）：
 
 **维度一 · size** —— 决定尺寸：
 
-| size | height | font-size | padding-inline |
-|---|---|---|---|
-| sm | 28px | 13px | 10px |
-| md（默认） | **36px** | 14px | 14px |
-| lg | 44px | 16px | 18px |
+| size       | height   | font-size | padding-inline |
+| ---------- | -------- | --------- | -------------- |
+| sm         | 28px     | 13px      | 10px           |
+| md（默认） | **36px** | 14px      | 14px           |
+| lg         | 44px     | 16px      | 18px           |
 
 **`md = 36px` 取自真实生产**：PixivNow 三分之二的按钮实际选用的 `size='sm'` 实测 35.8px，取整到 4px 基数即 36px。默认值直接对齐两个项目已经跑了很久的那个尺寸，而非另拍一个数。
 
 **维度二 · weight** —— 决定视觉重量，border 与 shadow 成对：
 
-| weight | border | shadow | 适用 |
-|---|---|---|---|
-| w1（轻） | 2px | 3px | Tag 等行内标记 |
-| w2 | 2px | 4px | sm 档控件 |
-| w3（标准） | 3px | 6px | md 档控件、Card |
-| w4（重） | 3px | 8px | lg 档控件、Dialog |
+| weight     | border | shadow | 适用              |
+| ---------- | ------ | ------ | ----------------- |
+| w1（轻）   | 2px    | 3px    | Tag 等行内标记    |
+| w2         | 2px    | 4px    | sm 档控件         |
+| w3（标准） | 3px    | 6px    | md 档控件、Card   |
+| w4（重）   | 3px    | 8px    | lg 档控件、Dialog |
 
 **禁令：border 与 shadow 必须成对变更，禁止单独调整其一。** 在本设计语言中硬阴影与边框是同级别的东西，二者合起来才构成一档视觉重量；拆开调会立刻失衡。
 
@@ -266,24 +272,38 @@ dist 实测（Chromium，16px 根字号）：
 ```css
 :root {
   /* size 维度，默认 md */
-  --fnb-control-h: 36px; --fnb-control-font: 14px; --fnb-control-px: 14px;
+  --fnb-control-h: 36px;
+  --fnb-control-font: 14px;
+  --fnb-control-px: 14px;
   /* weight 维度，默认 w3 */
-  --fnb-weight-border: 3px; --fnb-weight-shadow: 6px;
+  --fnb-weight-border: 3px;
+  --fnb-weight-shadow: 6px;
 }
-.fnb-button, .fnb-input, .fnb-select__trigger {
+.fnb-button,
+.fnb-input,
+.fnb-select__trigger {
   height: var(--fnb-control-h);
   font-size: var(--fnb-control-font);
   padding-inline: var(--fnb-control-px);
   border-width: var(--fnb-weight-border);
-  box-shadow: var(--fnb-weight-shadow) var(--fnb-weight-shadow) 0 0 var(--fnb-shadow-color);
+  box-shadow: var(--fnb-weight-shadow) var(--fnb-weight-shadow) 0 0
+    var(--fnb-shadow-color);
 }
 /* 控件的 size 类同时切两个维度——控件的 weight 跟随其 size */
-.fnb-button--sm, .fnb-input-group--sm {
-  --fnb-control-h: 28px; --fnb-control-font: 13px; --fnb-control-px: 10px;
-  --fnb-weight-border: 2px; --fnb-weight-shadow: 4px;      /* → w2 */
+.fnb-button--sm,
+.fnb-input-group--sm {
+  --fnb-control-h: 28px;
+  --fnb-control-font: 13px;
+  --fnb-control-px: 10px;
+  --fnb-weight-border: 2px;
+  --fnb-weight-shadow: 4px; /* → w2 */
 }
 /* Tag 只锁 weight，不参与 control size */
-.fnb-tag { --fnb-weight-border: 2px; --fnb-weight-shadow: 3px; height: 24px; }
+.fnb-tag {
+  --fnb-weight-border: 2px;
+  --fnb-weight-shadow: 3px;
+  height: 24px;
+}
 ```
 
 由此 `.fnb-input-group--sm` 只需覆盖变量，**全体成员经 CSS 继承自动跟随**——成员无需知道自己在 group 内，Vue 侧也不必 provide/inject 传 size。两个维度各用一组变量，正交性由此在实现层面强制。
@@ -309,8 +329,9 @@ dist 实测（Chromium，16px 根字号）：
   ```css
   .fnb-input-group > :focus-visible {
     outline: 2px solid var(--fnb-brand);
-    outline-offset: -2px;     /* 内描边，不占布局、不影响相邻边合并 */
-    position: relative; z-index: 1;   /* 描边压在相邻成员之上 */
+    outline-offset: -2px; /* 内描边，不占布局、不影响相邻边合并 */
+    position: relative;
+    z-index: 1; /* 描边压在相邻成员之上 */
   }
   ```
 
@@ -352,24 +373,25 @@ dist 实测（Chromium，16px 根字号）：
 
 ### 7.1 组件清单
 
-| 类别 | 组件 | 职责 |
-|---|---|---|
-| 骨架 | `FnbLayout` | 纵向 flex 容器，`min-height: 100vh` |
-| | `FnbHeader` | sticky + 三槽（left/center/right）+ 滚动隐藏 |
-| | `FnbSider` | 抽屉 + 遮罩 + 滚动锁，`v-model:open` |
-| | `FnbFooter` | 页脚容器 |
-| 配件 | `FnbBrand` / `FnbNav` / `FnbNavLink` | 导航现成件 |
-| 基础件 | `FnbDropdown` | 新增。触发器 + 浮层 + click-outside |
-| | `FnbDivider` | 新增。分隔线，强/弱两档 + 可带标题（见 §7.5） |
-| 全局件 | `FnbBackToTop` | 基于已有 `FnbFloatButton` 薄封装 + 滚动阈值 |
-| | `FnbLoadingBar` | 顶部加载指示条，**自实现替换 `nprogress`**（见 §7.3） |
-| | `FnbLink` | 统一链接件，`external` 为语法糖（见 §7.4） |
-| composable | `useScrollDirection` / `useScrollLock` | 行为复用 |
+| 类别       | 组件                                   | 职责                                                  |
+| ---------- | -------------------------------------- | ----------------------------------------------------- |
+| 骨架       | `FnbLayout`                            | 纵向 flex 容器，`min-height: 100vh`                   |
+|            | `FnbHeader`                            | sticky + 三槽（left/center/right）+ 滚动隐藏          |
+|            | `FnbSider`                             | 抽屉 + 遮罩 + 滚动锁，`v-model:open`                  |
+|            | `FnbFooter`                            | 页脚容器                                              |
+| 配件       | `FnbBrand` / `FnbNav` / `FnbNavLink`   | 导航现成件                                            |
+| 基础件     | `FnbDropdown`                          | 新增。触发器 + 浮层 + click-outside                   |
+|            | `FnbDivider`                           | 新增。分隔线，强/弱两档 + 可带标题（见 §7.5）         |
+| 全局件     | `FnbBackToTop`                         | 基于已有 `FnbFloatButton` 薄封装 + 滚动阈值           |
+|            | `FnbLoadingBar`                        | 顶部加载指示条，**自实现替换 `nprogress`**（见 §7.3） |
+|            | `FnbLink`                              | 统一链接件，`external` 为语法糖（见 §7.4）            |
+| composable | `useScrollDirection` / `useScrollLock` | 行为复用                                              |
 
 ### 7.2 去重要点
 
 - `FnbDropdown` 落地后，`FnbSelect` 内部那份重复的 click-outside 实现改为复用它。
 - `useScrollLock` 从 `FnbDialogProvider` 现有实现提取，`FnbSider` 与 `FnbDialogProvider` 共用一份。
+
 ### 7.3 `FnbLoadingBar`：替换 nprogress 而非封装它
 
 两项目现有的 `NProgress.vue` 模板为空，本体是第三方包 `nprogress`（停更于 v0.2.0）加一层样式补丁与路由钩子。两边都在删它自带的 `.peg`、都不需要 `.spinner` 却都留着、都硬编码了 header 偏移。**覆盖它的代码量已接近重写它**，而它的核心逻辑（伪造递增至 99%、完成时冲到 100%）仅约 30 行。
@@ -394,10 +416,10 @@ dist 实测（Chromium，16px 根字号）：
 
 两个项目并存两种分隔线，故需两档，非过度设计：
 
-| 档 | 线宽 / 颜色 | 用途 | 现有出处 |
-|---|---|---|---|
-| 弱（默认） | 1px `--fnb-divider` | 列表项之间 | PicaComicNow `1px solid #eee` |
-| 强（`strong`） | `var(--fnb-weight-border)` + `--fnb-border` | section 边界 | 两项目多处 `3px solid #000` |
+| 档             | 线宽 / 颜色                                 | 用途         | 现有出处                      |
+| -------------- | ------------------------------------------- | ------------ | ----------------------------- |
+| 弱（默认）     | 1px `--fnb-divider`                         | 列表项之间   | PicaComicNow `1px solid #eee` |
+| 强（`strong`） | `var(--fnb-weight-border)` + `--fnb-border` | section 边界 | 两项目多处 `3px solid #000`   |
 
 - props：`strong` / `dashed` / `vertical` / `titlePlacement`（`left | center | right`，默认 `center`），标题走默认 slot。
 - **Divider 不参与 weight 维度的 shadow 部分**——它是线不是块，无阴影。强档线宽复用 `--fnb-weight-border`，以与同处容器的边框等宽。
@@ -432,9 +454,9 @@ const { class: themeClass, style: themeStyle } = useThemeScope()
 4. 嵌套两层 `FnbProvider`，内层覆盖生效且不影响外层；卸载内层后外层主题正确恢复。
 5. `scripts/gen-tokens.mjs` 重新运行后 `tokens.css` 无 diff。
 6. 全库 SFC 中 `<style>` 块数量为 0。
-6b. **包边界**：`packages/vue/dist` 中不存在任何 `.css` 文件；`@fnb-ui/core/style.css` 的引入不触发任何 JS 加载。
+   6b. **包边界**：`packages/vue/dist` 中不存在任何 `.css` 文件；`@fnb-ui/core/style.css` 的引入不触发任何 JS 加载。
 7. `FnbLink` 同时传 `external` 与自定义 `suffix-icon` 时，图标被覆盖而 `target` / `rel` 仍生效（正交性）。
 8. `tokens.css` 中不含任何 breakpoint 变量；SCSS 变量与 TS 常量各生成一份且取值一致。
 9. **同类控件三维对齐**：同一 size 下 `FnbButton` / `FnbInput` / `FnbSelect` 的 `height`、`borderTopWidth`、`boxShadow` 三项计算值完全相等，sm/md/lg 三档均需通过。
-9b. **weight 与 size 正交**：默认 size 下 `FnbTag` 的 border/shadow 严格轻于 `FnbButton`（2px/3px vs 3px/6px）；Tag 不因 size 变化而升到 w3。
+   9b. **weight 与 size 正交**：默认 size 下 `FnbTag` 的 border/shadow 严格轻于 `FnbButton`（2px/3px vs 3px/6px）；Tag 不因 size 变化而升到 w3。
 10. **组合零覆盖**：`.fnb-input-group` 包裹 Select + Input + Button 后，不写任何额外 CSS 即得到与 PixivNow 现有搜索胶囊等效的外观；组内任一成员获得焦点时拼接不裂开。
