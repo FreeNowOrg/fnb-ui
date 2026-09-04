@@ -5,7 +5,7 @@ import { version } from '../../packages/vue/package.json'
 
 export default defineConfig({
   title: 'fnb-ui',
-  description: 'Free Neubrutalism — a Vue 3 component library',
+  description: 'Free Neubrutalism — a CSS-first design system',
   lang: 'en-US',
 
   themeConfig: {

@@ -1,14 +1,19 @@
 # fnb-ui
 
-> **F**ree **N**eu**b**rutalism — a Vue 3 component library.
+> **F**ree **N**eu**b**rutalism — a CSS-first design system.
 
-A standalone, framework-agnostic Vue 3 component library that codifies the
-shared neubrutalism design language of [FreeNowOrg](https://github.com/FreeNowOrg)
-projects — first introduced in
+The design system behind [FreeNowOrg](https://github.com/FreeNowOrg) projects —
+first introduced in
 [PicaComicNow](https://github.com/FreeNowOrg/PicaComicNow) and since carried into
 [PixivNow](https://github.com/FreeNowOrg/PixivNow) and sibling apps. Hard shadows,
 zero radius, `Archivo Black` display type — themeable entirely through `--fnb-*`
-CSS custom properties, with a naive-ui-aligned API surface.
+CSS custom properties.
+
+**The stylesheet is the product.** `@fnb-ui/core` is a framework-agnostic
+stylesheet plus its design tokens: every component's appearance comes from
+plain `.fnb-*` classes that any framework, or none, can put on an element.
+`@fnb-ui/vue` is a thin binding layer on top — Vue components with a
+naive-ui-aligned API that ship no CSS of their own.
 
 > 🚧 Early development. Design specs live under `docs/superpowers/specs/`.
 

@@ -4,7 +4,7 @@ layout: home
 hero:
   name: fnb-ui
   text: Free Neubrutalism
-  tagline: A bold, framework-agnostic Vue 3 component library.
+  tagline: A bold, framework-agnostic CSS design system, with Vue bindings.
   actions:
     - theme: brand
       text: Get Started
