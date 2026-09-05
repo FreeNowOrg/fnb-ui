@@ -1,0 +1,243 @@
+/* ==========================================================================
+   fnb-ui docs theme
+   The docs site is the showcase: it is built out of the same tokens it
+   documents. Every value here comes from --fnb-*; nothing is invented locally.
+   If a value you need does not exist as a token, that is a gap in the token
+   set — add it there, not here.
+   ========================================================================== */
+
+/* --- Bridge VitePress's palette onto the design system --------------------
+   VitePress reads --vp-* everywhere. Point those at --fnb-* once and the
+   whole default theme follows, including its dark mode (VitePress toggles
+   `html.dark`, which is the same hook tokens.css uses — no adapter needed).
+   -------------------------------------------------------------------------- */
+
+:root {
+  --vp-c-bg: var(--fnb-surface);
+  --vp-c-bg-alt: var(--fnb-bg);
+  --vp-c-bg-soft: var(--fnb-bg);
+  --vp-c-bg-elv: var(--fnb-surface);
+
+  --vp-c-text-1: var(--fnb-text);
+  --vp-c-text-2: var(--fnb-text-muted);
+  --vp-c-text-3: var(--fnb-text-muted);
+
+  --vp-c-brand-1: var(--fnb-brand);
+  --vp-c-brand-2: var(--fnb-brand-hover);
+  --vp-c-brand-3: var(--fnb-brand);
+  --vp-c-brand-soft: var(--fnb-bg);
+
+  --vp-c-divider: var(--fnb-border);
+  --vp-c-border: var(--fnb-border);
+  --vp-c-gutter: var(--fnb-border);
+
+  --vp-font-family-base: var(--fnb-font-sans);
+  --vp-code-block-bg: var(--fnb-bg-alt);
+  --vp-code-font-size: 0.9em;
+
+  --vp-layout-max-width: 1400px;
+  --vp-nav-height: 64px;
+}
+
+/* --- Type ----------------------------------------------------------------
+   Archivo Black carries the display voice. It is only loaded if the reader
+   has it; the stack falls back to the body face, which stays legible but
+   loses the punch — see docs/ for how to self-host it.
+   -------------------------------------------------------------------------- */
+
+.vp-doc h1,
+.vp-doc h2,
+.vp-doc h3,
+.VPNavBarTitle .title {
+  font-family: var(--fnb-font-display);
+  letter-spacing: -0.01em;
+}
+
+.vp-doc h1 {
+  font-size: 2.6rem;
+  line-height: 1.1;
+}
+
+/* Sections are separated by space and weight, not by another rule. The hard
+   line is reserved for things that genuinely enclose content — chrome, code,
+   tables, demo frames. Adding one here too made the page read as a stack of
+   horizontal bars and drowned out the demo frames' shadow, which is the one
+   thing readers should notice. Do not put a border back on this. */
+.vp-doc h2 {
+  margin-top: var(--fnb-space-8);
+  padding-top: 0;
+  border-top: none;
+  font-size: 1.6rem;
+}
+
+/* --- Chrome: nav and sidebar ---------------------------------------------
+   Flat fills and hard rules instead of the default translucent blur — this
+   design language has no soft edges anywhere else either.
+   -------------------------------------------------------------------------- */
+
+.VPNav,
+.VPNavBar {
+  background: var(--fnb-bg);
+  backdrop-filter: none;
+}
+
+.VPNavBar {
+  border-bottom: var(--fnb-w3-border) solid var(--fnb-border);
+}
+
+.VPNavBar.has-sidebar .content-body,
+.VPNavBar .divider {
+  background: transparent;
+}
+
+.VPNavBarTitle .title {
+  border-bottom: none;
+  font-weight: 900;
+}
+
+.VPSidebar {
+  background: var(--fnb-bg);
+  border-right: var(--fnb-w3-border) solid var(--fnb-border);
+}
+
+/* The active page is marked with a filled block, not a tinted label —
+   the same highlight token used by an active FnbTag. */
+.VPSidebarItem.is-active > .item .link .text,
+.VPSidebarItem.is-link.is-active > .item .text {
+  background: var(--fnb-highlight);
+  color: var(--fnb-on-light);
+  font-weight: 900;
+  padding-inline: var(--fnb-space-2);
+  box-shadow: var(--fnb-w1-shadow) var(--fnb-w1-shadow) 0 0 var(--fnb-border);
+  border: var(--fnb-w1-border) solid var(--fnb-border);
+}
+
+.VPSidebarItem.level-0 > .item > .indicator {
+  background: transparent;
+}
+
+.VPSidebarItem.level-0 .text {
+  font-weight: 700;
+}
+
+/* --- Content -------------------------------------------------------------- */
+
+.vp-doc a {
+  font-weight: 700;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 2px;
+}
+
+.vp-doc table {
+  border-collapse: collapse;
+  display: table;
+  width: 100%;
+}
+
+.vp-doc th,
+.vp-doc td {
+  border: var(--fnb-w1-border) solid var(--fnb-border);
+}
+
+.vp-doc th {
+  background: var(--fnb-bg);
+  font-weight: 900;
+}
+
+.vp-doc tr {
+  background: transparent;
+  border-top: none;
+}
+
+.vp-doc div[class*='language-'] {
+  border: var(--fnb-w1-border) solid var(--fnb-border);
+  border-radius: var(--fnb-radius);
+  box-shadow: var(--fnb-w2-shadow) var(--fnb-w2-shadow) 0 0
+    var(--fnb-shadow-color);
+}
+
+.vp-doc :not(pre) > code {
+  background: var(--fnb-bg);
+  border: 1px solid var(--fnb-divider);
+  border-radius: var(--fnb-radius);
+  color: var(--fnb-text);
+}
+
+.vp-doc blockquote {
+  border-left: var(--fnb-w3-border) solid var(--fnb-brand);
+  padding-left: var(--fnb-space-4);
+}
+
+/* --- The demo frame ------------------------------------------------------
+   This is where readers actually meet the components, so it gets the full
+   treatment: hard border plus offset shadow, the signature of the system.
+   -------------------------------------------------------------------------- */
+
+.vitepress-demo-plugin__container {
+  border: var(--fnb-w3-border) solid var(--fnb-border) !important;
+  border-radius: var(--fnb-radius) !important;
+  box-shadow: var(--fnb-w3-shadow) var(--fnb-w3-shadow) 0 0
+    var(--fnb-shadow-color);
+  background: var(--fnb-surface);
+  margin-block: var(--fnb-space-6);
+}
+
+.vitepress-demo-plugin-preview {
+  padding: var(--fnb-space-6) !important;
+}
+
+.vitepress-demo-plugin__container .bottom {
+  border-top: var(--fnb-w1-border) dashed var(--fnb-border) !important;
+}
+
+/* --- Page footer nav ------------------------------------------------------
+   Prev/next become real cards so the press interaction shows up here too.
+   -------------------------------------------------------------------------- */
+
+.VPDocFooter .pager-link {
+  border: var(--fnb-w2-border) solid var(--fnb-border);
+  border-radius: var(--fnb-radius);
+  background: var(--fnb-surface);
+  box-shadow: var(--fnb-w2-shadow) var(--fnb-w2-shadow) 0 0
+    var(--fnb-shadow-color);
+  transition:
+    transform var(--fnb-duration-fast),
+    box-shadow var(--fnb-duration-fast);
+}
+
+.VPDocFooter .pager-link:hover {
+  transform: translate(1.5px, 1.5px);
+  box-shadow: 0 0 0 0 var(--fnb-border);
+}
+
+.VPDocFooter .pager-link .title {
+  color: var(--fnb-brand);
+  font-weight: 900;
+}
+
+/* --- Aside outline -------------------------------------------------------- */
+
+.VPDocAsideOutline .outline-marker {
+  background: var(--fnb-brand);
+  width: 3px;
+}
+
+.VPDocAsideOutline .outline-title {
+  font-weight: 900;
+}
+
+/* --- Accessibility floor -------------------------------------------------- */
+
+:where(a, button, .VPSidebarItem .link):focus-visible {
+  outline: var(--fnb-w1-border) solid var(--fnb-brand);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .VPDocFooter .pager-link {
+    transition: none;
+  }
+  .VPDocFooter .pager-link:hover {
+    transform: none;
+  }
+}
