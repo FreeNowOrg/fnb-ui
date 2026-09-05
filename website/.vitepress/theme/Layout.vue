@@ -5,7 +5,7 @@ const { Layout } = DefaultTheme
 </script>
 
 <template>
-  <FnbProvider>
+  <FnbProvider class="fnb-grid">
     <Layout />
   </FnbProvider>
 </template>

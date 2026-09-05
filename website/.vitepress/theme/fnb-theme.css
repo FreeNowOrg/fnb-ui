@@ -37,13 +37,37 @@
 
   --vp-layout-max-width: 1400px;
   --vp-nav-height: 64px;
+
+  /* VitePress paints its chrome through dedicated variables, and its own
+     rules carry a scope attribute (specificity 0,2,0). Overriding the
+     elements directly loses to them — set the variables instead. */
+  --vp-nav-bg-color: var(--fnb-bg);
+  --vp-sidebar-bg-color: var(--fnb-bg);
+  --vp-local-nav-bg-color: var(--fnb-bg);
 }
 
-/* --- Type ----------------------------------------------------------------
-   Archivo Black carries the display voice. It is only loaded if the reader
-   has it; the stack falls back to the body face, which stays legible but
-   loses the punch — see docs/ for how to self-host it.
+/* --- Page ground ---------------------------------------------------------
+   The graph-paper grid is part of the language — the hard-edged blocks need
+   something to sit on. .fnb-grid comes from the library's base layer; the
+   docs site only opts in.
    -------------------------------------------------------------------------- */
+
+.fnb-grid {
+  /* The grid needs an opaque ground of its own, otherwise it draws on
+     transparency and whatever paints a background above it wins. */
+  background-color: var(--fnb-bg);
+  min-height: 100vh;
+}
+
+/* Let the grid show through the content column. Nav and sidebar stay flat
+   fills on purpose — the grid belongs to the page, not to the chrome. */
+.VPContent,
+.VPDoc,
+.VPPage {
+  background-color: transparent;
+}
+
+/* --- Type ---------------------------------------------------------------- */
 
 .vp-doc h1,
 .vp-doc h2,
@@ -77,7 +101,6 @@
 
 .VPNav,
 .VPNavBar {
-  background: var(--fnb-bg);
   backdrop-filter: none;
 }
 

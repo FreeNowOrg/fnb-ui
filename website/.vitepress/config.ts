@@ -8,6 +8,23 @@ export default defineConfig({
   description: 'Free Neubrutalism — a CSS-first design system',
   lang: 'en-US',
 
+  // Archivo Black is the display voice of this design language. The docs site
+  // is the showcase, so it loads the real face rather than falling back.
+  head: [
+    ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
+    [
+      'link',
+      { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+    ],
+    [
+      'link',
+      {
+        rel: 'stylesheet',
+        href: 'https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap',
+      },
+    ],
+  ],
+
   themeConfig: {
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
