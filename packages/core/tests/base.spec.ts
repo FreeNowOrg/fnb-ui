@@ -35,7 +35,12 @@ describe('base.css', () => {
   it('scopes every element selector under .fnb-prose, or behind an explicit .fnb- class', () => {
     // .fnb-divider is an explicit opt-in class (same pattern as .fnb-link),
     // not a bare element selector, so it is as safe as the other two prefixes.
-    const allowedPrefixes = ['.fnb-prose', '.fnb-link', '.fnb-divider']
+    const allowedPrefixes = [
+      '.fnb-prose',
+      '.fnb-link',
+      '.fnb-divider',
+      '.fnb-grid',
+    ]
 
     for (const sel of selectors) {
       const scoped = allowedPrefixes.some((prefix) => sel.startsWith(prefix))
@@ -109,5 +114,14 @@ describe('prose does not outrank component classes', () => {
 
   it('leaves a tag identical inside and outside prose', () => {
     expect(style('tag-in').borderTopWidth).toBe(style('tag-out').borderTopWidth)
+  })
+
+  it('draws the page grid from tokens, never hardcoded values', () => {
+    const grid = css.slice(css.indexOf('.fnb-grid'))
+    expect(grid).toContain('var(--fnb-grid-line)')
+    expect(grid).toContain('var(--fnb-grid-size)')
+    // Both first-party apps hardcoded rgba(0,0,0,0.03) and 72px in their own
+    // stylesheets; that duplication is what this layer exists to remove.
+    expect(grid).not.toMatch(/rgba\(|72px/)
   })
 })

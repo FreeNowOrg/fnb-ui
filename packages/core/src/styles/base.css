@@ -128,3 +128,18 @@
 .fnb-link--plain {
   text-decoration: none;
 }
+
+/* --- Page grid ------------------------------------------------------------
+   The faint graph-paper grid is part of the design language, not decoration:
+   it gives the hard-edged blocks something to sit on. Opt in by putting
+   .fnb-grid on whatever paints the page background. It draws with
+   --fnb-grid-line, which is already tuned per colour scheme, so it stays
+   readable in dark mode without a second rule here.
+   -------------------------------------------------------------------------- */
+
+.fnb-grid {
+  background-image:
+    linear-gradient(var(--fnb-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--fnb-grid-line) 1px, transparent 1px);
+  background-size: var(--fnb-grid-size) var(--fnb-grid-size);
+}

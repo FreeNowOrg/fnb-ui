@@ -104,6 +104,9 @@ export const font = {
 /** Layout sizes multiple components must agree on. */
 export const layout = {
   headerHeight: '56px',
+  /* The page grid is part of the design language, not decoration. Both
+     first-party apps draw it at 72px; keep them in step by changing it here. */
+  gridSize: '72px',
 } as const
 
 /**

@@ -81,6 +81,7 @@
   --fnb-z-message: 400;
   --fnb-z-image-preview: 500;
   --fnb-header-height: 56px;
+  --fnb-grid-size: 72px;
 }
 
 .dark {
