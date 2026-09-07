@@ -325,7 +325,11 @@
 .fnb-select__dropdown {
   box-sizing: border-box;
   position: absolute;
-  top: calc(100% + 4px);
+  /* Hangs flush off the trigger, pulled up by its own border width so the two
+     borders land on the same line. Plain `100%` would stack the trigger's
+     bottom border and the dropdown's top border into one thick bar — the same
+     reason .fnb-input-group joins its members with a negative margin. */
+  top: calc(100% - var(--fnb-w2-border));
   left: 0;
   width: 100%;
   border: var(--fnb-w2-border) solid var(--fnb-border);
