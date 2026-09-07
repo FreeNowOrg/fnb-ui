@@ -1,6 +1,6 @@
 <template lang="pug">
 input.fnb-input(
-  :class='{ "fnb-input--disabled": disabled }',
+  :class='[`fnb-input--${size}`, { "fnb-input--disabled": disabled }]',
   :disabled='disabled',
   :placeholder='placeholder',
   :readonly='readonly',
@@ -20,11 +20,13 @@ withDefaults(
     modelValue?: string
     placeholder?: string
     type?: string
+    size?: 'sm' | 'md' | 'lg'
     disabled?: boolean
     readonly?: boolean
   }>(),
   {
     type: 'text',
+    size: 'md',
   }
 )
 

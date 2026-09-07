@@ -70,6 +70,38 @@ describe('control sizing', () => {
     expect(sm).toContain('--fnb-weight-border: var(--fnb-w2-border)')
     expect(sm).toContain('--fnb-weight-shadow: var(--fnb-w2-shadow)')
   })
+
+  it('gives every single-line control the same size dimension', () => {
+    // The promise is that a button and a field at the same size are the same
+    // height with no per-use tweaking. That only holds if all three carry the
+    // modifier and map it to identical tokens — Input and Select shipped
+    // without one, so `size="sm"` was silently ignored and only buttons moved.
+    for (const [size, tier] of [
+      ['sm', 'w2'],
+      ['lg', 'w4'],
+    ] as const) {
+      for (const base of ['.fnb-button', '.fnb-input', '.fnb-select']) {
+        const b = block(`${base}--${size}`)
+        expect(b, `${base}--${size} missing`).not.toBe('')
+        expect(b).toContain(`--fnb-control-h: var(--fnb-control-h-${size})`)
+        expect(b).toContain(
+          `--fnb-control-font: var(--fnb-control-font-${size})`
+        )
+        expect(b).toContain(`--fnb-control-px: var(--fnb-control-px-${size})`)
+        expect(b).toContain(`--fnb-weight-border: var(--fnb-${tier}-border)`)
+        expect(b).toContain(`--fnb-weight-shadow: var(--fnb-${tier}-shadow)`)
+      }
+    }
+  })
+
+  it('lets the Select dropdown read as one object with its trigger', () => {
+    // Trigger and dropdown are visually a single block, so the dropdown gets no
+    // shadow of its own and matches the trigger's border width.
+    const b = block('.fnb-select__dropdown')
+    expect(b).toContain('border: var(--fnb-weight-border)')
+    expect(b).not.toContain('box-shadow')
+    expect(b).toContain('top: calc(100% - var(--fnb-weight-border))')
+  })
 })
 
 describe('weight variables do not leak down the tree', () => {
@@ -85,6 +117,12 @@ describe('weight variables do not leak down the tree', () => {
     '.fnb-input-group--lg',
     '.fnb-button--sm',
     '.fnb-button--lg',
+    '.fnb-input--sm',
+    '.fnb-input--lg',
+    // The Select modifier sits on the wrapper so the dropdown moves tier with
+    // the trigger — a retuning wrapper, not a leaf.
+    '.fnb-select--sm',
+    '.fnb-select--lg',
     '.fnb-pagination__btn',
   ]
 

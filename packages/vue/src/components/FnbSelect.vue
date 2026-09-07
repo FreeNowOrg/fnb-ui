@@ -1,5 +1,8 @@
 <template lang="pug">
-.fnb-select(:class='{ "fnb-select--open": open }', ref='rootEl')
+.fnb-select(
+  :class='[`fnb-select--${size}`, { "fnb-select--open": open }]',
+  ref='rootEl'
+)
   button.fnb-select__trigger(
     @click='open = !open',
     @keydown='onTriggerKeydown',
@@ -27,10 +30,14 @@
 <script lang="ts" setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
-const props = defineProps<{
-  options: { label: string; value: string }[]
-  modelValue: string
-}>()
+const props = withDefaults(
+  defineProps<{
+    options: { label: string; value: string }[]
+    modelValue: string
+    size?: 'sm' | 'md' | 'lg'
+  }>(),
+  { size: 'md' }
+)
 
 const emit = defineEmits<{
   'update:modelValue': [value: string]

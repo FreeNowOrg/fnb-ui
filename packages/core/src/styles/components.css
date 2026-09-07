@@ -205,6 +205,25 @@
     var(--fnb-shadow-color);
 }
 
+/* A field is a leaf control, so it may retune --fnb-weight-* directly — same
+   shape as Button's modifiers, and the same values, which is what keeps a
+   button and a field of the same size on one baseline. */
+.fnb-input--sm {
+  --fnb-control-h: var(--fnb-control-h-sm);
+  --fnb-control-font: var(--fnb-control-font-sm);
+  --fnb-control-px: var(--fnb-control-px-sm);
+  --fnb-weight-border: var(--fnb-w2-border);
+  --fnb-weight-shadow: var(--fnb-w2-shadow);
+}
+
+.fnb-input--lg {
+  --fnb-control-h: var(--fnb-control-h-lg);
+  --fnb-control-font: var(--fnb-control-font-lg);
+  --fnb-control-px: var(--fnb-control-px-lg);
+  --fnb-weight-border: var(--fnb-w4-border);
+  --fnb-weight-shadow: var(--fnb-w4-shadow);
+}
+
 .fnb-input--disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -313,6 +332,26 @@
     calc(var(--fnb-weight-shadow) * 2) 0 0 var(--fnb-shadow-color);
 }
 
+/* The modifier sits on the wrapper, not the trigger: the dropdown has to move
+   to the same tier too, or its border stops matching the trigger's and the
+   flush seam doubles up. This is the "wrapper whose job is retuning its
+   members" case the weight note at the top of this file allows. */
+.fnb-select--sm {
+  --fnb-control-h: var(--fnb-control-h-sm);
+  --fnb-control-font: var(--fnb-control-font-sm);
+  --fnb-control-px: var(--fnb-control-px-sm);
+  --fnb-weight-border: var(--fnb-w2-border);
+  --fnb-weight-shadow: var(--fnb-w2-shadow);
+}
+
+.fnb-select--lg {
+  --fnb-control-h: var(--fnb-control-h-lg);
+  --fnb-control-font: var(--fnb-control-font-lg);
+  --fnb-control-px: var(--fnb-control-px-lg);
+  --fnb-weight-border: var(--fnb-w4-border);
+  --fnb-weight-shadow: var(--fnb-w4-shadow);
+}
+
 .fnb-select__arrow {
   font-size: 0.6em;
   transition: transform var(--fnb-duration);
@@ -325,16 +364,15 @@
 .fnb-select__dropdown {
   box-sizing: border-box;
   position: absolute;
-  /* Hangs flush off the trigger, pulled up by its own border width so the two
-     borders land on the same line. Plain `100%` would stack the trigger's
-     bottom border and the dropdown's top border into one thick bar — the same
-     reason .fnb-input-group joins its members with a negative margin. */
-  top: calc(100% - var(--fnb-w2-border));
+  /* Hangs flush off the trigger and carries no shadow of its own: trigger and
+     dropdown read as one object, so a second offset shadow would only fight
+     the trigger's. Same border width as the trigger for the same reason, and
+     the pull-up equals that width so both borders land on one line — plain
+     `100%` would stack them into a bar twice as thick. */
+  top: calc(100% - var(--fnb-weight-border));
   left: 0;
   width: 100%;
-  border: var(--fnb-w2-border) solid var(--fnb-border);
-  box-shadow: var(--fnb-w2-shadow) var(--fnb-w2-shadow) 0 0
-    var(--fnb-shadow-color);
+  border: var(--fnb-weight-border) solid var(--fnb-border);
   border-radius: var(--fnb-radius);
   background: var(--fnb-surface);
   z-index: var(--fnb-z-base);
