@@ -126,7 +126,10 @@ export const zIndex = {
 export const font = {
   sans: "'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', system-ui, sans-serif",
   display: "'Archivo Black', 'Noto Sans SC', system-ui, sans-serif",
-  mono: "'Space Grotesk', ui-monospace, monospace",
+  // Every family here must actually be monospaced. Space Grotesk used to lead
+  // this stack and is proportional, so anyone who happened to have it installed
+  // got code blocks that did not line up.
+  mono: 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
 } as const
 
 /** Layout sizes multiple components must agree on. */

@@ -1,9 +1,22 @@
 {
   "name": "@fnb-ui/vue",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Free Neubrutalism — Vue 3 bindings",
+  "keywords": [
+    "vue",
+    "vue3",
+    "components",
+    "design-system",
+    "neubrutalism",
+    "brutalist",
+    "ui"
+  ],
   "type": "module",
   "license": "MIT",
+  "homepage": "https://github.com/FreeNowOrg/fnb-ui",
+  "bugs": {
+    "url": "https://github.com/FreeNowOrg/fnb-ui/issues"
+  },
   "author": "FreeNowOrg",
   "repository": {
     "type": "git",
@@ -30,5 +43,8 @@
   },
   "dependencies": {
     "@fnb-ui/core": "workspace:*"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

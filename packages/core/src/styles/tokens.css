@@ -28,7 +28,7 @@
   --fnb-font-sans:
     'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', system-ui, sans-serif;
   --fnb-font-display: 'Archivo Black', 'Noto Sans SC', system-ui, sans-serif;
-  --fnb-font-mono: 'Space Grotesk', ui-monospace, monospace;
+  --fnb-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   /* Zero radius is intrinsic to this design language — one variable,
      not a scale: there is no size/weight dimension for corners. */

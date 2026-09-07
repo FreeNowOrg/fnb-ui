@@ -1,9 +1,21 @@
 {
   "name": "@fnb-ui/core",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Free Neubrutalism — CSS-first design system core",
+  "keywords": [
+    "css",
+    "design-system",
+    "design-tokens",
+    "neubrutalism",
+    "brutalist",
+    "ui"
+  ],
   "type": "module",
   "license": "MIT",
+  "homepage": "https://github.com/FreeNowOrg/fnb-ui",
+  "bugs": {
+    "url": "https://github.com/FreeNowOrg/fnb-ui/issues"
+  },
   "author": "FreeNowOrg",
   "repository": {
     "type": "git",
@@ -28,5 +40,8 @@
   "scripts": {
     "build": "vite build",
     "typecheck": "tsc --noEmit"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
