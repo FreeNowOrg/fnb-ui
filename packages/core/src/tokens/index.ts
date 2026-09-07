@@ -60,10 +60,38 @@ export const control = {
  * Element type picks the tier, not size alone: a Tag stays w1 at any size.
  */
 export const weight = {
-  w1: { border: '2px', shadow: '3px' },
-  w2: { border: '2px', shadow: '4px' },
-  w3: { border: '3px', shadow: '6px' },
-  w4: { border: '3px', shadow: '8px' },
+  w1: { border: '2px', shadow: '2px' },
+  w2: { border: '2px', shadow: '3px' },
+  w3: { border: '3px', shadow: '4px' },
+  w4: { border: '3px', shadow: '6px' },
+} as const
+
+/**
+ * State layer: a translucent wash painted OVER whatever background a control
+ * already carries, so one pair of values covers every variant — default,
+ * primary, danger, and any background a consumer sets themselves.
+ *
+ * It is the non-geometric half of the interaction ladder. Motion alone cannot
+ * carry a state: `prefers-reduced-motion` switches the press off, and a
+ * transform is invisible to anyone who cannot perceive the movement. The wash
+ * always remains.
+ *
+ * Components apply it through `background-image`, never `background-color`, so
+ * it composites on top instead of replacing the base fill. Never clear it to
+ * `none` in another state's rule — doing so makes the luminance ladder
+ * non-monotonic (hover darkens, then focus brightens again), which reads as
+ * the control lighting up when you press it.
+ */
+export const state = {
+  hover: 'rgb(0 0 0 / 0.09)',
+  active: 'rgb(0 0 0 / 0.18)',
+} as const
+
+/** On dark ground the wash inverts: the same gesture must still darken→lighten
+ *  consistently relative to its own surface. */
+export const stateDark = {
+  hover: 'rgb(255 255 255 / 0.11)',
+  active: 'rgb(255 255 255 / 0.2)',
 } as const
 
 export const spacing = {
@@ -131,6 +159,8 @@ export const tokens = {
   colorDark,
   control,
   weight,
+  state,
+  stateDark,
   spacing,
   motion,
   zIndex,
@@ -152,5 +182,6 @@ export type FnbTokenName =
   | 'brand-hover'
   | 'shadow-color'
   | 'radius'
+  | `state-${keyof typeof state}`
   | `font-${keyof typeof font}`
   | Kebab<keyof typeof layout>

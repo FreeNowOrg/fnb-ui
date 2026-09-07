@@ -50,15 +50,20 @@
 
   /* Dimension two: weight. Bare names default to w3. */
   --fnb-weight-border: 3px;
-  --fnb-weight-shadow: 6px;
+  --fnb-weight-shadow: 4px;
   --fnb-w1-border: 2px;
-  --fnb-w1-shadow: 3px;
+  --fnb-w1-shadow: 2px;
   --fnb-w2-border: 2px;
-  --fnb-w2-shadow: 4px;
+  --fnb-w2-shadow: 3px;
   --fnb-w3-border: 3px;
-  --fnb-w3-shadow: 6px;
+  --fnb-w3-shadow: 4px;
   --fnb-w4-border: 3px;
-  --fnb-w4-shadow: 8px;
+  --fnb-w4-shadow: 6px;
+
+  /* State layer. Painted via background-image so it composites over the
+     control's own fill instead of replacing it. Never clear it to none. */
+  --fnb-state-hover: rgb(0 0 0 / 0.09);
+  --fnb-state-active: rgb(0 0 0 / 0.18);
 
   /* Spacing, motion, stacking, layout */
   --fnb-space-1: 4px;
@@ -96,4 +101,6 @@
   --fnb-grid-line: rgba(255, 255, 255, 0.04);
   /* Keep the hard shadow visible on dark ground; derives from brand */
   --fnb-shadow-color: color-mix(in oklab, var(--fnb-brand), #000 27%);
+  --fnb-state-hover: rgb(255 255 255 / 0.11);
+  --fnb-state-active: rgb(255 255 255 / 0.2);
 }

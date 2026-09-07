@@ -16,6 +16,8 @@ import {
   colorDark,
   control,
   weight,
+  state,
+  stateDark,
   spacing,
   motion,
   zIndex,
@@ -65,6 +67,15 @@ for (const [w, vals] of Object.entries(weight))
   for (const [k, v] of Object.entries(vals)) push(`${w}-${k}`, v)
 
 lines.push('')
+lines.push(
+  '  /* State layer. Painted via background-image so it composites over the'
+)
+lines.push(
+  "     control's own fill instead of replacing it. Never clear it to none. */"
+)
+for (const [k, v] of Object.entries(state)) push(`state-${k}`, v)
+
+lines.push('')
 lines.push('  /* Spacing, motion, stacking, layout */')
 for (const [k, v] of Object.entries(spacing)) push(`space-${k}`, v)
 for (const [k, v] of Object.entries(motion)) push(kebab(k), v)
@@ -79,6 +90,7 @@ lines.push(
   '  /* Keep the hard shadow visible on dark ground; derives from brand */'
 )
 push('shadow-color', 'color-mix(in oklab, var(--fnb-brand), #000 27%)')
+for (const [k, v] of Object.entries(stateDark)) push(`state-${k}`, v)
 lines.push('}')
 lines.push('')
 
