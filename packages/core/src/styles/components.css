@@ -57,10 +57,66 @@
     box-shadow var(--fnb-duration-fast);
 }
 
-.fnb-button:hover,
+/* ==========================================================================
+   Interaction states
+
+   The hard shadow is the gap between the object and the page. States move
+   along that one axis:
+
+     rest    gap = W        no offset
+     hover   gap = W        no offset, state-layer wash
+     active  gap = 0        offset = W — the object lands where its shadow was
+
+   NEVER put a transform on :hover. Moving the box on hover slides it out from
+   under the cursor; hover is lost, the box springs back, the cursor is over it
+   again — a frame-rate oscillation anywhere near the element's edge. The whole
+   travel budget belongs to :active, where no such loop exists because the
+   pointer is held down.
+
+   The state layer is the non-geometric half, and it is mandatory: motion alone
+   fails under prefers-reduced-motion and for anyone who cannot perceive it. It
+   is applied through background-image so it composites over each variant's own
+   fill. Never clear it to none in another state's rule (see tokens/index.ts).
+   ========================================================================== */
+
+.fnb-button:hover {
+  background-image: linear-gradient(
+    var(--fnb-state-hover),
+    var(--fnb-state-hover)
+  );
+}
+
 .fnb-button:active {
-  transform: translate(1.5px, 1.5px);
-  box-shadow: 0 0 0 0 var(--fnb-border);
+  transform: translate(var(--fnb-weight-shadow), var(--fnb-weight-shadow));
+  box-shadow: 0 0 0 0 var(--fnb-shadow-color);
+  background-image: linear-gradient(
+    var(--fnb-state-active),
+    var(--fnb-state-active)
+  );
+}
+
+/* Keyboard focus lifts: the shadow grows and the box rises. Only ever one
+   element is focused, so the shadow has nothing to collide with — the reason
+   this treatment is wrong for :hover but right here. The indicator is the
+   lengthened black shadow (18.8:1 against the page ground); the highlight fill
+   is decoration and carries no accessibility duty on its own — it measures
+   1.30:1 against white. */
+.fnb-button:focus-visible {
+  outline: none;
+  background-color: var(--fnb-highlight);
+  color: var(--fnb-on-light);
+  transform: translate(
+    calc(var(--fnb-weight-shadow) / -2),
+    calc(var(--fnb-weight-shadow) / -2)
+  );
+  box-shadow: calc(var(--fnb-weight-shadow) * 2)
+    calc(var(--fnb-weight-shadow) * 2) 0 0 var(--fnb-shadow-color);
+}
+
+/* Pressing wins over focus. */
+.fnb-button:focus-visible:active {
+  transform: translate(var(--fnb-weight-shadow), var(--fnb-weight-shadow));
+  box-shadow: 0 0 0 0 var(--fnb-shadow-color);
 }
 
 .fnb-button--primary {
@@ -124,9 +180,29 @@
   transition: box-shadow var(--fnb-duration-fast);
 }
 
-.fnb-input:focus {
+.fnb-input:hover {
+  background-image: linear-gradient(
+    var(--fnb-state-hover),
+    var(--fnb-state-hover)
+  );
+}
+
+/* A field is typed into, not pressed. Never give it the press treatment: an
+   offset would jump the caret mid-word and a shrinking shadow makes the whole
+   field breathe while typing. Geometry stays frozen — only the border colour
+   moves, and the fill returns to rest so the typing surface stays clean.
+   Declared after :hover on purpose: without that order, resting the pointer on
+   an already-focused field would re-apply the hover wash under your cursor.
+   The indicator is the border going #000 -> --fnb-brand, 6.9:1. */
+.fnb-input:focus,
+.fnb-input:focus-visible {
+  outline: none;
+  border-color: var(--fnb-brand);
+  background-color: var(--fnb-surface);
+  background-image: none;
+  transform: none;
   box-shadow: var(--fnb-weight-shadow) var(--fnb-weight-shadow) 0 0
-    var(--fnb-brand);
+    var(--fnb-shadow-color);
 }
 
 .fnb-input--disabled {
@@ -171,10 +247,20 @@
   cursor: pointer;
 }
 
-.fnb-tag--clickable:hover,
+.fnb-tag--clickable:hover {
+  background-image: linear-gradient(
+    var(--fnb-state-hover),
+    var(--fnb-state-hover)
+  );
+}
+
 .fnb-tag--clickable:active {
-  transform: translate(1.5px, 1.5px);
-  box-shadow: 0 0 0 0 var(--fnb-border);
+  transform: translate(var(--fnb-w1-shadow), var(--fnb-w1-shadow));
+  box-shadow: 0 0 0 0 var(--fnb-shadow-color);
+  background-image: linear-gradient(
+    var(--fnb-state-active),
+    var(--fnb-state-active)
+  );
 }
 
 /* --- Select --------------------------------------------------------------- */
@@ -200,8 +286,31 @@
 }
 
 .fnb-select__trigger:hover {
-  transform: translate(1.5px, 1.5px);
-  box-shadow: none;
+  background-image: linear-gradient(
+    var(--fnb-state-hover),
+    var(--fnb-state-hover)
+  );
+}
+
+.fnb-select__trigger:active {
+  transform: translate(var(--fnb-weight-shadow), var(--fnb-weight-shadow));
+  box-shadow: 0 0 0 0 var(--fnb-shadow-color);
+  background-image: linear-gradient(
+    var(--fnb-state-active),
+    var(--fnb-state-active)
+  );
+}
+
+.fnb-select__trigger:focus-visible {
+  outline: none;
+  background-color: var(--fnb-highlight);
+  color: var(--fnb-on-light);
+  transform: translate(
+    calc(var(--fnb-weight-shadow) / -2),
+    calc(var(--fnb-weight-shadow) / -2)
+  );
+  box-shadow: calc(var(--fnb-weight-shadow) * 2)
+    calc(var(--fnb-weight-shadow) * 2) 0 0 var(--fnb-shadow-color);
 }
 
 .fnb-select__arrow {
@@ -312,8 +421,13 @@
   margin-inline-start: calc(-1 * var(--fnb-weight-border));
 }
 
+/* The state-layer wash is deliberately NOT reset here — it is pure paint and
+   cannot tear the seam, so a hovered or pressed member still reads. Only the
+   geometry is flattened. */
 .fnb-input-group > *:hover,
-.fnb-input-group .fnb-select__trigger:hover {
+.fnb-input-group > *:active,
+.fnb-input-group .fnb-select__trigger:hover,
+.fnb-input-group .fnb-select__trigger:active {
   transform: none;
   box-shadow: none;
 }
@@ -336,6 +450,10 @@
 .fnb-input-group .fnb-select__trigger:focus,
 .fnb-input-group .fnb-select__trigger:focus-visible {
   box-shadow: none;
+  /* Members carry no shadow of their own, so the focus lift has nothing to
+     grow — the inset ring replaces it here. transform must be reasserted for
+     the same reason box-shadow is: a member's own :focus-visible rule lifts. */
+  transform: none;
   outline: 2px solid var(--fnb-brand);
   outline-offset: -2px;
   position: relative;
@@ -742,10 +860,32 @@
     box-shadow var(--fnb-duration-fast);
 }
 
-.fnb-pagination__btn:hover,
+.fnb-pagination__btn:hover {
+  background-image: linear-gradient(
+    var(--fnb-state-hover),
+    var(--fnb-state-hover)
+  );
+}
+
 .fnb-pagination__btn:active {
-  transform: translate(1.5px, 1.5px);
-  box-shadow: 0 0 0 0 var(--fnb-border);
+  transform: translate(var(--fnb-weight-shadow), var(--fnb-weight-shadow));
+  box-shadow: 0 0 0 0 var(--fnb-shadow-color);
+  background-image: linear-gradient(
+    var(--fnb-state-active),
+    var(--fnb-state-active)
+  );
+}
+
+.fnb-pagination__btn:focus-visible {
+  outline: none;
+  background-color: var(--fnb-highlight);
+  color: var(--fnb-on-light);
+  transform: translate(
+    calc(var(--fnb-weight-shadow) / -2),
+    calc(var(--fnb-weight-shadow) / -2)
+  );
+  box-shadow: calc(var(--fnb-weight-shadow) * 2)
+    calc(var(--fnb-weight-shadow) * 2) 0 0 var(--fnb-shadow-color);
 }
 
 .fnb-pagination__btn--active {
@@ -870,10 +1010,20 @@
     box-shadow var(--fnb-duration-fast);
 }
 
-.fnb-float-button__main:hover,
+.fnb-float-button__main:hover {
+  background-image: linear-gradient(
+    var(--fnb-state-hover),
+    var(--fnb-state-hover)
+  );
+}
+
 .fnb-float-button__main:active {
-  transform: translate(1.5px, 1.5px);
-  box-shadow: 0 0 0 0 var(--fnb-border);
+  transform: translate(var(--fnb-w3-shadow), var(--fnb-w3-shadow));
+  box-shadow: 0 0 0 0 var(--fnb-shadow-color);
+  background-image: linear-gradient(
+    var(--fnb-state-active),
+    var(--fnb-state-active)
+  );
 }
 
 .fnb-float-button__menu {
@@ -1031,4 +1181,40 @@
 .fnb-message-leave-to {
   opacity: 0;
   transform: translateY(-10px);
+}
+
+/* ==========================================================================
+   Reduced motion
+
+   Everything the interaction ladder expresses through movement is also
+   expressed through the state layer and through shadow length, so switching
+   the movement off costs no information: hover still washes, active still
+   washes harder and flattens the shadow, focus still grows it.
+
+   Transitions go too, not just transforms — a 150ms cross-fade of the wash is
+   still motion to someone who asked for none.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .fnb-button,
+  .fnb-input,
+  .fnb-tag,
+  .fnb-select__trigger,
+  .fnb-select__arrow,
+  .fnb-pagination__btn,
+  .fnb-float-button__main,
+  .fnb-card {
+    transition: none;
+  }
+
+  .fnb-button:active,
+  .fnb-button:focus-visible,
+  .fnb-tag--clickable:active,
+  .fnb-select__trigger:active,
+  .fnb-select__trigger:focus-visible,
+  .fnb-pagination__btn:active,
+  .fnb-pagination__btn:focus-visible,
+  .fnb-float-button__main:active {
+    transform: none;
+  }
 }
