@@ -451,6 +451,21 @@
   display: flex;
 }
 
+/* Only the field absorbs slack. Flex items default to `flex: 0 1 auto`, so
+   without this every member shrinks together and a narrow group squeezes a
+   button's label into two lines inside its fixed-height box — the text
+   overflows rather than the button growing. min-width:0 is required as well:
+   a flex item's automatic minimum size is its content width, which would stop
+   the field from ever shrinking below its value. */
+.fnb-input-group > * {
+  flex: none;
+}
+
+.fnb-input-group > .fnb-input {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
 /* Members drop their own shadow — hard shadows would occlude each other —
    and drop the press transform, which would tear the seam open. */
 .fnb-input-group > *,
